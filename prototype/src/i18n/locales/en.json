@@ -287,7 +287,8 @@
       "reachDesc": "There's no tray icon. Use these instead:",
       "reachRelaunch": "Open Translate again from Start",
       "reachShortcut": "Press {{key}}",
-      "reachBar": "Use the panel's ⋯ menu"
+      "reachBar": "Use the panel's ⋯ menu",
+      "active": "Translate while typing"
     }
   },
   "showcase": {

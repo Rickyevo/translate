@@ -48,6 +48,8 @@ export interface TranslateApi {
   windowAction(a: 'close' | 'minimize'): void
   quit(): void
   onTheme(cb: (t: ThemeName) => void): void
+  /** Pause state changed elsewhere (panel ⋯ menu, Ctrl+Alt+P). */
+  onPaused(cb: (paused: boolean) => void): void
   // settings → backend (see prototype/src/settings/bridge.ts)
   svcTest(service: unknown, key: string): Promise<{ ok: boolean; ms?: number; error?: string; status?: number; detail?: string }>
   svcModels(service: unknown, key: string): Promise<{ ok: boolean; models?: string[]; error?: string; status?: number; detail?: string }>

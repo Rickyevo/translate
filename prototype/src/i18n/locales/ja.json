@@ -287,7 +287,8 @@
       "reachDesc": "トレイアイコンはありません。次の方法を使います：",
       "reachRelaunch": "スタートから Translate をもう一度開く",
       "reachShortcut": "{{key}} を押す",
-      "reachBar": "パネルの ⋯ メニューを使う"
+      "reachBar": "パネルの ⋯ メニューを使う",
+      "active": "入力中に翻訳"
     }
   },
   "showcase": {

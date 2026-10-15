@@ -42,6 +42,9 @@ function SettingsApp() {
       setReady(true)
     })
     api.onTheme(setOsTheme)
+    // Keep the pause switch and sidebar in step when pausing happens outside this window. Setting the same value
+    // back is a no-op, so this can't loop through the subscription below.
+    api.onPaused((p) => useReview.getState().paused !== p && useReview.setState({ paused: p }))
     // Store → main: save, live draft, pause.
     const unSettings = useSettings.subscribe((s, prev) => {
       if (s.saved !== prev.saved)

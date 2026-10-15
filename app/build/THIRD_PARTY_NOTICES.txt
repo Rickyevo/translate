@@ -1,0 +1,19 @@
+Translate — third-party components included in this release
+
+Electron (MIT License) and Chromium (BSD-style and other licenses)
+  See LICENSE and LICENSES.chromium.html in this folder.
+
+Python 3.12 runtime (Python Software Foundation License Version 2)
+  resources\python\ — see resources\python\LICENSE.txt. Includes OpenSSL 3 (Apache License 2.0),
+  libffi (MIT License) and the Microsoft Visual C++ runtime (vcruntime140*.dll, redistributable).
+
+Frida 17.23.3 (wxWindows Library Licence, Version 3.1)
+  resources\backend\vendor\frida\ — https://frida.re, https://github.com/frida/frida.
+  Used unmodified, as a library, to observe the WeChat Input Method's candidate list locally.
+
+CC-CEDICT (Creative Commons Attribution-ShareAlike 4.0)
+  resources\backend\translate_backend\data\cedict.tsv — derived from CC-CEDICT
+  (https://www.mdbg.net/chinese/dictionary?page=cedict); see cedict.LICENSE next to it.
+
+Inter typeface (SIL Open Font License 1.1), React, Radix UI, lucide, i18next, zustand (MIT License)
+  Bundled in the app's user interface (resources\app.asar).

@@ -755,8 +755,9 @@ export function OverviewPage({ go }: { go: (p: 'general' | 'translation') => voi
               </div>
             </div>
             <label className="flex items-center gap-2.5 text-13 text-fg-2">
-              {t('settings.overview.pause')}
-              <Switch label={t('settings.overview.pause')} checked={paused} onCheckedChange={(v) => setp({ paused: v })} />
+              {t('settings.overview.active')}
+              {/* On (lit) while translating, off (dimmed) when paused — the switch states what is happening. */}
+              <Switch label={t('settings.overview.active')} checked={!paused} onCheckedChange={(v) => setp({ paused: !v })} />
             </label>
           </div>
           <Row

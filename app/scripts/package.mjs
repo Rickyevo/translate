@@ -1,9 +1,10 @@
-// Production package: bundled main/preload/renderer only (no node_modules), asar, Overlap icon,
-// Python backend copied next to app.asar. The backend still runs on the system Python here;
-// a frozen backend (PyInstaller) replaces it in the release step.
+// Production package: bundled main/preload/renderer only (no node_modules), asar, Overlap icon, the Python backend
+// and an isolated Python 3.12 runtime next to app.asar (resources/backend, resources/python): the release needs no
+// Python, Node or any other development tool on the machine. Build with CPython 3.12 on PATH.
 import { packager } from '@electron/packager'
 import { flipFuses, FuseVersion, FuseV1Options } from '@electron/fuses'
-import { cpSync, readdirSync, rmSync } from 'node:fs'
+import { copyFileSync, cpSync, readdirSync, rmSync } from 'node:fs'
+import { execFileSync } from 'node:child_process'
 import { join } from 'node:path'
 
 // --out=<dir> packages elsewhere (e.g. while Translate.exe is running from out/ and locks it).
@@ -15,6 +16,9 @@ const STAGE = '../.cache/package-stage/backend'
 rmSync(STAGE, { recursive: true, force: true })
 for (const part of ['translate_backend', 'vendor', 'requirements.txt'])
   cpSync(join('../backend', part), join(STAGE, part), { recursive: true, filter: (src) => !/__pycache__|\.pyc$/.test(src) })
+// Isolated runtime (+ precompiled backend); see scripts/bundle_python.py.
+const PY_STAGE = '../.cache/package-stage/python'
+execFileSync('python', ['-X', 'utf8', 'scripts/bundle_python.py', PY_STAGE, STAGE], { stdio: 'inherit' })
 const paths = await packager({
   dir: '.',
   out: OUT,
@@ -26,7 +30,8 @@ const paths = await packager({
   prune: true,
   icon: 'build/icon.ico',
   overwrite: true,
-  extraResource: [STAGE],
+  extraResource: [STAGE, PY_STAGE],
+  appVersion: JSON.parse((await import('node:fs')).readFileSync('package.json', 'utf8')).version,
   appCopyright: 'Translate',
   win32metadata: { CompanyName: 'Translate', FileDescription: 'Translate', ProductName: 'Translate' },
   // Only the built output and package.json go into app.asar.
@@ -48,4 +53,5 @@ for (const p of paths)
     [FuseV1Options.OnlyLoadAppFromAsar]: true,
     [FuseV1Options.EnableCookieEncryption]: true,
   })
+for (const p of paths) copyFileSync('build/THIRD_PARTY_NOTICES.txt', join(p, 'THIRD_PARTY_NOTICES.txt'))
 console.log('packaged:', paths.join(', '))

@@ -114,7 +114,10 @@ function saveSettingsFile(s: Settings) {
 
 /* ------------------------------------------------------------------ backend */
 
-const python = process.env.TRANSLATE_PYTHON || 'python'
+// Release builds run the bundled, isolated Python runtime (resources/python, see scripts/bundle_python.py) and never a
+// Python installed on the machine. Development runs use TRANSLATE_PYTHON or the `python` on PATH.
+const BUNDLED_PYTHON = join(process.resourcesPath ?? '', 'python', 'TranslateEngine.exe')
+const python = app.isPackaged && existsSync(BUNDLED_PYTHON) ? BUNDLED_PYTHON : process.env.TRANSLATE_PYTHON || 'python'
 const backend = new Backend({ python, args: ['-E', '-s', '-B', '-m', 'translate_backend', ...(testPort ? ['--test'] : []), ...(testSource ? ['--source=' + testSource] : []), ...(testPort && argv.includes('--translator=live') ? ['--translator=live'] : [])], cwd: BACKEND_DIR })
 
 backend.on('status', (s) => log.info('backend status ' + JSON.stringify(s)))
@@ -365,13 +368,27 @@ function layoutPanel() {
   }
   const x = Math.max(work.x + 8, Math.min(anchorDip.x + s.offsetX, work.x + work.width - w - 8))
   // The window also covers any open menu (extent), so menus are never clipped.
-  setBoundsIfChanged(panelWin, { x: Math.round(x) - M, y: Math.round(y) - M, width: panelContent.ew + 2 * M, height: panelContent.eh + 2 * M })
+  // The window is sized to the panel's capacity (widest row × configured candidate count + footer), not to the current
+  // content: rows appearing or translations getting longer between keystrokes then change only what is drawn inside
+  // a stable, transparent, click-through window. Resizing it per keystroke showed a stale/blank frame each time
+  // (the flicker while typing). It still grows for an open menu or larger text.
+  const cap = panelCapacity()
+  setBoundsIfChanged(panelWin, { x: Math.round(x) - M, y: Math.round(y) - M, width: Math.max(panelContent.ew, cap.w) + 2 * M, height: Math.max(panelContent.eh, cap.h) + 2 * M })
   if (!panelWin.isVisible()) panelWin.showInactive()
   layoutPreview()
 }
 
 function clickableBox(): Rect | null {
   return eff().clickable && canvasDip ? canvasDip : null
+}
+
+/** Largest the panel can be with the current settings (DIP): Panel.tsx metrics — max width 24.6 × text size; rows of
+ * round(text size × 2.15 | 1.85 compact), 1 px gaps, 4 px padding top and bottom, a 1 px rule and the 24 px footer. */
+function panelCapacity() {
+  const s = eff()
+  const rowH = Math.round(s.textSize * (s.density === 'compact' ? 1.85 : 2.15))
+  const n = Math.max(1, Math.min(9, s.count))
+  return { w: Math.round(s.textSize * 24.6) + 2, h: 8 + n * rowH + (n - 1) + 1 + 24 + 2 }
 }
 
 function contentRect(win: BrowserWindow): Rect {
@@ -431,8 +448,10 @@ function layoutPreview() {
   if (!previewWin.isVisible()) previewWin.showInactive()
 }
 
+let windowResizes = 0 // test control: size changes of the panel/preview windows (each can show a stale frame)
 function setBoundsIfChanged(win: BrowserWindow, b: Rectangle) {
   const c = win.getBounds()
+  if (c.width !== b.width || c.height !== b.height) windowResizes++
   if (c.x !== b.x || c.y !== b.y || c.width !== b.width || c.height !== b.height) win.setBounds(b)
 }
 
@@ -657,6 +676,7 @@ function startTestControl(port: number, readOnly = false) {
           panelExists: !!panelWin && !panelWin.isDestroyed(),
           panelCreated,
           panelHides,
+          windowResizes,
           anchorDip,
           canvasDip,
           imeState,

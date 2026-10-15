@@ -8,6 +8,8 @@ backend/vendor/
 app/dist/
 app/out/
 app/out-*/
+app/release-build/
+release/
 prototype/dist/
 
 # Local caches, test profiles, downloads (CC-CEDICT zip), Edge test profile

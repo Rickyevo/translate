@@ -135,8 +135,10 @@ export const TextInput = forwardRef<
   return (
     <div
       className={cx(
-        'group flex h-[var(--ctl-h)] items-center rounded-md bg-surface transition-shadow duration-[var(--dur-1)]',
-        'shadow-[inset_0_0_0_1px_var(--c-line)] hover:shadow-[inset_0_0_0_1px_var(--c-line-strong)]',
+        // Same control recipe as Select/Button (DESIGN §4): raised fill, contact shadow (--sh-control), 1 px ring.
+        // With the card's own fill and no contact shadow the field looked flat next to them, and nearly vanished in dark.
+        'group flex h-[var(--ctl-h)] items-center rounded-md bg-raised transition-shadow duration-[var(--dur-1)]',
+        'shadow-[var(--sh-control),inset_0_0_0_1px_var(--c-line)] hover:shadow-[var(--sh-control),inset_0_0_0_1px_var(--c-line-strong)]',
         'focus-within:shadow-[inset_0_0_0_1px_var(--c-accent),0_0_0_3px_var(--c-accent-soft)]',
         invalid &&
           'shadow-[inset_0_0_0_1px_var(--c-danger)] hover:shadow-[inset_0_0_0_1px_var(--c-danger)] focus-within:shadow-[inset_0_0_0_1px_var(--c-danger),0_0_0_3px_var(--c-danger-soft)]',

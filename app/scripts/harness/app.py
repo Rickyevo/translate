@@ -16,12 +16,26 @@ DEV_ELECTRON = APP / "node_modules" / "electron" / "dist" / "electron.exe"
 PACKAGED = Path(os.environ["TRANSLATE_EXE"]) if os.environ.get("TRANSLATE_EXE") else APP / "out" / "Translate-win32-x64" / "Translate.exe"
 
 
+def clean_env() -> dict:
+    """The environment of a machine without development tools: Windows folders only on PATH, no PYTHON*/NODE*/
+    TRANSLATE_PYTHON variables (the release must not need or use them)."""
+    keep = ("SYSTEMROOT", "SYSTEMDRIVE", "WINDIR", "TEMP", "TMP", "USERPROFILE", "USERNAME", "USERDOMAIN", "APPDATA",
+            "LOCALAPPDATA", "PROGRAMDATA", "PROGRAMFILES", "PROGRAMFILES(X86)", "COMMONPROGRAMFILES", "COMPUTERNAME",
+            "HOMEDRIVE", "HOMEPATH", "PUBLIC", "ALLUSERSPROFILE", "OS", "PROCESSOR_ARCHITECTURE", "NUMBER_OF_PROCESSORS")
+    e = {k: v for k, v in os.environ.items() if k.upper() in keep}
+    root = os.environ.get("SYSTEMROOT", r"C:\Windows")
+    e["PATH"] = ";".join([os.path.join(root, "System32"), root, os.path.join(root, "System32", "Wbem")])
+    return e
+
+
 class App:
     def __init__(self, port: int = 47321, packaged: bool = False, extra_args: list[str] | None = None, env: dict | None = None):
         self.port = port
         exe = PACKAGED if packaged else DEV_ELECTRON
         args = [str(exe)] + ([] if packaged else [str(APP)]) + [f"--test-control={port}"] + (extra_args or [])
         e = {**os.environ, "TRANSLATE_PYTHON": sys.executable, **(env or {})}
+        if os.environ.get("TRANSLATE_CLEAN_ENV"):
+            e = {**clean_env(), **(env or {})}  # release verification: no Python/Node/dev tools in the environment
         # Isolated user data so tests never touch the user's real config.
         e["TRANSLATE_USER_DATA"] = str(ROOT / ".cache" / "test-userdata")
         self.proc = subprocess.Popen(args, env=e, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)

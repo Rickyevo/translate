@@ -287,7 +287,8 @@
       "reachDesc": "트레이 아이콘이 없습니다. 대신 다음을 사용하세요:",
       "reachRelaunch": "시작 메뉴에서 Translate 다시 열기",
       "reachShortcut": "{{key}} 누르기",
-      "reachBar": "패널의 ⋯ 메뉴 사용"
+      "reachBar": "패널의 ⋯ 메뉴 사용",
+      "active": "입력 중 번역"
     }
   },
   "showcase": {

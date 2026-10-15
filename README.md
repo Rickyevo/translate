@@ -25,6 +25,7 @@ OpenAI/Claude/Gemini-compatible endpoint). Keys are stored in Windows Credential
 | `app/scripts/` | Build/package, real-desktop focus test, resource measurement + report |
 | `backend/` | Python backend (stdlib + ctypes + vendored Frida): protocol, WeType adapter (`translate_backend/wetype/`), Win32 input and window events, simulated translations, fixture source; `tests/` (no IME, no input); `tools/` research capture tools (dev only, not packaged) |
 | `docs/protocol.md` | Host ↔ backend JSON Lines protocol |
+| `docs/release.md` | Release build: bundled Python runtime, packaging, verification |
 | `docs/stage5-report.md` | Stage 5: translation service, dictionary, hybrid cache, keys, verification, resources |
 | `docs/stage4-report.md` | Stage 4: real candidates, composition handling, verification, before/after resources |
 | `docs/stage3-report.md` | Stage 3: architecture, focus verification, resource measurements, recommendation |

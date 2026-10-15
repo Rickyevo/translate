@@ -287,7 +287,8 @@
       "reachDesc": "没有托盘图标，可以通过以下方式打开：",
       "reachRelaunch": "从开始菜单再次打开 Translate",
       "reachShortcut": "按 {{key}}",
-      "reachBar": "使用翻译面板的 ⋯ 菜单"
+      "reachBar": "使用翻译面板的 ⋯ 菜单",
+      "active": "输入时翻译"
     }
   },
   "showcase": {
