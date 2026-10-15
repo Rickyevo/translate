@@ -1,0 +1,461 @@
+{
+ "provider": "opencode-go",
+ "model": "deepseek-v4.1-flash",
+ "short_dict": [
+  {
+   "zh": "时间",
+   "en": "time",
+   "ok": true,
+   "source": "dict"
+  },
+  {
+   "zh": "事件",
+   "en": "incident",
+   "ok": true,
+   "source": "dict"
+  },
+  {
+   "zh": "实践",
+   "en": "practice",
+   "ok": true,
+   "source": "dict"
+  },
+  {
+   "zh": "会议室",
+   "en": "meeting room",
+   "ok": true,
+   "source": "dict"
+  },
+  {
+   "zh": "明天",
+   "en": "tomorrow",
+   "ok": true,
+   "source": "dict"
+  },
+  {
+   "zh": "谢谢",
+   "en": "to thank",
+   "ok": true,
+   "source": "dict"
+  },
+  {
+   "zh": "你好",
+   "en": "hello",
+   "ok": true,
+   "source": "dict"
+  },
+  {
+   "zh": "电脑",
+   "en": "computer",
+   "ok": true,
+   "source": "dict"
+  },
+  {
+   "zh": "手机",
+   "en": "cell phone",
+   "ok": true,
+   "source": "dict"
+  },
+  {
+   "zh": "飞机",
+   "en": "airplane",
+   "ok": true,
+   "source": "dict"
+  },
+  {
+   "zh": "天气",
+   "en": "weather",
+   "ok": true,
+   "source": "dict"
+  },
+  {
+   "zh": "朋友",
+   "en": "friend",
+   "ok": true,
+   "source": "dict"
+  },
+  {
+   "zh": "工作",
+   "en": "to work",
+   "ok": true,
+   "source": "dict"
+  },
+  {
+   "zh": "学习",
+   "en": "to learn",
+   "ok": true,
+   "source": "dict"
+  },
+  {
+   "zh": "问题",
+   "en": "question",
+   "ok": true,
+   "source": "dict"
+  },
+  {
+   "zh": "数据",
+   "en": "data",
+   "ok": true,
+   "source": "dict"
+  },
+  {
+   "zh": "翻译",
+   "en": "to translate",
+   "ok": true,
+   "source": "dict"
+  },
+  {
+   "zh": "输入法",
+   "en": "input method",
+   "ok": true,
+   "source": "dict"
+  },
+  {
+   "zh": "公司",
+   "en": "company",
+   "ok": true,
+   "source": "dict"
+  },
+  {
+   "zh": "医院",
+   "en": "hospital",
+   "ok": true,
+   "source": "dict"
+  },
+  {
+   "zh": "苹果",
+   "en": "apple",
+   "ok": true,
+   "source": "dict"
+  },
+  {
+   "zh": "咖啡",
+   "en": "coffee",
+   "ok": true,
+   "source": "dict"
+  },
+  {
+   "zh": "银行",
+   "en": "bank",
+   "ok": true,
+   "source": "dict"
+  },
+  {
+   "zh": "机场",
+   "en": "airport",
+   "ok": true,
+   "source": "dict"
+  },
+  {
+   "zh": "周末",
+   "en": "weekend",
+   "ok": true,
+   "source": "dict"
+  },
+  {
+   "zh": "生日快乐",
+   "en": "Happy birthday",
+   "ok": true,
+   "source": "dict"
+  },
+  {
+   "zh": "没关系",
+   "en": "it doesn't matter",
+   "ok": true,
+   "source": "dict"
+  },
+  {
+   "zh": "加油",
+   "en": "to add oil",
+   "ok": false,
+   "source": "dict"
+  },
+  {
+   "zh": "不客气",
+   "en": "you're welcome",
+   "ok": true,
+   "source": "dict"
+  },
+  {
+   "zh": "试剑",
+   "en": "Try Sword",
+   "ok": true,
+   "source": "ai"
+  }
+ ],
+ "short_time_dict_s": [
+  0.06,
+  0.02,
+  0.0,
+  0.0,
+  0.0,
+  2.29
+ ],
+ "short_svc": [
+  {
+   "zh": "时间",
+   "en": "time",
+   "ok": true,
+   "source": "ai"
+  },
+  {
+   "zh": "事件",
+   "en": "event",
+   "ok": true,
+   "source": "ai"
+  },
+  {
+   "zh": "实践",
+   "en": "practice",
+   "ok": true,
+   "source": "ai"
+  },
+  {
+   "zh": "会议室",
+   "en": "meeting room",
+   "ok": true,
+   "source": "ai"
+  },
+  {
+   "zh": "明天",
+   "en": "tomorrow",
+   "ok": true,
+   "source": "ai"
+  },
+  {
+   "zh": "谢谢",
+   "en": "Thank you",
+   "ok": true,
+   "source": "ai"
+  },
+  {
+   "zh": "你好",
+   "en": "Hello",
+   "ok": true,
+   "source": "ai"
+  },
+  {
+   "zh": "电脑",
+   "en": "Computer",
+   "ok": true,
+   "source": "ai"
+  },
+  {
+   "zh": "手机",
+   "en": "Phone",
+   "ok": true,
+   "source": "ai"
+  },
+  {
+   "zh": "飞机",
+   "en": "Airplane",
+   "ok": true,
+   "source": "ai"
+  },
+  {
+   "zh": "天气",
+   "en": "weather",
+   "ok": true,
+   "source": "ai"
+  },
+  {
+   "zh": "朋友",
+   "en": "friend",
+   "ok": true,
+   "source": "ai"
+  },
+  {
+   "zh": "工作",
+   "en": "work",
+   "ok": true,
+   "source": "ai"
+  },
+  {
+   "zh": "学习",
+   "en": "study",
+   "ok": true,
+   "source": "ai"
+  },
+  {
+   "zh": "问题",
+   "en": "question",
+   "ok": true,
+   "source": "ai"
+  },
+  {
+   "zh": "数据",
+   "en": "data",
+   "ok": true,
+   "source": "ai"
+  },
+  {
+   "zh": "翻译",
+   "en": "translation",
+   "ok": true,
+   "source": "ai"
+  },
+  {
+   "zh": "输入法",
+   "en": "input method",
+   "ok": true,
+   "source": "ai"
+  },
+  {
+   "zh": "公司",
+   "en": "company",
+   "ok": true,
+   "source": "ai"
+  },
+  {
+   "zh": "医院",
+   "en": "hospital",
+   "ok": true,
+   "source": "ai"
+  },
+  {
+   "zh": "苹果",
+   "en": "apple",
+   "ok": true,
+   "source": "ai"
+  },
+  {
+   "zh": "咖啡",
+   "en": "coffee",
+   "ok": true,
+   "source": "ai"
+  },
+  {
+   "zh": "银行",
+   "en": "bank",
+   "ok": true,
+   "source": "ai"
+  },
+  {
+   "zh": "机场",
+   "en": "airport",
+   "ok": true,
+   "source": "ai"
+  },
+  {
+   "zh": "周末",
+   "en": "weekend",
+   "ok": true,
+   "source": "ai"
+  },
+  {
+   "zh": "生日快乐",
+   "en": "Happy birthday",
+   "ok": true,
+   "source": "ai"
+  },
+  {
+   "zh": "没关系",
+   "en": "It's okay",
+   "ok": true,
+   "source": "ai"
+  },
+  {
+   "zh": "加油",
+   "en": "Go for it",
+   "ok": true,
+   "source": "ai"
+  },
+  {
+   "zh": "不客气",
+   "en": "You're welcome",
+   "ok": true,
+   "source": "ai"
+  },
+  {
+   "zh": "试剑",
+   "en": "Test the sword",
+   "ok": true,
+   "source": "ai"
+  }
+ ],
+ "short_time_svc_s": [
+  1.87,
+  1.7,
+  1.9,
+  1.7,
+  1.75,
+  2.0
+ ],
+ "long": [
+  {
+   "zh": "我们明天下午三点在会议室讨论这个问题",
+   "en": "Let's discuss this in the meeting room at 3 PM tomorrow",
+   "ok": true
+  },
+  {
+   "zh": "请大家提前准备好上周的数据",
+   "en": "Please prepare last week's data in advance",
+   "ok": true
+  },
+  {
+   "zh": "这个问题我们明天再讨论",
+   "en": "Let's discuss this tomorrow",
+   "ok": false
+  },
+  {
+   "zh": "我已经把文件发到你的邮箱了",
+   "en": "I've already sent the file to your email",
+   "ok": true
+  },
+  {
+   "zh": "今天天气很好我们去公园散步吧",
+   "en": "The weather is nice today, let's go for a walk in the park",
+   "ok": true
+  },
+  {
+   "zh": "如果你有任何问题请随时联系我",
+   "en": "If you have any questions, please feel free to contact me",
+   "ok": true
+  }
+ ],
+ "long_time_s": [
+  1.67,
+  1.56
+ ],
+ "service_ms_all": [
+  1,
+  5,
+  5,
+  5,
+  5,
+  5,
+  5,
+  3,
+  3
+ ],
+ "service_ms_p50": 5,
+ "service_ms_p95": 5,
+ "cache_list_s": 0.012,
+ "typing": {
+  "requests": 1,
+  "final_after_last_key_s": 1.67,
+  "placeholder_share": 0.932,
+  "final": [
+   "We'll meet at 10am next Monday to discuss the new project",
+   "We'll meet at 10am next Monday to discuss the new",
+   "We next week",
+   "we"
+  ]
+ },
+ "target_ja": [
+  "会議室",
+  "明日の午後3時に会議があります",
+  "ありがとう"
+ ],
+ "target_ko": [
+  "회의실",
+  "우리 내일 오후 세 시에 회의해요",
+  "감사합니다"
+ ],
+ "passed": 13,
+ "total": 15,
+ "failed": [
+  "continuous typing: rows rarely blank (placeholder share ≤ 20 %)",
+  "continuous typing: final sentence translated sensibly"
+ ]
+}

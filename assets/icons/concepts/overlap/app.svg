@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 48 48" fill="none">
+  <defs>
+    <linearGradient id="ink-overlap23" x1="0" y1="0" x2="1" y2="1" gradientTransform="rotate(-15 .5 .5)">
+      <stop offset="0" stop-color="#2F3742"/><stop offset="1" stop-color="#161B21"/>
+    </linearGradient>
+    <linearGradient id="jade-overlap23" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#45C9A6"/><stop offset="1" stop-color="#1F9E81"/>
+    </linearGradient>
+  </defs><rect x="4" y="4" width="40" height="40" rx="10" fill="url(#ink-overlap23)"/><rect x="4.5" y="4.5" width="39" height="39" rx="9.5" fill="none" stroke="#fff" stroke-opacity=".1"/>
+      <clipPath id="sq-overlap23"><rect x="10" y="11" width="19" height="19" rx="4.5"/></clipPath>
+      <rect x="10" y="11" width="19" height="19" rx="4.5" fill="#F1F4F6"/>
+      <circle cx="29" cy="28" r="10" fill="url(#jade-overlap23)"/>
+      <circle cx="29" cy="28" r="10" fill="#C9F2E6" clip-path="url(#sq-overlap23)"/></svg>

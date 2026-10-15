@@ -1,0 +1,20 @@
+/* App renderers reuse the approved design system from the prototype. */
+@import "../../../prototype/src/styles/index.css";
+@source "../../../prototype/src";
+@source "./";
+
+html,
+body {
+  background: transparent;
+  overflow: hidden;
+}
+
+/* Resource budget (see docs/stage3-report.md):
+ * - loading placeholders are static: a shimmer repaints the whole transparent window every frame
+ * - backdrop-filter cannot see the desktop behind an Electron window, so it only costs compositing */
+.skeleton {
+  animation: none !important;
+}
+.backdrop-blur-md {
+  backdrop-filter: none !important;
+}

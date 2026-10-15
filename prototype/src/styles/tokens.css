@@ -1,0 +1,112 @@
+/* =====================================================================
+   Design tokens — light + dark.
+   Scope: any element carrying data-theme (see ui/scope.tsx).
+   Primitive ramps are expressed directly in OKLCH so lightness steps are
+   perceptually even across both themes (same approach Linear describes).
+   ===================================================================== */
+
+/* ---------- Shared, direction-independent ---------- */
+:root,
+[data-theme] {
+  --dur-1: 90ms; /* hover, press */
+  --dur-2: 140ms; /* popovers, item flash */
+  --dur-3: 200ms; /* window-level transitions */
+  --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* =====================================================================
+   Selected direction — "Panel" (was direction B in stage 1)
+   Cool porcelain neutrals (hue 250), jade accent.
+   Softer radii, 32px controls, surfaces carry grouping.
+   ===================================================================== */
+[data-theme] {
+  --r-xs: 4px;
+  --r-sm: 6px;
+  --r-md: 8px;
+  --r-lg: 10px;
+  --r-xl: 12px;
+  --ctl-h: 32px;
+  --row-h: 52px;
+  --row-h-bar: 28px;
+}
+[data-theme="light"] {
+  color-scheme: light;
+  --c-app: oklch(0.975 0.003 250);
+  --c-side: oklch(0.975 0.003 250);
+  --c-surface: oklch(1 0 0);
+  --c-raised: oklch(1 0 0);
+  --c-sunken: oklch(0.962 0.004 250);
+  --c-hover: oklch(0.3 0.02 250 / 0.05);
+  --c-press: oklch(0.3 0.02 250 / 0.085);
+  --c-select: oklch(0.3 0.02 250 / 0.065);
+  --c-line-soft: oklch(0.3 0.02 250 / 0.07);
+  --c-line: oklch(0.3 0.02 250 / 0.11);
+  --c-line-strong: oklch(0.3 0.02 250 / 0.19);
+  --c-fg: oklch(0.24 0.012 250);
+  --c-fg-2: oklch(0.45 0.012 250);
+  --c-fg-3: oklch(0.58 0.01 250);
+  --c-fg-4: oklch(0.71 0.008 250);
+  --c-accent: oklch(0.56 0.11 172);
+  --c-accent-hover: oklch(0.51 0.11 172);
+  --c-accent-soft: oklch(0.56 0.11 172 / 0.12);
+  --c-accent-text: oklch(0.47 0.1 172);
+  --c-on-accent: oklch(0.99 0 0);
+  --c-danger: oklch(0.58 0.19 27);
+  --c-danger-soft: oklch(0.58 0.19 27 / 0.08);
+  --c-danger-text: oklch(0.52 0.18 27);
+  --c-warning: oklch(0.72 0.15 70);
+  --c-warning-soft: oklch(0.72 0.15 70 / 0.13);
+  --c-warning-text: oklch(0.5 0.11 65);
+  --c-success: oklch(0.6 0.12 160);
+  --c-success-text: oklch(0.48 0.1 160);
+  --c-focus: oklch(0.56 0.11 172 / 0.6);
+  --c-skel: oklch(0.3 0.02 250 / 0.06);
+  --c-skel-hi: oklch(0.3 0.02 250 / 0.11);
+  --sh-control: 0 1px 2px oklch(0.25 0.02 250 / 0.06);
+  --sh-pop: 0 0 0 1px oklch(0.25 0.02 250 / 0.08), 0 6px 14px oklch(0.25 0.02 250 / 0.08), 0 18px 36px oklch(0.25 0.02 250 / 0.1);
+  --sh-bar: 0 0 0 1px oklch(0.25 0.02 250 / 0.11), 0 4px 10px oklch(0.25 0.02 250 / 0.07), 0 14px 32px oklch(0.25 0.02 250 / 0.14);
+  --sh-window: 0 0 0 1px oklch(0.25 0.02 250 / 0.12), 0 16px 48px oklch(0.25 0.02 250 / 0.16);
+  --bar-bg: oklch(0.995 0.002 250);
+  --bar-fw: 500;
+}
+[data-theme="dark"] {
+  color-scheme: dark;
+  --c-app: oklch(0.19 0.006 250);
+  --c-side: oklch(0.19 0.006 250);
+  --c-surface: oklch(0.225 0.007 250);
+  --c-raised: oklch(0.255 0.007 250);
+  --c-sunken: oklch(0.17 0.006 250);
+  --c-hover: oklch(0.97 0.01 250 / 0.055);
+  --c-press: oklch(0.97 0.01 250 / 0.09);
+  --c-select: oklch(0.97 0.01 250 / 0.07);
+  --c-line-soft: oklch(0.97 0.01 250 / 0.06);
+  --c-line: oklch(0.97 0.01 250 / 0.095);
+  --c-line-strong: oklch(0.97 0.01 250 / 0.16);
+  --c-fg: oklch(0.945 0.005 250);
+  --c-fg-2: oklch(0.77 0.008 250);
+  --c-fg-3: oklch(0.61 0.008 250);
+  --c-fg-4: oklch(0.48 0.008 250);
+  --c-accent: oklch(0.68 0.11 172);
+  --c-accent-hover: oklch(0.73 0.11 172);
+  --c-accent-soft: oklch(0.68 0.11 172 / 0.17);
+  --c-accent-text: oklch(0.78 0.1 172);
+  --c-on-accent: oklch(0.2 0.03 172);
+  --c-danger: oklch(0.66 0.17 25);
+  --c-danger-soft: oklch(0.66 0.17 25 / 0.13);
+  --c-danger-text: oklch(0.75 0.13 25);
+  --c-warning: oklch(0.78 0.14 75);
+  --c-warning-soft: oklch(0.78 0.14 75 / 0.12);
+  --c-warning-text: oklch(0.83 0.11 80);
+  --c-success: oklch(0.7 0.13 160);
+  --c-success-text: oklch(0.77 0.11 160);
+  --c-focus: oklch(0.7 0.11 172 / 0.7);
+  --c-skel: oklch(0.97 0.01 250 / 0.06);
+  --c-skel-hi: oklch(0.97 0.01 250 / 0.12);
+  --sh-control: 0 1px 2px oklch(0 0 0 / 0.25);
+  --sh-pop: 0 0 0 1px oklch(0.97 0.01 250 / 0.09), 0 6px 16px oklch(0 0 0 / 0.32), 0 18px 40px oklch(0 0 0 / 0.36);
+  --sh-bar: 0 0 0 1px oklch(0.97 0.01 250 / 0.14), 0 4px 10px oklch(0 0 0 / 0.32), 0 14px 34px oklch(0 0 0 / 0.45);
+  --sh-window: 0 0 0 1px oklch(0.97 0.01 250 / 0.1), 0 18px 52px oklch(0 0 0 / 0.5);
+  --bar-bg: oklch(0.25 0.007 250);
+  --bar-fw: 450;
+}

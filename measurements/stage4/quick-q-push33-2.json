@@ -1,0 +1,13 @@
+{
+  "private_total": 152.7,
+  "cpu_avg_core_pct": 17.77,
+  "cpu_p95_core_pct": 28.36,
+  "by_role_cpu": {
+    "backend": 1.31,
+    "gpu": 4.99,
+    "main": 3.96,
+    "other": 0.0,
+    "renderer:panel": 7.51,
+    "utility:mojom": 0.0
+  }
+}

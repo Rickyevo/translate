@@ -1,0 +1,167 @@
+{
+  "diag": {
+    "before_click": {
+      "hit": "panel",
+      "test_window_above_panel": false,
+      "preview": null,
+      "previewWanted": false,
+      "row1": {
+        "x": 113,
+        "y": 374,
+        "width": 312,
+        "height": 28
+      },
+      "mouse": []
+    },
+    "after_click_mouse": []
+  },
+  "target": "tk",
+  "clickable": true,
+  "provider": "opencode-go",
+  "passed": 24,
+  "total": 24,
+  "timings_ms": {
+    "last_key_to_all_translated_ms": [
+      1868
+    ],
+    "click_insert_ms": [
+      669
+    ],
+    "hotkey_insert_ms": [
+      603
+    ],
+    "show_after_release_ms": [
+      220
+    ]
+  },
+  "ordering": {
+    "compositions": 9,
+    "lists": 65,
+    "pinyin": 58,
+    "dup": 4,
+    "dropped": 8,
+    "late": 9
+  },
+  "results": [
+    {
+      "name": "app running live and attached to WeType",
+      "ok": true,
+      "detail": "ime=connected"
+    },
+    {
+      "name": "test window has focus",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "WeType composes in the test window (Chinese mode)",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "a new generation per keystroke, strictly increasing",
+      "ok": true,
+      "detail": "gens=[4, 5, 6, 8, 10, 12, 14]"
+    },
+    {
+      "name": "panel never hidden during the composition",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "one composition for the whole word",
+      "ok": true,
+      "detail": "composition 2\u21923"
+    },
+    {
+      "name": "panel clear of the IME window (clickable setting)",
+      "ok": true,
+      "detail": "ime={'x': 109, 'y': 52, 'w': 628, 'h': 314} panel={'x': 109, 'y': 370, 'w': 320, 'h': 176}"
+    },
+    {
+      "name": "candidate count shown",
+      "ok": true,
+      "detail": "count=5 (compare with what WeType shows)"
+    },
+    {
+      "name": "real translations arrive (dictionary + service), footer healthy",
+      "ok": true,
+      "detail": "sources=['cache', 'cache', 'ai', 'cache', 'ai'] service=ok"
+    },
+    {
+      "name": "the panel row is the topmost window under the pointer",
+      "ok": true,
+      "detail": "{\"hit\": \"panel\", \"test_window_above_panel\": false, \"preview\": null, \"previewWanted\": false, \"row1\": {\"x\": 113, \"y\": 374, \"width\": 312, \"height\": 28}, \"mouse\": []}"
+    },
+    {
+      "name": "click: inserted the simulated translation, no pinyin left",
+      "ok": true,
+      "detail": "len=4 chinese_left=False pinyin_left=False result={'ok': True, 'error': None, 'gen': 14, 'n': 1}"
+    },
+    {
+      "name": "click: IME composition gone, panel hidden",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "click: target keeps foreground and keyboard focus",
+      "ok": true,
+      "detail": "0x913f4 'Translate focus target (Tk)' class=TkTopLevel exe=python.exe"
+    },
+    {
+      "name": "Alt+2: inserted, no pinyin left",
+      "ok": true,
+      "detail": "len=4 chinese_left=False pinyin_left=False result={'ok': True, 'error': None, 'gen': 18, 'n': 2}"
+    },
+    {
+      "name": "Alt+2: focus kept, no menu activation",
+      "ok": true,
+      "detail": "0x913f4 'Translate focus target (Tk)' class=TkTopLevel exe=python.exe"
+    },
+    {
+      "name": "Esc: composition cancelled, panel hidden, field empty",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "candidate-bar offsets match where WeType draws",
+      "ok": true,
+      "detail": "drawn_top=109 drawn_h=70 assumed=109/70 window={'x': 109, 'y': 52, 'w': 628, 'h': 314}"
+    },
+    {
+      "name": "Backspace to empty: panel hidden, field empty",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "Space commit: panel hidden, IME committed (non-ASCII, not ours)",
+      "ok": true,
+      "detail": "len=1"
+    },
+    {
+      "name": "long candidate: lead preview (N/A \u2014 the real translation fits its row)",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "Alt+0 hides the panel; IME still composing; focus kept",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "Alt+0 shows it again",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "panel renderer released after idle",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "panel recreated on the next composition",
+      "ok": true,
+      "detail": ""
+    }
+  ]
+}

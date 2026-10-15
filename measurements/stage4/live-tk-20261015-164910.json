@@ -1,0 +1,146 @@
+{
+  "target": "tk",
+  "passed": 21,
+  "total": 24,
+  "timings_ms": {
+    "click_insert_ms": [
+      2657
+    ],
+    "hotkey_insert_ms": [
+      604
+    ],
+    "show_after_release_ms": [
+      199
+    ]
+  },
+  "ordering": {
+    "compositions": 8,
+    "lists": 63,
+    "pinyin": 58,
+    "dup": 1,
+    "dropped": 7,
+    "late": 8
+  },
+  "results": [
+    {
+      "name": "app running live and attached to WeType",
+      "ok": true,
+      "detail": "ime=connected"
+    },
+    {
+      "name": "test window has focus",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "WeType composes in the test window (Chinese mode)",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "a new generation per keystroke, strictly increasing",
+      "ok": true,
+      "detail": "gens=[4, 5, 6, 7, 8, 9, 10]"
+    },
+    {
+      "name": "panel never hidden during the composition",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "one composition for the whole word",
+      "ok": true,
+      "detail": "composition 2\u21923"
+    },
+    {
+      "name": "panel directly under the IME candidate row",
+      "ok": true,
+      "detail": "ime={'x': 109, 'y': 52, 'w': 628, 'h': 314} anchor={'x': 109, 'y': 189, 'w': 628, 'h': 46} panel={'x': 109, 'y': 239, 'w': 243, 'h': 176}"
+    },
+    {
+      "name": "candidate count shown",
+      "ok": true,
+      "detail": "count=5 (compare with what WeType shows)"
+    },
+    {
+      "name": "click: inserted the simulated translation, no pinyin left",
+      "ok": false,
+      "detail": "len=0 marked=False pinyin_left=False result=None"
+    },
+    {
+      "name": "click: IME composition gone, panel hidden",
+      "ok": false,
+      "detail": ""
+    },
+    {
+      "name": "click: target keeps foreground and keyboard focus",
+      "ok": true,
+      "detail": "0x2e00c1a 'Translate focus target (Tk)' class=TkTopLevel exe=python.exe"
+    },
+    {
+      "name": "Alt+2: inserted, no pinyin left",
+      "ok": true,
+      "detail": "len=10 marked=True pinyin_left=False result={'ok': True, 'error': None, 'gen': 21, 'n': 2}"
+    },
+    {
+      "name": "Alt+2: focus kept, no menu activation",
+      "ok": true,
+      "detail": "0x2e00c1a 'Translate focus target (Tk)' class=TkTopLevel exe=python.exe"
+    },
+    {
+      "name": "Esc: composition cancelled, panel hidden, field empty",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "candidate-row offsets match where WeType draws",
+      "ok": false,
+      "detail": "drawn_top=109 drawn_h=70 assumed=137/46 window={'x': 109, 'y': 52, 'w': 628, 'h': 314}"
+    },
+    {
+      "name": "Backspace to empty: panel hidden, field empty",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "Space commit: panel hidden, IME committed (non-ASCII, not ours)",
+      "ok": true,
+      "detail": "len=1"
+    },
+    {
+      "name": "long candidate: lead preview opens",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "lead preview inside the screen and clear of the IME row",
+      "ok": true,
+      "detail": "kind=outer preview={'x': 109, 'y': 421, 'width': 380, 'height': 64} row={'x': 109, 'y': 189, 'w': 628, 'h': 46}"
+    },
+    {
+      "name": "Alt+1 inserts the long simulated translation",
+      "ok": true,
+      "detail": "len=28 marked=True pinyin_left=False"
+    },
+    {
+      "name": "Alt+0 hides the panel; IME still composing; focus kept",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "Alt+0 shows it again",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "panel renderer released after idle",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "panel recreated on the next composition",
+      "ok": true,
+      "detail": ""
+    }
+  ]
+}

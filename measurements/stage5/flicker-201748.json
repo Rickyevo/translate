@@ -1,0 +1,15 @@
+{
+ "backdrop_detected_before_panel": true,
+ "idle_after_update": {
+  "frames": 67,
+  "blinks": 0,
+  "longest": 0
+ },
+ "typing_one_composition": {
+  "frames": 102,
+  "blinks": 0,
+  "longest": 0
+ },
+ "panel_hides_during_test": 0,
+ "build": "packaged"
+}

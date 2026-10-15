@@ -1,0 +1,194 @@
+[
+  {
+    "dir": "a",
+    "name": "Bar lists translations in candidate order",
+    "ok": true,
+    "detail": "1 time 时间 | 2 event 事件 | 3 practice 实践 | 4 the world 世间 | 5 test a sword 试剑"
+  },
+  {
+    "dir": "a",
+    "name": "Hover opens detail peek (source + key)",
+    "ok": false,
+    "detail": ""
+  },
+  {
+    "dir": "a",
+    "name": "Mouse click inserts translation",
+    "ok": true,
+    "detail": "\"event\""
+  },
+  {
+    "dir": "a",
+    "name": "Field keeps focus after clicking the bar",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "dir": "a",
+    "name": "Composition cleared after insert",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "dir": "a",
+    "name": "Alt+3 inserts translation #3",
+    "ok": true,
+    "detail": "\"event practice\""
+  },
+  {
+    "dir": "a",
+    "name": "Alt+2 on loading item → notice, no insert",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "dir": "a",
+    "name": "Alt+0 toggles bar (hide → show)",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "dir": "a",
+    "name": "Ctrl+Alt+P pauses and resumes",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "dir": "a",
+    "name": "Ctrl+Alt+O opens settings",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "dir": "a",
+    "name": "Unsaved change counted, Cancel reverts",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "dir": "a",
+    "name": "Language switch previews live on same page; Cancel restores",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "dir": "a",
+    "name": "Saved value survives close + reopen",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "dir": "a",
+    "name": "Near bottom edge: bar placed above caret",
+    "ok": true,
+    "detail": "bar bottom 703 < field top 760"
+  },
+  {
+    "dir": "a",
+    "name": "Near right edge: bar stays on screen",
+    "ok": true,
+    "detail": "bar right 957 ≤ 1140"
+  },
+  {
+    "dir": "a",
+    "name": "No runtime errors",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "dir": "b",
+    "name": "Bar lists translations in candidate order",
+    "ok": true,
+    "detail": "1 time 时间 | 2 event 事件 | 3 practice 实践 | 4 the world 世间 | 5 test a sword 试剑"
+  },
+  {
+    "dir": "b",
+    "name": "Hover opens detail peek (source + key)",
+    "ok": false,
+    "detail": ""
+  },
+  {
+    "dir": "b",
+    "name": "Mouse click inserts translation",
+    "ok": true,
+    "detail": "\"event\""
+  },
+  {
+    "dir": "b",
+    "name": "Field keeps focus after clicking the bar",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "dir": "b",
+    "name": "Composition cleared after insert",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "dir": "b",
+    "name": "Alt+3 inserts translation #3",
+    "ok": true,
+    "detail": "\"event practice\""
+  },
+  {
+    "dir": "b",
+    "name": "Alt+2 on loading item → notice, no insert",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "dir": "b",
+    "name": "Alt+0 toggles bar (hide → show)",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "dir": "b",
+    "name": "Ctrl+Alt+P pauses and resumes",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "dir": "b",
+    "name": "Ctrl+Alt+O opens settings",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "dir": "b",
+    "name": "Unsaved change counted, Cancel reverts",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "dir": "b",
+    "name": "Language switch previews live on same page; Cancel restores",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "dir": "b",
+    "name": "Saved value survives close + reopen",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "dir": "b",
+    "name": "Near bottom edge: bar placed above caret",
+    "ok": true,
+    "detail": "bar bottom 703 < field top 760"
+  },
+  {
+    "dir": "b",
+    "name": "Near right edge: bar stays on screen",
+    "ok": true,
+    "detail": "bar right 957 ≤ 1140"
+  },
+  {
+    "dir": "b",
+    "name": "No runtime errors",
+    "ok": true,
+    "detail": ""
+  }
+]

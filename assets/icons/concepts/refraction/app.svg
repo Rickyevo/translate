@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 48 48" fill="none">
+  <defs>
+    <linearGradient id="ink-refraction12" x1="0" y1="0" x2="1" y2="1" gradientTransform="rotate(-15 .5 .5)">
+      <stop offset="0" stop-color="#2F3742"/><stop offset="1" stop-color="#161B21"/>
+    </linearGradient>
+    <linearGradient id="jade-refraction12" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#45C9A6"/><stop offset="1" stop-color="#1F9E81"/>
+    </linearGradient>
+  </defs><rect x="4" y="4" width="40" height="40" rx="10" fill="url(#ink-refraction12)"/><rect x="4.5" y="4.5" width="39" height="39" rx="9.5" fill="none" stroke="#fff" stroke-opacity=".1"/>
+      <rect x="18" y="9" width="12" height="30" rx="3.5" fill="#fff" fill-opacity=".12" stroke="#fff" stroke-opacity=".22" stroke-width="1.25"/>
+      <path d="M9.5 17.5H18.5" stroke="#F1F4F6" stroke-width="4.5" stroke-linecap="round"/>
+      <path d="M18.5 17.5L29.5 30.5H38.5" stroke="url(#jade-refraction12)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></svg>

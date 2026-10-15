@@ -1,0 +1,14 @@
+{
+ "idle_after_update": {
+  "frames": 95,
+  "blinks": 95,
+  "longest": 95
+ },
+ "typing_one_composition": {
+  "frames": 132,
+  "blinks": 132,
+  "longest": 132
+ },
+ "panel_hides_during_test": 0,
+ "build": "packaged"
+}

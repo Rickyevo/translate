@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+  <defs>
+    <linearGradient id="ink-fold35" x1="0" y1="0" x2="1" y2="1" gradientTransform="rotate(-15 .5 .5)">
+      <stop offset="0" stop-color="#2F3742"/><stop offset="1" stop-color="#161B21"/>
+    </linearGradient>
+    <linearGradient id="jade-fold35" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#45C9A6"/><stop offset="1" stop-color="#1F9E81"/>
+    </linearGradient>
+  </defs><rect x="0.5" y="0.5" width="15" height="15" rx="3.5" fill="url(#ink-fold35)" stroke="#fff" stroke-opacity=".12" stroke-width=".5"/>
+      <path d="M4 5.5H10" stroke="#F1F4F6" stroke-width="3" stroke-linecap="round"/>
+      <path d="M10 5.5A2.75 2.75 0 0 1 10 11H7" fill="none" stroke="url(#jade-fold35)" stroke-width="3" stroke-linecap="round"/></svg>

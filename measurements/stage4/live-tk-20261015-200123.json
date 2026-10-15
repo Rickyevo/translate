@@ -1,0 +1,67 @@
+{
+  "target": "tk",
+  "clickable": true,
+  "provider": "opencode-go",
+  "passed": 4,
+  "total": 9,
+  "timings_ms": {
+    "last_key_to_all_translated_ms": [
+      10044
+    ]
+  },
+  "ordering": {
+    "compositions": 2,
+    "lists": 13,
+    "pinyin": 10,
+    "dup": 1,
+    "dropped": 1,
+    "late": 2
+  },
+  "results": [
+    {
+      "name": "app running live and attached to WeType",
+      "ok": true,
+      "detail": "ime=connected"
+    },
+    {
+      "name": "test window has focus",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "WeType composes in the test window (Chinese mode)",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "a new generation per keystroke, strictly increasing",
+      "ok": true,
+      "detail": "gens=[4, 5, 6, 7, 9, 11, 13]"
+    },
+    {
+      "name": "panel never hidden during the composition",
+      "ok": false,
+      "detail": ""
+    },
+    {
+      "name": "one composition for the whole word",
+      "ok": false,
+      "detail": "composition 2\u2192None"
+    },
+    {
+      "name": "panel clear of the IME window (clickable setting)",
+      "ok": false,
+      "detail": "ime={'x': 109, 'y': 52, 'w': 628, 'h': 314} panel=None"
+    },
+    {
+      "name": "candidate count shown",
+      "ok": false,
+      "detail": "count=None (compare with what WeType shows)"
+    },
+    {
+      "name": "real translations arrive (dictionary + service), footer healthy",
+      "ok": false,
+      "detail": "sources=None service=None"
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+ "provider": "opencode-go",
+ "model": "deepseek-v4.1-flash",
+ "passed": 0,
+ "total": 1,
+ "failed": [
+  "harness completed"
+ ]
+}

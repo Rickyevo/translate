@@ -1,0 +1,40 @@
+# Dependencies (restore with npm install / pip, see README)
+node_modules/
+backend/vendor/
+# backend/vendor/frida/_frida.pyd is 129 MB (over GitHub's 100 MB file limit):
+#   python -m pip install --target backend/vendor frida==17.23.3
+
+# Build output
+app/dist/
+app/out/
+app/out-*/
+prototype/dist/
+
+# Local caches, test profiles, downloads (CC-CEDICT zip), Edge test profile
+.cache/
+
+# Python
+__pycache__/
+*.pyc
+
+# Logs (never committed; app logs live in %APPDATA%\Translate\logs)
+*.log
+
+# Screenshots of the real desktop that show unrelated windows behind the app (kept locally only)
+screenshots/stage3/focus/*.png
+screenshots/stage3/real-panel-preview-*.png
+
+# Editor / OS / tool-local
+.vscode/
+.idea/
+*.swp
+Thumbs.db
+Desktop.ini
+.DS_Store
+.claude/settings.local.json
+
+# Secrets — keys belong in Windows Credential Manager, never in files
+.env
+.env.*
+*.pem
+*.key

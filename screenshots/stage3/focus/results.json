@@ -1,0 +1,32 @@
+[
+  {
+    "target": "tk",
+    "name": "Target has focus after a real click",
+    "ok": true,
+    "detail": "fg=0xb0f0a 'Translate focus target (Tk)' class=TkTopLevel exe=python.exe"
+  },
+  {
+    "target": "tk",
+    "name": "Real typing reaches the target",
+    "ok": true,
+    "detail": "'12 '"
+  },
+  {
+    "target": "tk",
+    "name": "Click on panel row inserts the translation",
+    "ok": true,
+    "detail": "'12 event'"
+  },
+  {
+    "target": "tk",
+    "name": "Focus stays in the target after clicking the panel",
+    "ok": true,
+    "detail": "fg=0xb0f0a 'Translate focus target (Tk)' class=TkTopLevel exe=python.exe"
+  },
+  {
+    "target": "tk",
+    "name": "Unexpected error",
+    "ok": false,
+    "detail": "TimeoutError('condition not met; last state: {\"panel\": {\"visible\": false, \"bounds\": {\"x\": 144, \"y\": 228, \"width\": 248, \"height\": 208}, \"content\": {\"x\": 160, \"y\": 244, \"w\": 216, \"h\": 176}, \"phys\": {\"x\": 144, \"y\": 228, \"width\": 248, \"height\": 208}}, \"rows\": [{\"n\": 1, \"dip\": {\"x\": 164, \"y\": 248, \"width"
+  }
+]

@@ -1,0 +1,22 @@
+{
+  "build": "dev",
+  "passed": 36,
+  "total": 36,
+  "timings_ms": {
+    "show_cold_ms": [
+      220.1
+    ],
+    "show_warm_ms": [
+      1.6,
+      1.9,
+      1.5
+    ],
+    "insert_ms": [
+      31.5
+    ],
+    "show_after_release_ms": [
+      222.3
+    ]
+  },
+  "failed": []
+}

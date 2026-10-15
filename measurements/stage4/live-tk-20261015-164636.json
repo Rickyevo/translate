@@ -1,0 +1,30 @@
+{
+  "target": "tk",
+  "passed": 2,
+  "total": 3,
+  "timings_ms": {},
+  "ordering": {
+    "compositions": 0,
+    "lists": 0,
+    "pinyin": 0,
+    "dup": 0,
+    "dropped": 0
+  },
+  "results": [
+    {
+      "name": "app running live and attached to WeType",
+      "ok": true,
+      "detail": "ime=connected"
+    },
+    {
+      "name": "test window has focus",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "WeType composes in the test window (Chinese mode)",
+      "ok": false,
+      "detail": "switch WeType to Chinese mode and re-run"
+    }
+  ]
+}

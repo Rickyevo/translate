@@ -1,0 +1,148 @@
+{
+  "target": "tk",
+  "clickable": true,
+  "provider": "opencode-go",
+  "passed": 20,
+  "total": 24,
+  "timings_ms": {
+    "last_key_to_all_translated_ms": [
+      1577
+    ],
+    "click_insert_ms": [
+      2664
+    ],
+    "hotkey_insert_ms": [
+      601
+    ]
+  },
+  "ordering": {
+    "compositions": 7,
+    "lists": 61,
+    "pinyin": 55,
+    "dup": 2,
+    "dropped": 6,
+    "late": 7
+  },
+  "results": [
+    {
+      "name": "app running live and attached to WeType",
+      "ok": true,
+      "detail": "ime=connected"
+    },
+    {
+      "name": "test window has focus",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "WeType composes in the test window (Chinese mode)",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "a new generation per keystroke, strictly increasing",
+      "ok": true,
+      "detail": "gens=[4, 5, 6, 7, 8, 10, 12]"
+    },
+    {
+      "name": "panel never hidden during the composition",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "one composition for the whole word",
+      "ok": true,
+      "detail": "composition 2\u21923"
+    },
+    {
+      "name": "panel clear of the IME window (clickable setting)",
+      "ok": true,
+      "detail": "ime={'x': 109, 'y': 52, 'w': 628, 'h': 314} panel={'x': 109, 'y': 370, 'w': 320, 'h': 176}"
+    },
+    {
+      "name": "candidate count shown",
+      "ok": true,
+      "detail": "count=5 (compare with what WeType shows)"
+    },
+    {
+      "name": "real translations arrive (dictionary + service), footer healthy",
+      "ok": true,
+      "detail": "sources=['ai', 'ai', 'ai', 'ai', 'ai'] service=ok"
+    },
+    {
+      "name": "the panel row is the topmost window under the pointer",
+      "ok": true,
+      "detail": "hit=Translate.exe"
+    },
+    {
+      "name": "click: inserted the simulated translation, no pinyin left",
+      "ok": false,
+      "detail": "len=0 chinese_left=False pinyin_left=False result=None"
+    },
+    {
+      "name": "click: IME composition gone, panel hidden",
+      "ok": false,
+      "detail": ""
+    },
+    {
+      "name": "click: target keeps foreground and keyboard focus",
+      "ok": true,
+      "detail": "0x311a4 'Translate focus target (Tk)' class=TkTopLevel exe=python.exe"
+    },
+    {
+      "name": "Alt+2: inserted, no pinyin left",
+      "ok": true,
+      "detail": "len=4 chinese_left=False pinyin_left=False result={'ok': True, 'error': None, 'gen': 12, 'n': 2}"
+    },
+    {
+      "name": "Alt+2: focus kept, no menu activation",
+      "ok": true,
+      "detail": "0x311a4 'Translate focus target (Tk)' class=TkTopLevel exe=python.exe"
+    },
+    {
+      "name": "Esc: composition cancelled, panel hidden, field empty",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "candidate-bar offsets match where WeType draws",
+      "ok": true,
+      "detail": "drawn_top=109 drawn_h=70 assumed=109/70 window={'x': 109, 'y': 52, 'w': 628, 'h': 314}"
+    },
+    {
+      "name": "Backspace to empty: panel hidden, field empty",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "Space commit: panel hidden, IME committed (non-ASCII, not ours)",
+      "ok": true,
+      "detail": "len=1"
+    },
+    {
+      "name": "long candidate: lead preview opens",
+      "ok": false,
+      "detail": ""
+    },
+    {
+      "name": "Alt+0 hides the panel; IME still composing; focus kept",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "Alt+0 shows it again",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "panel renderer released after idle",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "aborted safely: another window came to the foreground",
+      "ok": false,
+      "detail": "foreground is 0x2705e8 'Claude' class=Chrome_WidgetWin_1 exe=claude.exe, expected 0x311a4; refusing to inject input"
+    }
+  ]
+}

@@ -1,0 +1,187 @@
+[
+  {
+    "name": "Translations listed in candidate order",
+    "ok": true,
+    "detail": "1 time 时间 | 2 event 事件 | 3 practice 实践 | 4 the world 世间 | 5 test a sword 试剑"
+  },
+  {
+    "name": "Panel fits short content (≤ 240 px, was 300)",
+    "ok": true,
+    "detail": "216 px"
+  },
+  {
+    "name": "No peek on a fully visible translation",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "Click inserts translation",
+    "ok": true,
+    "detail": "\"event\""
+  },
+  {
+    "name": "Field keeps focus after clicking the panel",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "Composition cleared after insert",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "Alt+3 inserts translation #3",
+    "ok": true,
+    "detail": "\"event practice\""
+  },
+  {
+    "name": "Alt+Shift+2 copies #2, field unchanged",
+    "ok": true,
+    "detail": "clipboard=\"event\""
+  },
+  {
+    "name": "Right-click menu offers Insert + Copy; Insert works",
+    "ok": true,
+    "detail": "\"event practice practice\""
+  },
+  {
+    "name": "Field keeps focus after the context menu",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "Long phrases widen the panel, capped at 320 px",
+    "ok": true,
+    "detail": "216 → 320 px"
+  },
+  {
+    "name": "Width does not shrink back within the same composition",
+    "ok": true,
+    "detail": "320 → 320 px"
+  },
+  {
+    "name": "Next composition starts compact again",
+    "ok": true,
+    "detail": "216 px"
+  },
+  {
+    "name": "Truncated row shows full text on hover",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "No lead preview when #1 fits",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "Cut-off #1 → lead preview appears automatically on the outer side",
+    "ok": true,
+    "detail": "placement=outer"
+  },
+  {
+    "name": "Rows do not move when the preview appears",
+    "ok": true,
+    "detail": "510 → 510"
+  },
+  {
+    "name": "Preview sits on the far side of the panel from the caret",
+    "ok": true,
+    "detail": "preview y 659 ≥ panel bottom 653"
+  },
+  {
+    "name": "Clicking the preview body inserts nothing and keeps focus",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "Wheel over the preview keeps focus",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "Alt+↓ moves the preview to candidate 2",
+    "ok": true,
+    "detail": "chip=2"
+  },
+  {
+    "name": "Alt+` hides and shows the preview",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "× collapses the preview for this composition; focus kept",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "Preview Insert inserts the previewed candidate; preview closes with the composition",
+    "ok": true,
+    "detail": "\"ve last week's figures ready beforehand.\""
+  },
+  {
+    "name": "Alt+2 on a loading item → notice, no insert",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "Footer switch changes target language immediately",
+    "ok": true,
+    "detail": "1 時間 时间"
+  },
+  {
+    "name": "Field keeps focus after switching language",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "Alt+0 hides and shows the panel",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "Ctrl+Alt+P pauses and resumes",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "Ctrl+Alt+O opens settings",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "Density previews live, counted as unsaved, Cancel reverts",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "Full-text mode setting (Automatic/On request/Off) previews live; Cancel reverts",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "Interface language previews on the same page; Cancel restores",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "Saved value survives close + reopen",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "Near bottom edge: panel placed above the caret",
+    "ok": true,
+    "detail": "panel bottom 703 < field top 760"
+  },
+  {
+    "name": "Near right edge: panel stays on screen",
+    "ok": true,
+    "detail": "right 1046 ≤ 1140"
+  },
+  {
+    "name": "No runtime errors",
+    "ok": true,
+    "detail": ""
+  }
+]

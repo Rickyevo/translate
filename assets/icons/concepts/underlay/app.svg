@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 48 48" fill="none">
+  <defs>
+    <linearGradient id="ink-underlay1" x1="0" y1="0" x2="1" y2="1" gradientTransform="rotate(-15 .5 .5)">
+      <stop offset="0" stop-color="#2F3742"/><stop offset="1" stop-color="#161B21"/>
+    </linearGradient>
+    <linearGradient id="jade-underlay1" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#45C9A6"/><stop offset="1" stop-color="#1F9E81"/>
+    </linearGradient>
+  </defs><rect x="4" y="4" width="40" height="40" rx="10" fill="url(#ink-underlay1)"/><rect x="4.5" y="4.5" width="39" height="39" rx="9.5" fill="none" stroke="#fff" stroke-opacity=".1"/>
+      <path d="M13.5 15V27.5A2.5 2.5 0 0 0 16 30H19" fill="none" stroke="#F1F4F6" stroke-opacity=".45" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      <rect x="10" y="11" width="28" height="7" rx="3.5" fill="#F1F4F6"/>
+      <rect x="19" y="24.5" width="19" height="11" rx="5.5" fill="url(#jade-underlay1)"/></svg>

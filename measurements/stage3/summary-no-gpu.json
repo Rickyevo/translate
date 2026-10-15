@@ -1,0 +1,319 @@
+{
+  "variant": "no-gpu",
+  "cpus": 24,
+  "preview_seen": false,
+  "phases": {
+    "1 idle (no window yet)": {
+      "n": 14,
+      "procs": 5,
+      "ws_total": 196.9,
+      "private_total": 71.1,
+      "uss_total": 48.2,
+      "private_electron": 60.1,
+      "private_backend": 11.0,
+      "ws_backend": 19.0,
+      "cpu_avg_core_pct": 0.0,
+      "cpu_p95_core_pct": 0.0,
+      "cpu_backend_avg": 0.0,
+      "cpu_avg_machine_pct": 0.0,
+      "by_role": {
+        "backend": {
+          "ws": 19.0,
+          "private": 11.0,
+          "uss": 9.7,
+          "cpu": 0.0
+        },
+        "gpu": {
+          "ws": 48.9,
+          "private": 13.8,
+          "uss": 7.7,
+          "cpu": 0.0
+        },
+        "main": {
+          "ws": 77.9,
+          "private": 34.1,
+          "uss": 23.7,
+          "cpu": 0.0
+        },
+        "other": {
+          "ws": 7.6,
+          "private": 1.2,
+          "uss": 0.8,
+          "cpu": 0.0
+        },
+        "utility:mojom": {
+          "ws": 43.4,
+          "private": 10.9,
+          "uss": 6.4,
+          "cpu": 0.0
+        }
+      }
+    },
+    "2 continuous typing": {
+      "n": 14,
+      "procs": 6,
+      "ws_total": 353.4,
+      "private_total": 143.6,
+      "uss_total": 107.5,
+      "private_electron": 132.4,
+      "private_backend": 11.2,
+      "ws_backend": 19.2,
+      "cpu_avg_core_pct": 33.19,
+      "cpu_p95_core_pct": 43.58,
+      "cpu_backend_avg": 1.26,
+      "cpu_avg_machine_pct": 1.383,
+      "by_role": {
+        "backend": {
+          "ws": 19.2,
+          "private": 11.2,
+          "uss": 9.8,
+          "cpu": 1.26
+        },
+        "gpu": {
+          "ws": 56.4,
+          "private": 16.0,
+          "uss": 9.5,
+          "cpu": 19.91
+        },
+        "main": {
+          "ws": 104.4,
+          "private": 39.2,
+          "uss": 29.1,
+          "cpu": 0.34
+        },
+        "other": {
+          "ws": 7.6,
+          "private": 1.2,
+          "uss": 0.8,
+          "cpu": 0.0
+        },
+        "renderer:panel": {
+          "ws": 120.6,
+          "private": 64.7,
+          "uss": 51.5,
+          "cpu": 11.69
+        },
+        "utility:mojom": {
+          "ws": 45.2,
+          "private": 11.4,
+          "uss": 6.8,
+          "cpu": 0.0
+        }
+      }
+    },
+    "3 idle after typing (panel hidden)": {
+      "n": 14,
+      "procs": 6,
+      "ws_total": 373.1,
+      "private_total": 163.2,
+      "uss_total": 128.0,
+      "private_electron": 152.2,
+      "private_backend": 10.9,
+      "ws_backend": 19.1,
+      "cpu_avg_core_pct": 0.0,
+      "cpu_p95_core_pct": 0.0,
+      "cpu_backend_avg": 0.0,
+      "cpu_avg_machine_pct": 0.0,
+      "by_role": {
+        "backend": {
+          "ws": 19.1,
+          "private": 10.9,
+          "uss": 9.7,
+          "cpu": 0.0
+        },
+        "gpu": {
+          "ws": 55.1,
+          "private": 15.3,
+          "uss": 8.9,
+          "cpu": 0.0
+        },
+        "main": {
+          "ws": 104.8,
+          "private": 39.1,
+          "uss": 29.2,
+          "cpu": 0.0
+        },
+        "other": {
+          "ws": 7.6,
+          "private": 1.2,
+          "uss": 0.8,
+          "cpu": 0.0
+        },
+        "renderer:panel": {
+          "ws": 141.2,
+          "private": 85.4,
+          "uss": 72.7,
+          "cpu": 0.0
+        },
+        "utility:mojom": {
+          "ws": 45.2,
+          "private": 11.4,
+          "uss": 6.8,
+          "cpu": 0.0
+        }
+      }
+    },
+    "4 long-translation preview open": {
+      "n": 14,
+      "procs": 6,
+      "ws_total": 351.5,
+      "private_total": 137.8,
+      "uss_total": 102.1,
+      "private_electron": 126.9,
+      "private_backend": 10.9,
+      "ws_backend": 19.1,
+      "cpu_avg_core_pct": 0.11,
+      "cpu_p95_core_pct": 0.0,
+      "cpu_backend_avg": 0.0,
+      "cpu_avg_machine_pct": 0.005,
+      "by_role": {
+        "backend": {
+          "ws": 19.1,
+          "private": 10.9,
+          "uss": 9.7,
+          "cpu": 0.0
+        },
+        "gpu": {
+          "ws": 57.3,
+          "private": 16.7,
+          "uss": 10.1,
+          "cpu": 0.0
+        },
+        "main": {
+          "ws": 105.5,
+          "private": 39.1,
+          "uss": 29.1,
+          "cpu": 0.11
+        },
+        "other": {
+          "ws": 7.6,
+          "private": 1.2,
+          "uss": 0.8,
+          "cpu": 0.0
+        },
+        "renderer:panel": {
+          "ws": 116.8,
+          "private": 58.7,
+          "uss": 45.8,
+          "cpu": 0.0
+        },
+        "utility:mojom": {
+          "ws": 45.2,
+          "private": 11.3,
+          "uss": 6.8,
+          "cpu": 0.0
+        }
+      }
+    },
+    "5 settings open": {
+      "n": 14,
+      "procs": 7,
+      "ws_total": 465.4,
+      "private_total": 178.3,
+      "uss_total": 132.2,
+      "private_electron": 167.4,
+      "private_backend": 10.9,
+      "ws_backend": 19.1,
+      "cpu_avg_core_pct": 0.34,
+      "cpu_p95_core_pct": 1.61,
+      "cpu_backend_avg": 0.0,
+      "cpu_avg_machine_pct": 0.014,
+      "by_role": {
+        "backend": {
+          "ws": 19.1,
+          "private": 10.9,
+          "uss": 9.7,
+          "cpu": 0.0
+        },
+        "gpu": {
+          "ws": 65.2,
+          "private": 17.5,
+          "uss": 10.9,
+          "cpu": 0.0
+        },
+        "main": {
+          "ws": 106.4,
+          "private": 39.4,
+          "uss": 29.3,
+          "cpu": 0.34
+        },
+        "other": {
+          "ws": 7.6,
+          "private": 1.2,
+          "uss": 0.8,
+          "cpu": 0.0
+        },
+        "renderer:panel": {
+          "ws": 116.0,
+          "private": 58.5,
+          "uss": 45.6,
+          "cpu": 0.0
+        },
+        "renderer:settings": {
+          "ws": 105.8,
+          "private": 39.5,
+          "uss": 29.1,
+          "cpu": 0.0
+        },
+        "utility:mojom": {
+          "ws": 45.2,
+          "private": 11.3,
+          "uss": 6.8,
+          "cpu": 0.0
+        }
+      }
+    },
+    "6 settings closed again": {
+      "n": 14,
+      "procs": 6,
+      "ws_total": 355.7,
+      "private_total": 138.1,
+      "uss_total": 102.5,
+      "private_electron": 127.2,
+      "private_backend": 10.9,
+      "ws_backend": 19.1,
+      "cpu_avg_core_pct": 0.22,
+      "cpu_p95_core_pct": 1.57,
+      "cpu_backend_avg": 0.0,
+      "cpu_avg_machine_pct": 0.009,
+      "by_role": {
+        "backend": {
+          "ws": 19.1,
+          "private": 10.9,
+          "uss": 9.7,
+          "cpu": 0.0
+        },
+        "gpu": {
+          "ws": 61.9,
+          "private": 17.3,
+          "uss": 10.8,
+          "cpu": 0.0
+        },
+        "main": {
+          "ws": 106.6,
+          "private": 39.5,
+          "uss": 29.3,
+          "cpu": 0.22
+        },
+        "other": {
+          "ws": 7.6,
+          "private": 1.2,
+          "uss": 0.8,
+          "cpu": 0.0
+        },
+        "renderer:panel": {
+          "ws": 115.4,
+          "private": 57.8,
+          "uss": 45.1,
+          "cpu": 0.0
+        },
+        "utility:mojom": {
+          "ws": 45.2,
+          "private": 11.3,
+          "uss": 6.8,
+          "cpu": 0.0
+        }
+      }
+    }
+  }
+}
