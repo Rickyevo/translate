@@ -1,6 +1,6 @@
 # Release build (0.6.1)
 
-Portable Windows x64 release: `release/Translate-0.6.1-win-x64.zip` (198 MB; 474 MB unpacked, 99 files) and
+Portable Windows x64 release: `release/Translate-0.6.1-win-x64.zip` (198 MB; 474 MB unpacked, 100 files) and
 `release/SHA256SUMS.txt`. Unzip anywhere and run `Translate.exe` — no installer, no admin rights, no Python, Node or
 other development tools. Not code-signed (SmartScreen warns on first launch). User notes: `README-FIRST.txt` in the zip.
 
@@ -11,7 +11,7 @@ other development tools. Not code-signed (SmartScreen warns on first launch). Us
 | Electron 44 app | `Translate.exe`, `resources/app.asar` | asar integrity, hardened fuses, 4 UI locales |
 | Python 3.12.9 runtime | `resources/python/` (19 MB) | `TranslateEngine.exe` + DLLs + stdlib as precompiled `python312.zip`; isolated by `python312._pth` (ignores PYTHONPATH/PYTHONHOME, user site and any installed Python). Built from the local CPython by `app/scripts/bundle_python.py` |
 | Backend | `resources/backend/` | precompiled; Frida 17.23.3 in `vendor/`; CC-CEDICT data |
-| Licenses | `THIRD_PARTY_NOTICES.txt`, `LICENSE`, `LICENSES.chromium.html`, `resources/python/LICENSE.txt`, `cedict.LICENSE` | |
+| Licenses | `LICENSE.txt` (Translate, MIT), `THIRD_PARTY_NOTICES.txt`, `LICENSE.electron.txt`, `LICENSES.chromium.html`, `resources/python/LICENSE.txt`, `cedict.LICENSE` | |
 
 ## Build
 
@@ -21,6 +21,9 @@ npm run build
 node scripts/package.mjs --out=release-build      # needs CPython 3.12 on PATH (bundled from it)
 python -X utf8 scripts/make_release.py release-build/Translate-win32-x64
 ```
+
+`make_release.py` builds the zip from a staging copy in `.cache/release-stage/` and refreshes the unpacked
+`release/Translate-<version>-win-x64/` only when no running Translate uses it.
 
 ## Verification (all on the release, copied out of the source tree, in an environment with only Windows folders on PATH and no PYTHON*/NODE* variables)
 
@@ -35,6 +38,11 @@ python -X utf8 scripts/make_release.py release-build/Translate-win32-x64
 | Backend unit tests | 59 / 59 |
 
 ## 0.6.1
+
+- Release zip: Translate's own license (`LICENSE.txt`, MIT), Electron's renamed to `LICENSE.electron.txt`;
+  README-FIRST gains a disclaimer, the tested WeType version and a start-with-Windows workaround. `SHA256SUMS.txt`
+  and README-FIRST had doubled carriage returns (CR CR LF), which broke `sha256sum -c`; fixed. Verified again from the
+  extracted zip in a clean environment: 9 / 9.
 
 - **Floating panel and lead preview are flat**: no drop shadow, a 1 px border only (`--sh-bar`), per your request;
   Settings unchanged. `screenshots/stage5/panel-border-only.png` (in-app capture, light and dark).

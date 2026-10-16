@@ -1,7 +1,8 @@
 Translate — third-party components included in this release
+(Translate itself is under the MIT License: LICENSE.txt)
 
 Electron (MIT License) and Chromium (BSD-style and other licenses)
-  See LICENSE and LICENSES.chromium.html in this folder.
+  See LICENSE.electron.txt and LICENSES.chromium.html in this folder.
 
 Python 3.12 runtime (Python Software Foundation License Version 2)
   resources\python\ — see resources\python\LICENSE.txt. Includes OpenSSL 3 (Apache License 2.0),

@@ -1,7 +1,8 @@
 """Make the distributable: release/Translate-<version>-win-x64.zip (+ SHA256SUMS.txt) from a packaged build.
 
 The zip holds one folder, Translate-<version>-win-x64/, with Translate.exe, the bundled Python runtime and backend,
-license notices and README-FIRST.txt. Portable: unzip anywhere and run; no installer, no admin rights, no Python or
+Translate's license (LICENSE.txt), third-party notices (Electron's license as LICENSE.electron.txt) and README-FIRST.txt.
+The zip is built from a staging copy in .cache/; release/<name>/ is refreshed only when no running Translate uses it. Portable: unzip anywhere and run; no installer, no admin rights, no Python or
 other tools needed. Run from app/:  python -X utf8 scripts/make_release.py <packaged folder>
 """
 from __future__ import annotations
@@ -46,7 +47,14 @@ REMOVE
   Quit Translate, delete this folder and %APPDATA%\\Translate. API keys: Windows Credential Manager >
   Windows Credentials > entries starting with "Translate:service:".
 
-Third-party components and licenses: THIRD_PARTY_NOTICES.txt.
+START WITH WINDOWS
+  The "Start with Windows" switch in Settings has no effect in this version. To start Translate with Windows, press
+  Win+R, open shell:startup and put a shortcut to Translate.exe there.
+
+Translate is an independent project, not made by, affiliated with or endorsed by Tencent or WeChat.
+It is tested with WeChat Input Method 3.0.0.34; other versions may not work.
+
+License: LICENSE.txt (MIT). Third-party components and licenses: THIRD_PARTY_NOTICES.txt.
 """
 
 
@@ -61,26 +69,34 @@ def sha256(p: Path) -> str:
 def main() -> None:
     src = Path(sys.argv[1]).resolve()
     rel = ROOT / "release"
+    stage = ROOT / ".cache" / "release-stage" / NAME
+    shutil.rmtree(stage.parent, ignore_errors=True)
+    shutil.copytree(src, stage)
+    (stage / "LICENSE").rename(stage / "LICENSE.electron.txt")
+    shutil.copyfile(ROOT / "LICENSE", stage / "LICENSE.txt")
+    shutil.copyfile(ROOT / "app" / "build" / "THIRD_PARTY_NOTICES.txt", stage / "THIRD_PARTY_NOTICES.txt")
+    (stage / "README-FIRST.txt").write_text(README, encoding="utf-8", newline=chr(13) + chr(10))
+    rel.mkdir(exist_ok=True)
+    zpath = rel / f"{NAME}.zip"
+    zpath.unlink(missing_ok=True)
+    files = sorted(p for p in stage.rglob("*") if p.is_file())
+    with zipfile.ZipFile(zpath, "w", zipfile.ZIP_DEFLATED, compresslevel=9) as z:
+        for p in files:
+            z.write(p, f"{NAME}/{p.relative_to(stage).as_posix()}")
+    exe_hash = sha256(stage / "Translate.exe")
+    zip_hash = sha256(zpath)
+    (rel / "SHA256SUMS.txt").write_text(f"{zip_hash}  {zpath.name}\r\n{exe_hash}  {NAME}/Translate.exe\r\n", encoding="ascii", newline="")
+    size = sum(p.stat().st_size for p in files)
+    # The unpacked copy in release/: never delete one someone is running (Windows lets most of its files be removed
+    # underneath it). Then the zip is still complete; only the unpacked copy stays as it was.
     folder = rel / NAME
-    # Never delete a release someone is running: Windows lets most of its files be removed underneath it.
     import psutil
     busy = [p.info["pid"] for p in psutil.process_iter(["pid", "exe"]) if p.info["exe"] and str(folder).lower() in p.info["exe"].lower()]
     if busy:
-        sys.exit(f"{folder} is in use by running processes {busy}; quit Translate first (nothing was changed)")
-    shutil.rmtree(folder, ignore_errors=True)
-    rel.mkdir(exist_ok=True)
-    shutil.copytree(src, folder)
-    (folder / "README-FIRST.txt").write_text(README.replace("\n", "\r\n"), encoding="utf-8")
-    zpath = rel / f"{NAME}.zip"
-    zpath.unlink(missing_ok=True)
-    files = sorted(p for p in folder.rglob("*") if p.is_file())
-    with zipfile.ZipFile(zpath, "w", zipfile.ZIP_DEFLATED, compresslevel=9) as z:
-        for p in files:
-            z.write(p, f"{NAME}/{p.relative_to(folder).as_posix()}")
-    exe_hash = sha256(folder / "Translate.exe")
-    zip_hash = sha256(zpath)
-    (rel / "SHA256SUMS.txt").write_text(f"{zip_hash}  {zpath.name}\r\n{exe_hash}  {NAME}/Translate.exe\r\n", encoding="ascii")
-    size = sum(p.stat().st_size for p in files)
+        print(f"note: {folder} is in use by running processes {busy}; left as it was (the zip is up to date)")
+    else:
+        shutil.rmtree(folder, ignore_errors=True)
+        shutil.copytree(stage, folder)
     print(json.dumps({"zip": str(zpath), "zip_mb": round(zpath.stat().st_size / 2**20, 1), "unpacked_mb": round(size / 2**20, 1),
                       "files": len(files), "sha256": zip_hash}))
 
