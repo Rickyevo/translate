@@ -19,11 +19,11 @@ ROOT = Path(__file__).resolve().parents[2]
 VERSION = json.loads((ROOT / "app" / "src-tauri" / "tauri.conf.json").read_text(encoding="utf-8"))["version"]
 NAME = f"Translate-{VERSION}-win-x64"
 
-README = f"""Translate {VERSION} — translation companion for WeChat Input Method (Windows 10/11, x64)
+README = f"""Translate {VERSION} — translation companion for WeChat Input Method and Microsoft Pinyin (Windows x64)
 
 START
   Unzip this folder anywhere you like (for example %LOCALAPPDATA%\\Programs\\Translate) and run Translate.exe.
-  Nothing appears at first: Translate runs quietly in the background. Type pinyin with WeChat Input Method in any
+  Nothing appears at first: Translate runs quietly in the background. Type with WeChat Input Method or Microsoft Pinyin in any
   app and the translation panel appears under the candidates. No installer, no admin rights, and no Python or other
   tools are needed — everything is in this folder; the interface uses the WebView2 Runtime built into Windows.
 
@@ -31,6 +31,7 @@ START
 
 FIRST SETUP
   Run Translate.exe again (or press Ctrl+Alt+O) to open Settings.
+  Settings > General > Input method: Automatic, WeChat Input Method, or Microsoft Pinyin (tested on Windows 11).
   Settings > Translation: choose your translation service, paste its API key, press "Test connection", then Save.
   Without a service, common words are still translated by the built-in dictionary (Chinese to English).
   Tip: if you click the panel with the mouse, turn on Settings > Appearance > "Keep the panel clickable".
@@ -38,6 +39,7 @@ FIRST SETUP
 USE
   Alt+1...9 insert a translation, Alt+Shift+1...9 copy it, Alt+0 hides the panel, Alt+` shows the full text.
   Ctrl+Alt+P pauses or resumes. Right-click a row to insert, copy or retry. Quit from Settings > About.
+  If another app occupies a shortcut, open Settings by running Translate.exe again and pause from Overview.
 
 PRIVACY
   Candidates you type are translated only by the service you choose (or not at all in Local-only mode).

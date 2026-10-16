@@ -139,7 +139,7 @@ Translate 是一个安静运行在 Windows 后台的微信输入法（WeType）�
 程序尚未签名，SmartScreen 可能不认识它。确认下载来源后，可选择“更多信息 → 仍要运行”。发布页附有 `SHA256SUMS.txt`，可核对文件：
 
 ```powershell
-Get-FileHash .\Translate-0.2.0-win-x64.zip -Algorithm SHA256
+Get-FileHash .\Translate-0.2.1-win-x64.zip -Algorithm SHA256
 ```
 
 </details>

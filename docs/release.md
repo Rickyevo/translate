@@ -1,4 +1,22 @@
-# Release build (0.2.0)
+# Release build
+
+## 0.2.1 hotfix
+
+Release: `release/Translate-0.2.1-win-x64.zip` with `release/SHA256SUMS.txt`.
+Microsoft Pinyin's generated COM wrappers in 0.2.0 could fail their system-DLL timestamp check with
+`ImportError: Typelib different than module`. The observer now uses comtypes' typelib loader, reusing compatible
+wrappers or regenerating them in memory for the local Windows installation. No system or installation files are modified.
+
+Regression coverage forces stale timestamps in copied wrappers and initializes UI Automation in a separate process,
+checking that the copied installation remains unchanged. The clean-environment release check now tests Microsoft Pinyin's
+UI Automation initialization independently; a connected WeChat adapter alone is insufficient.
+
+Verified: backend tests 75/75; TypeScript typecheck; bundled-runtime clean-environment checks 10/10;
+packaged Microsoft Pinyin replay checks 12/12 (including automatic takeover from WeChat Input Method).
+No keyboard/mouse-controlled live session was run for this hotfix; actual typing on other PCs remains unverified.
+Package size: about 61.2 MB downloaded and 157.2 MB unpacked.
+
+## 0.2.0 verification record
 
 Portable Windows x64 release: `release/Translate-0.2.0-win-x64.zip` (61 MB; 156 MB unpacked, 80 files) and
 `release/SHA256SUMS.txt`. Unzip anywhere and run `Translate.exe` — no installer, no admin rights, no Python, Node or

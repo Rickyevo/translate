@@ -33,6 +33,20 @@ def _rect(r) -> dict | None:
     return {"x": r.left, "y": r.top, "w": w, "h": h} if w > 0 and h > 0 else None
 
 
+def _load_uia():
+    """Use the local Windows typelib; shipped wrappers may predate a Windows update.
+
+    GetModule reuses compatible wrappers and regenerates mismatched ones. Keep generated
+    modules in memory so portable/read-only installations never need writable code files.
+    """
+    _vendor()
+    import comtypes
+    import comtypes.client
+
+    comtypes.client.gen_dir = None
+    return comtypes, comtypes.client.GetModule("UIAutomationCore.dll")
+
+
 class Observer:
     """Runs on its own thread; posts {"kind": "connection"} once, then {"kind": "mspy", texts, rect, canvas,
     foreground} whenever what Microsoft Pinyin shows changes (texts=[] when the window closes)."""
@@ -96,9 +110,7 @@ class Observer:
         import logging
         logging.getLogger("comtypes").setLevel(logging.WARNING)
         try:
-            import comtypes
-            import comtypes.client
-            from comtypes.gen import UIAutomationClient as U  # generated at build time (vendor/comtypes/gen)
+            comtypes, U = _load_uia()
         except Exception as e:  # noqa: BLE001
             log.info("mspinyin: UI Automation unavailable (%s)", type(e).__name__)
             self._post({"kind": "connection", "state": "failed", "epoch": 1, "code": "uia_missing"})

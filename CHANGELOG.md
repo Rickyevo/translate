@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.1 — 2026-10-16
+
+- Fix Microsoft Pinyin silently failing to start when the shipped UI Automation wrappers were generated against a
+  different Windows system DLL timestamp. Load compatible bindings from the local system, regenerating them in
+  memory when needed; no writes to the app directory are required.
+- Release verification now initializes Microsoft Pinyin's UI Automation independently of WeChat Input Method.
+- The bundled quick-start guide now includes Microsoft Pinyin and the Settings fallback for occupied shortcuts.
+
 ## 0.2.0 — 2026-10-16
 
 - **Microsoft Pinyin support.** Translate now also works with Microsoft Pinyin (Windows 11), the input method built

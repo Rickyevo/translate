@@ -75,6 +75,17 @@ def main() -> int:
     env = {**clean_env(), "TRANSLATE_USER_DATA": str(ud)}
     check("environment has no Python/Node", not any(k.upper().startswith(("PYTHON", "NODE")) or k.upper() == "TRANSLATE_PYTHON" for k in env)
           and "python" not in env["PATH"].lower() and "node" not in env["PATH"].lower(), env["PATH"])
+    uia_check = subprocess.run(
+        [str(dest / "resources/python/TranslateEngine.exe"), "-B", "-c",
+         "import sys; sys.coinit_flags=0; "
+         "from translate_backend.mspinyin.observer import _load_uia; "
+         "c,U=_load_uia(); a=c.client.CreateObject(U.CUIAutomation,interface=U.IUIAutomation); "
+         "assert a.GetRootElement(); print('UIA_READY')"],
+        env=env, capture_output=True, text=True, timeout=30,
+    )
+    check("Microsoft Pinyin UI Automation initializes in the bundled runtime",
+          uia_check.returncode == 0 and "UIA_READY" in uia_check.stdout,
+          f"exit={uia_check.returncode}")
     t0 = time.perf_counter()
     app = subprocess.Popen([str(exe), f"--observe={PORT}"], env=env, cwd=str(dest.parent))
     try:

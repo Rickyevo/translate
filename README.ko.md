@@ -132,7 +132,7 @@ Translate는 Windows의 **WeChat 입력기(微信输入法, WeType)** 를 위한
 코드 서명이 없어 경고가 나타날 수 있습니다. 다운로드 출처를 확인한 뒤 추가 정보 → 실행을 선택할 수 있습니다. 배포 페이지의 `SHA256SUMS.txt`와 비교할 수 있습니다.
 
 ```powershell
-Get-FileHash .\Translate-0.2.0-win-x64.zip -Algorithm SHA256
+Get-FileHash .\Translate-0.2.1-win-x64.zip -Algorithm SHA256
 ```
 
 </details>
