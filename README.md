@@ -9,12 +9,12 @@
 **Live translations for WeChat Input Method (微信输入法) and Microsoft Pinyin (微软拼音).**<br>
 See what every candidate means while you type pinyin, and insert the translation instead of the Chinese.
 
-[![Latest release](https://img.shields.io/github/v/release/Rickywu05/wetype-translate?label=release&color=0f7b6c)](https://github.com/Rickywu05/wetype-translate/releases/latest)
-[![Downloads](https://img.shields.io/github/downloads/Rickywu05/wetype-translate/total?color=0f7b6c)](https://github.com/Rickywu05/wetype-translate/releases)
+[![Latest release](https://img.shields.io/github/v/release/Rickywu05/translate?label=release&color=0f7b6c)](https://github.com/Rickywu05/translate/releases/latest)
+[![Downloads](https://img.shields.io/github/downloads/Rickywu05/translate/total?color=0f7b6c)](https://github.com/Rickywu05/translate/releases)
 [![Platform](https://img.shields.io/badge/platform-Windows%2010%20%7C%2011%20x64-0078d4)](#requirements)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
-[**Download**](https://github.com/Rickywu05/wetype-translate/releases/latest) ·
+[**Download**](https://github.com/Rickywu05/translate/releases/latest) ·
 [Quick start](#quick-start) ·
 [Features](#features) ·
 [Privacy](#privacy) ·
@@ -60,7 +60,7 @@ whatever app you're using — a chat, an email, a document — without leaving t
 ## Quick start
 
 1. **Download** `Translate-<version>-win-x64.zip` from
-   [Releases](https://github.com/Rickywu05/wetype-translate/releases/latest).
+   [Releases](https://github.com/Rickywu05/translate/releases/latest).
 2. **Unzip** it anywhere, for example `%LOCALAPPDATA%\Programs\Translate`.
 3. **Run** `Translate.exe`. No installer, admin rights, Python or other tools are needed.
 
@@ -153,7 +153,7 @@ Full details: [docs/privacy.md](docs/privacy.md).
 
 - **WeType updates.** Translate reads WeType's internal messages, which aren't a public interface. A WeType update can
   stop it from seeing candidates until Translate is updated — please
-  [open an issue](https://github.com/Rickywu05/wetype-translate/issues) with your WeType version.
+  [open an issue](https://github.com/Rickywu05/translate/issues) with your WeType version.
 - **Security software** may flag Translate, because it attaches to WeType's process (with Frida) to read candidates.
   Microsoft Pinyin needs no such attachment.
 - **Microsoft Pinyin on Windows 10**, and its *use previous version* setting, are untested.
@@ -259,7 +259,7 @@ See [docs/development.md](docs/development.md) for tests and the portable releas
 
 ## Feedback
 
-Found a bug, or does your WeType version not work? [Open an issue](https://github.com/Rickywu05/wetype-translate/issues)
+Found a bug, or does your WeType version not work? [Open an issue](https://github.com/Rickywu05/translate/issues)
 with your Windows and WeType versions. The log (Settings › Privacy › Open logs) holds states, counts and timings, never
 candidate text or translations.
 

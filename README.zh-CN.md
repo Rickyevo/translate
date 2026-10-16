@@ -9,12 +9,12 @@
 **微信输入法与微软拼音候选词实时翻译助手。**<br>
 输入拼音时查看候选译文，直接把所选译文输入当前应用。
 
-[![最新版本](https://img.shields.io/github/v/release/Rickywu05/wetype-translate?label=release&color=0f7b6c)](https://github.com/Rickywu05/wetype-translate/releases/latest)
-[![下载量](https://img.shields.io/github/downloads/Rickywu05/wetype-translate/total?color=0f7b6c)](https://github.com/Rickywu05/wetype-translate/releases)
+[![最新版本](https://img.shields.io/github/v/release/Rickywu05/translate?label=release&color=0f7b6c)](https://github.com/Rickywu05/translate/releases/latest)
+[![下载量](https://img.shields.io/github/downloads/Rickywu05/translate/total?color=0f7b6c)](https://github.com/Rickywu05/translate/releases)
 [![平台](https://img.shields.io/badge/platform-Windows%2010%20%7C%2011%20x64-0078d4)](#运行要求)
 [![许可证：MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
-[**下载**](https://github.com/Rickywu05/wetype-translate/releases/latest) · [快速开始](#快速开始) · [功能](#功能) · [隐私](#隐私) · [常见问题](#常见问题)
+[**下载**](https://github.com/Rickywu05/translate/releases/latest) · [快速开始](#快速开始) · [功能](#功能) · [隐私](#隐私) · [常见问题](#常见问题)
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="screenshots/readme/hero-en-dark.png">
@@ -48,7 +48,7 @@ Translate 是一个安静运行在 Windows 后台的微信输入法（WeType）�
 
 ## 快速开始
 
-1. 从 [Releases](https://github.com/Rickywu05/wetype-translate/releases/latest) 下载 `Translate-<version>-win-x64.zip`。
+1. 从 [Releases](https://github.com/Rickywu05/translate/releases/latest) 下载 `Translate-<version>-win-x64.zip`。
 2. 解压到固定位置，例如 `%LOCALAPPDATA%\Programs\Translate`。
 3. 运行 `Translate.exe`，无需安装 Python、Node.js 或其他开发工具，也无需管理员权限。
 
@@ -124,7 +124,7 @@ Translate 是一个安静运行在 Windows 后台的微信输入法（WeType）�
 
 ## 已知限制
 
-- 使用微信输入法内部消息，版本更新可能导致失效；请在 [Issues](https://github.com/Rickywu05/wetype-translate/issues) 提供版本信息。
+- 使用微信输入法内部消息，版本更新可能导致失效；请在 [Issues](https://github.com/Rickywu05/translate/issues) 提供版本信息。
 - Frida 会附加到输入法服务端进程，部分安全软件可能告警。
 - 尚未代码签名，首次启动可能出现 SmartScreen 提示。
 - 面板位置跟随微信输入法候选栏的实际绘制位置（不受布局、缩放比例和屏幕边缘影响）；缩放比例不同的多屏组合和 Windows ARM 尚未测试。
@@ -188,7 +188,7 @@ python -X utf8 scripts/package.py
 
 ## 反馈
 
-请在 [Issues](https://github.com/Rickywu05/wetype-translate/issues) 描述问题并附 Windows 和微信输入法版本。诊断日志可从设置 → 隐私打开，日志不含候选原文或译文。
+请在 [Issues](https://github.com/Rickywu05/translate/issues) 描述问题并附 Windows 和微信输入法版本。诊断日志可从设置 → 隐私打开，日志不含候选原文或译文。
 
 ## 许可证
 

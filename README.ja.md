@@ -9,12 +9,12 @@
 **WeChat Input Method と Microsoft Pinyin の変換候補をリアルタイムに翻訳。**<br>
 ピンイン入力中に候補の意味を確認し、翻訳をそのまま入力できます。
 
-[![最新リリース](https://img.shields.io/github/v/release/Rickywu05/wetype-translate?label=release&color=0f7b6c)](https://github.com/Rickywu05/wetype-translate/releases/latest)
-[![ダウンロード](https://img.shields.io/github/downloads/Rickywu05/wetype-translate/total?color=0f7b6c)](https://github.com/Rickywu05/wetype-translate/releases)
+[![最新リリース](https://img.shields.io/github/v/release/Rickywu05/translate?label=release&color=0f7b6c)](https://github.com/Rickywu05/translate/releases/latest)
+[![ダウンロード](https://img.shields.io/github/downloads/Rickywu05/translate/total?color=0f7b6c)](https://github.com/Rickywu05/translate/releases)
 [![Windows](https://img.shields.io/badge/platform-Windows%2010%20%7C%2011%20x64-0078d4)](#動作環境)
 [![MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
-[**ダウンロード**](https://github.com/Rickywu05/wetype-translate/releases/latest) · [クイックスタート](#クイックスタート) · [機能](#機能) · [プライバシー](#プライバシー) · [よくある質問](#よくある質問)
+[**ダウンロード**](https://github.com/Rickywu05/translate/releases/latest) · [クイックスタート](#クイックスタート) · [機能](#機能) · [プライバシー](#プライバシー) · [よくある質問](#よくある質問)
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="screenshots/readme/hero-ja-dark.png">
@@ -41,7 +41,7 @@ Translate は Windows の **WeChat Input Method（微信输入法・WeType）** 
 
 ## クイックスタート
 
-1. [Releases](https://github.com/Rickywu05/wetype-translate/releases/latest) から `Translate-<version>-win-x64.zip` をダウンロードします。
+1. [Releases](https://github.com/Rickywu05/translate/releases/latest) から `Translate-<version>-win-x64.zip` をダウンロードします。
 2. `%LOCALAPPDATA%\Programs\Translate` など、固定の場所に展開します。
 3. `Translate.exe` を実行します。Python、Node.js、開発ツール、管理者権限は不要です。
 
@@ -117,7 +117,7 @@ Translate は Windows の **WeChat Input Method（微信输入法・WeType）** 
 
 ## 既知の制限
 
-- WeType の内部メッセージを使用するため、更新によって動作しなくなる場合があります。[Issues](https://github.com/Rickywu05/wetype-translate/issues) にバージョンを添えて報告してください。
+- WeType の内部メッセージを使用するため、更新によって動作しなくなる場合があります。[Issues](https://github.com/Rickywu05/translate/issues) にバージョンを添えて報告してください。
 - Frida が入力メソッドのプロセスに接続するため、セキュリティソフトが警告する場合があります。
 - コード署名は未対応です。初回起動時に SmartScreen が警告する場合があります。
 - パネルの位置は、WeType のバーが実際に描かれた位置に合わせます（レイアウト、表示倍率、画面端を問いません）。倍率の異なる複数画面と Windows ARM は未検証です。
@@ -181,7 +181,7 @@ python -X utf8 scripts/package.py
 
 ## フィードバック
 
-[Issues](https://github.com/Rickywu05/wetype-translate/issues) に Windows と WeType のバージョンを添えて報告してください。診断ログは設定の Privacy から開けます。候補や翻訳は記録しません。
+[Issues](https://github.com/Rickywu05/translate/issues) に Windows と WeType のバージョンを添えて報告してください。診断ログは設定の Privacy から開けます。候補や翻訳は記録しません。
 
 ## ライセンス
 
