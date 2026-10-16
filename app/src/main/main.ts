@@ -9,7 +9,7 @@
 import { app, BrowserWindow, clipboard, globalShortcut, ipcMain, Menu, nativeTheme, screen, shell, type Rectangle } from 'electron'
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { createServer } from 'node:http'
-import { join, resolve } from 'node:path'
+import { dirname, join, resolve } from 'node:path'
 import { Backend, type BackendMessage } from './backend'
 import { log } from './log'
 import { placePreview, type Placement, type Rect } from '../../../prototype/src/layout/placePreview'
@@ -106,6 +106,30 @@ function loadSettings(): Settings {
   } catch {
     return { ...DEFAULT_SETTINGS } // missing or corrupt → defaults (the file is rewritten on next save)
   }
+}
+/* Setup progress (Overview › Finish setting up, step 3), kept in progress.json next to config.json and separate from
+   it, so saving settings can never reset it. A single flag: no text, times or counts. */
+const progressPath = () => join(dirname(configPath()), 'progress.json')
+function loadProgress(): { translatedOnce: boolean } {
+  try {
+    return { translatedOnce: JSON.parse(readFileSync(progressPath(), 'utf8')).translatedOnce === true }
+  } catch {
+    return { translatedOnce: false }
+  }
+}
+const progress = loadProgress()
+/** Step 3 is done once the panel has shown you a real translation (not a simulated one) for something you typed. */
+function noteTranslated() {
+  if (progress.translatedOnce || barHidden || paused || !panelWin?.isVisible()) return
+  if (!list?.items.some((i) => i.state === 'done' && !!i.translation && i.source !== 'sim')) return
+  progress.translatedOnce = true
+  try {
+    writeFileSync(progressPath(), JSON.stringify(progress))
+  } catch (e) {
+    log.warn('progress: ' + String(e))
+  }
+  log.info('setup: first translation shown')
+  settingsWin?.webContents.send('translated-once')
 }
 /** config.json never holds a key: keys live in Windows Credential Manager (written by the backend). */
 function saveSettingsFile(s: Settings) {
@@ -341,6 +365,7 @@ function pushState(notice?: Notice) {
 }
 function sendState(notice?: Notice) {
   const state: PanelState = { list, settings: eff(), theme: theme(), paused, hidden: barHidden, composition, notice }
+  noteTranslated()
   if (panelWin && !panelWin.isDestroyed()) panelWin.webContents.send('state', state)
   if (previewSeparate && previewWin && !previewWin.isDestroyed()) previewWin.webContents.send('state', state)
 }
@@ -375,6 +400,7 @@ function layoutPanel() {
   const cap = panelCapacity()
   setBoundsIfChanged(panelWin, { x: Math.round(x) - M, y: Math.round(y) - M, width: Math.max(panelContent.ew, cap.w) + 2 * M, height: Math.max(panelContent.eh, cap.h) + 2 * M })
   if (!panelWin.isVisible()) panelWin.showInactive()
+  noteTranslated() // translations can arrive before the window first shows
   layoutPreview()
 }
 
@@ -574,7 +600,7 @@ ipcMain.on('preview:need', (_e, need) => {
   previewNeed = need
   layoutPreview()
 })
-ipcMain.handle('settings:get', () => ({ saved: { ...settings, apiKey: '' }, theme: theme(), paused, version: app.getVersion() }))
+ipcMain.handle('settings:get', () => ({ saved: { ...settings, apiKey: '' }, theme: theme(), paused, translatedOnce: progress.translatedOnce, version: app.getVersion() }))
 ipcMain.handle('settings:save', (_e, s: Settings) => saveSettings(s))
 async function saveSettings(s: Settings) {
   // A newly typed key goes to the backend, which stores it in Windows Credential Manager; it is not kept here.

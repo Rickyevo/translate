@@ -22,6 +22,7 @@ const api: TranslateApi = {
   quit: () => ipcRenderer.send('quit'),
   onTheme: (cb) => void ipcRenderer.on('theme', (_e, t) => cb(t)),
   onPaused: (cb) => void ipcRenderer.on('paused', (_e, p) => cb(p)),
+  onTranslatedOnce: (cb) => void ipcRenderer.on('translated-once', () => cb()),
   svcTest: (service, key) => ipcRenderer.invoke('svc:test', service, key),
   svcModels: (service, key) => ipcRenderer.invoke('svc:models', service, key),
   svcKeys: () => ipcRenderer.invoke('svc:keys'),

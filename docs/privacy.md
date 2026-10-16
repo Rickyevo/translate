@@ -27,6 +27,7 @@ There is no account, no telemetry, no analytics and no update check.
 | What | Where | Notes |
 |---|---|---|
 | Settings | `%APPDATA%\Translate\config.json` | No key and no typed text |
+| Setup progress | `%APPDATA%\Translate\progress.json` | One flag: whether Translate has shown you a translation yet (for Settings › Overview). No text, times or counts |
 | API keys | Windows Credential Manager, `Translate:service:<provider>` | Read only by Translate; never written to files or logs, never shown back in Settings |
 | Translation cache (memory) | — | Every translation of this session; gone when Translate quits |
 | Translation cache (disk) | `%APPDATA%\Translate` | Only words of 1–4 Chinese characters that are general dictionary vocabulary, with their translation. Sentences, names, numbers, Latin letters and anything not in the dictionary never reach disk. Encrypted with Windows DPAPI for your Windows account. Clear it in Settings › Privacy |

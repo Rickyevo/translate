@@ -726,6 +726,7 @@ export function OverviewPage({ go }: { go: (p: 'general' | 'translation') => voi
   const { t } = useTranslation()
   const [d, set] = useDraft()
   const paused = useReview((r) => r.paused)
+  const translatedOnce = useReview((r) => r.translatedOnce)
   const setp = useReview((r) => r.setp)
   const lang = TARGETS.find((x) => x.id === d.target)!.native
   const [keys, setKeys] = useState<Partial<Record<ProviderId, boolean>>>({})
@@ -736,7 +737,7 @@ export function OverviewPage({ go }: { go: (p: 'general' | 'translation') => voi
   const steps: { done: boolean; title: string; desc?: string; go?: () => void }[] = [
     { done: true, title: t('settings.overview.step1'), go: () => go('general') },
     { done: serviceReady, title: t('settings.overview.step2'), desc: t('settings.overview.step2Desc'), go: () => go('translation') },
-    { done: false, title: t('settings.overview.step3'), desc: t('settings.overview.step3Desc') },
+    { done: translatedOnce, title: t('settings.overview.step3'), desc: t('settings.overview.step3Desc') },
   ]
   const done = steps.filter((s) => s.done).length
   return (

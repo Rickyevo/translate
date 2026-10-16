@@ -31,6 +31,7 @@ python -X utf8 scripts/make_release.py release-build/Translate-win32-x64
 |---|---|
 | `release_verify.py` on the folder extracted from the zip | 9 / 9 — backend is the bundled `TranslateEngine.exe`; 0 of 81 mapped files from outside the release; Frida, OpenSSL, ctypes load from the release; IME attached in 1.6 s; no visible windows; clean exit, no leftovers |
 | Start with Windows and panel footer (`autostart_test.py`) | 8 / 8 — Run entry added at start and on Save, removed when turned off; footer has no buttons or menus; version 0.1.0; nothing left behind |
+| Setup checklist step 3 (`setup_progress_test.py`) | 6 / 6 — not done on a fresh profile; done on the first real translation, live in an open Settings window; kept after Save and after a restart; `progress.json` holds one flag |
 | Stage-4 replay suite | 40 / 40 |
 | Translation pipeline vs local mock | 19 / 19 |
 | Settings UI (dropdowns, scrollbars) | 11 / 11 |
@@ -47,6 +48,9 @@ First public release; earlier builds were internal development builds numbered u
   removed when the setting is off. Test and verification runs (isolated profile) never touch it.
 - **Panel footer**: the ⋯ menu and the target-language dropdown are removed; the language pair is plain text.
   Pause/Hide/Settings/Quit remain on Ctrl+Alt+P, Alt+0, Ctrl+Alt+O and Settings › About.
+- **Setup checklist**: step 3 ("Type pinyin in any app") was hard-coded as not done. Main now records the first time
+  the visible panel shows a real (not simulated) translation in `progress.json` (separate from `config.json`, so a
+  settings save can't reset it), tells an open Settings window, and reports it at every start.
 - Settings › Overview: "Run Translate.exe again" instead of a Start menu entry the portable release doesn't have; the
   menu row is replaced by the hide shortcut and where to quit.
 - Version 0.1.0 in the app, package metadata, backend, docs and release files; MIT license in package metadata and the

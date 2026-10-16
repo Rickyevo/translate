@@ -21,6 +21,8 @@ First public release.
   for `Translate.exe`, re-synced at every start so a moved folder is picked up.
 - **Simpler panel footer.** The ⋯ menu and the target-language dropdown are gone; the footer shows the language pair
   as plain text. Pause, Hide, Settings and Quit stay available from shortcuts and Settings.
+- The setup checklist's last step ("Type pinyin in any app") never completed. It now completes the first time the
+  panel shows you a translation, updates an open Settings window right away, and is remembered across restarts.
 - Settings › Overview no longer points to a Start menu entry (the portable release has none) or to the removed menu.
 - `SHA256SUMS.txt` and `README-FIRST.txt` in the release had doubled carriage returns, which broke checksum tools.
 

@@ -35,9 +35,9 @@ function SettingsApp() {
   const eff = effectiveSettings(st)
 
   useEffect(() => {
-    api.getSettings().then(({ saved, theme, paused }) => {
+    api.getSettings().then(({ saved, theme, paused, translatedOnce }) => {
       useSettings.setState({ saved, draft: saved })
-      useReview.setState({ paused, page: page ?? 'overview' })
+      useReview.setState({ paused, translatedOnce, page: page ?? 'overview' })
       setOsTheme(theme)
       setReady(true)
     })
@@ -45,6 +45,8 @@ function SettingsApp() {
     // Keep the pause switch and sidebar in step when pausing happens outside this window. Setting the same value
     // back is a no-op, so this can't loop through the subscription below.
     api.onPaused((p) => useReview.getState().paused !== p && useReview.setState({ paused: p }))
+    // Setup step 3 completes live if the first translation appears while this window is open.
+    api.onTranslatedOnce(() => useReview.setState({ translatedOnce: true }))
     // Store → main: save, live draft, pause.
     const unSettings = useSettings.subscribe((s, prev) => {
       if (s.saved !== prev.saved)

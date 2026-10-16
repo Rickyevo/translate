@@ -39,6 +39,8 @@ interface Review {
   paused: boolean
   barHidden: boolean
   settingsOpen: boolean
+  /** Setup step 3: Translate has shown a real translation at least once (persisted by the app). */
+  translatedOnce: boolean
   setp: (p: Partial<Omit<Review, 'setp'>>) => void
 }
 
@@ -55,6 +57,7 @@ export const useReview = create<Review>((set) => ({
   paused: false,
   barHidden: false,
   settingsOpen: false,
+  translatedOnce: false,
   setp: (p) => set(p),
 }))
 

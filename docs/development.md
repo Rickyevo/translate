@@ -68,6 +68,7 @@ python -X utf8 -m unittest discover -s ../backend/tests                   # back
 python -X utf8 scripts/stage4_replay_test.py [--packaged]                 # real adapter path, synthetic bytes, no input
 python -X utf8 scripts/stage5_service_test.py [--packaged]                # translation pipeline vs a local mock service
 python -X utf8 scripts/stage5_real_test.py                                # your configured service, sample texts, no input
+python -X utf8 scripts/setup_progress_test.py                             # setup checklist step 3 (packaged)
 python -X utf8 scripts/autostart_test.py                                   # Start with Windows + panel footer (packaged)
 python -X utf8 scripts/settings_ui_probe.py                               # settings dropdowns and scrollbars
 python -X utf8 scripts/release_verify.py <release folder>                 # release in an environment without dev tools
