@@ -33,7 +33,7 @@ screenshots/stage3/real-panel-preview-*.png
 Thumbs.db
 Desktop.ini
 .DS_Store
-.claude/settings.local.json
+.claude/
 
 # Secrets — keys belong in Windows Credential Manager, never in files
 .env

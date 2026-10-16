@@ -1,5 +1,7 @@
 <div align="center">
 
+**English** · [简体中文](README.zh-CN.md) · [日本語](README.ja.md) · [한국어](README.ko.md)
+
 <img src="assets/icons/app/app-256.png" alt="Translate app icon" width="96" height="96">
 
 # Translate
@@ -109,7 +111,7 @@ plan-based subscriptions (OpenCode Go, for example) are intended for coding tool
 |---|---|
 | <kbd>Alt</kbd>+<kbd>1</kbd> … <kbd>9</kbd> | Insert that candidate's translation |
 | <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>1</kbd> … <kbd>9</kbd> | Copy it instead |
-| <kbd>Alt</kbd>+<kbd>\`</kbd> | Show or hide the full text |
+| <kbd>Alt</kbd>+<kbd>&#96;</kbd> | Show or hide the full text |
 | <kbd>Alt</kbd>+<kbd>↑</kbd> / <kbd>↓</kbd> | Preview another candidate |
 | <kbd>Alt</kbd>+<kbd>PgUp</kbd> / <kbd>PgDn</kbd> | Scroll the full text |
 | <kbd>Alt</kbd>+<kbd>0</kbd> | Hide or show the panel |
