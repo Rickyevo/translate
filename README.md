@@ -20,7 +20,7 @@ OpenAI/Claude/Gemini-compatible endpoint). Keys are stored in Windows Credential
 | `docs/archive/` | Stage-1 prototype source (incl. removed direction A) |
 | `assets/icons/app/` | Final app icon (Overlap): `translate.ico`, PNG/SVG, monochrome glyphs |
 | `assets/icons/concepts/` | All four icon concepts (reference) |
-| `docs/research/` | Linear articles (saved), images and study notes |
+| `docs/research/` | Design study notes (links to the sources) |
 | `app/` | Electron 44 app: `src/main` (windows, hotkeys, backend supervisor), `src/preload`, `src/renderer` (panel, settings) |
 | `app/scripts/` | Build/package, real-desktop focus test, resource measurement + report |
 | `backend/` | Python backend (stdlib + ctypes + vendored Frida): protocol, WeType adapter (`translate_backend/wetype/`), Win32 input and window events, simulated translations, fixture source; `tests/` (no IME, no input); `tools/` research capture tools (dev only, not packaged) |

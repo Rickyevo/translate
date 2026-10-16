@@ -1,12 +1,12 @@
 # Linear reference study — what transfers to a typing companion
 
-Sources (read in full, saved alongside this note):
+Sources (read in full; not copied into this repository):
 
-- `how-we-redesigned-the-linear-ui.md` — *How we redesigned the Linear UI (part Ⅱ)*, 2024
-- `behind-the-latest-design-refresh.md` — *A calmer interface for a product in motion*, 2026 refresh
-- `settings-are-not-a-design-failure.md` — *Settings are not a design failure*
-- `linear-shots/` — product images published in those articles (light/dark themes, sidebar alignment
-  grid, inbox view after the redesign, border refresh, tab bar refresh)
+- [How we redesigned the Linear UI (part Ⅱ)](https://linear.app/now/how-we-redesigned-the-linear-ui), 2024
+- [A calmer interface for a product in motion](https://linear.app/now/behind-the-latest-design-refresh), 2026 refresh
+- [Settings are not a design failure](https://linear.app/now/settings-are-not-a-design-failure)
+- the product images published in those articles (light/dark themes, sidebar alignment grid, inbox view after the
+  redesign, border refresh, tab bar refresh)
 
 ## Limits of this study
 

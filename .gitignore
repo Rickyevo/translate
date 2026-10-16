@@ -40,3 +40,8 @@ Desktop.ini
 .env.*
 *.pem
 *.key
+
+# Never commit translation caches (they hold what was typed) or saved copies of other people's articles/images
+translate-cache*.json
+docs/research/*
+!docs/research/*-notes.md

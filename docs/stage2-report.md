@@ -36,14 +36,14 @@ the right, card-based settings, persistent save footer).
 
 ### Research
 
-Notes: `docs/research/icons/`. Microsoft's guidelines (saved as `ms-icon-guidelines.json`):
+Microsoft's [app icon design guidelines](https://learn.microsoft.com/en-us/windows/apps/design/style/iconography/app-icon-design):
 - one metaphor, no typography;
 - a 48 px grid with 2 px exterior radii;
 - at most a subtle 120° gradient;
 - sizes 16, 20, 24, 32, 48 and 256 at minimum;
 - separate light and dark assets.
 
-The reference icons in `refs-sheet.png` show the pattern this product should break:
+Existing translation app icons (studied, not included here) show the pattern this product should break:
 - **Google Translate** (G/文) and **LibreTranslate** (L/众) are built from letters and characters.
 - **DeepL** uses a speech-bubble outline with network nodes.
 
