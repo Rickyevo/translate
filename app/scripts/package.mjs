@@ -32,7 +32,7 @@ const paths = await packager({
   overwrite: true,
   extraResource: [STAGE, PY_STAGE],
   appVersion: JSON.parse((await import('node:fs')).readFileSync('package.json', 'utf8')).version,
-  appCopyright: 'Translate',
+  appCopyright: 'Copyright (c) 2026 Rickywu05. MIT License.',
   win32metadata: { CompanyName: 'Translate', FileDescription: 'Translate', ProductName: 'Translate' },
   // Only the built output and package.json go into app.asar.
   ignore: (p) => p !== '' && !/^\/(dist|package\.json)(\/|$)/.test(p),

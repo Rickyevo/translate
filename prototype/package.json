@@ -1,7 +1,8 @@
 {
   "name": "translate-prototype",
-  "version": "1.0.0",
-  "description": "Stage 1 design prototypes",
+  "version": "0.1.0",
+  "description": "Design lab and shared UI for Translate",
+  "license": "MIT",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",

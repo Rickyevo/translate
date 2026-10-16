@@ -14,7 +14,7 @@ specific than "translate" is easier to find, for example `wetype-translate`.
 
 ## 2. Fill in the repository name
 
-`docs/release-notes/0.6.1.md` links to the README and changelog with the placeholder `OWNER/REPO`. Replace it with the
+`docs/release-notes/0.1.0.md` links to the README and changelog with the placeholder `OWNER/REPO`. Replace it with the
 real `owner/name`.
 
 ## 3. Push
@@ -31,14 +31,14 @@ is not included; `docs/development.md` explains how to restore it.
 
 Releases › Draft a new release:
 
-- **Tag:** `v0.6.1` on `main`. **Title:** `Translate 0.6.1`.
-- **Notes:** the contents of `docs/release-notes/0.6.1.md`.
-- **Assets:** `release/Translate-0.6.1-win-x64.zip` and `release/SHA256SUMS.txt`.
+- **Tag:** `v0.1.0` on `main`. **Title:** `Translate 0.1.0`.
+- **Notes:** the contents of `docs/release-notes/0.1.0.md`.
+- **Assets:** `release/Translate-0.1.0-win-x64.zip` and `release/SHA256SUMS.txt`.
 
 Or with the GitHub CLI:
 
 ```
-gh release create v0.6.1 release/Translate-0.6.1-win-x64.zip release/SHA256SUMS.txt --title "Translate 0.6.1" --notes-file docs/release-notes/0.6.1.md
+gh release create v0.1.0 release/Translate-0.1.0-win-x64.zip release/SHA256SUMS.txt --title "Translate 0.1.0" --notes-file docs/release-notes/0.1.0.md
 ```
 
 ## Checked before publishing

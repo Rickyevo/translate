@@ -30,15 +30,13 @@ export interface TranslateApi {
   onState(cb: (s: PanelState) => void): void
   onKey(cb: (k: PanelKey) => void): void
   onPreviewPlacement(cb: (p: PreviewPlacementMsg) => void): void
-  /** Content size, plus how far open menus extend (from the content's top-left). */
+  /** Content size, plus how far open menus (the row context menu) extend (from the content's top-left). */
   panelSize(w: number, h: number, extentW: number, extentH: number): void
   panelRows(rows: { n: number; x: number; y: number; w: number; h: number }[]): void
   mouseInside(win: 'panel' | 'preview', inside: boolean): void
   insert(gen: number, n: number): void
   copy(gen: number, n: number): void
   retry(gen: number, n: number): void
-  setTarget(t: Target): void
-  menu(action: 'pause' | 'hide' | 'settings' | 'quit'): void
   previewNeed(need: { wanted: boolean; requested: boolean; w: number; h: number }): void
   // settings
   getSettings(): Promise<{ saved: Settings; theme: ThemeName; paused: boolean; version: string }>
@@ -48,7 +46,7 @@ export interface TranslateApi {
   windowAction(a: 'close' | 'minimize'): void
   quit(): void
   onTheme(cb: (t: ThemeName) => void): void
-  /** Pause state changed elsewhere (panel ⋯ menu, Ctrl+Alt+P). */
+  /** Pause state changed elsewhere (Ctrl+Alt+P). */
   onPaused(cb: (paused: boolean) => void): void
   // settings → backend (see prototype/src/settings/bridge.ts)
   svcTest(service: unknown, key: string): Promise<{ ok: boolean; ms?: number; error?: string; status?: number; detail?: string }>

@@ -30,9 +30,10 @@ There is no account, no telemetry, no analytics and no update check.
 | API keys | Windows Credential Manager, `Translate:service:<provider>` | Read only by Translate; never written to files or logs, never shown back in Settings |
 | Translation cache (memory) | — | Every translation of this session; gone when Translate quits |
 | Translation cache (disk) | `%APPDATA%\Translate` | Only words of 1–4 Chinese characters that are general dictionary vocabulary, with their translation. Sentences, names, numbers, Latin letters and anything not in the dictionary never reach disk. Encrypted with Windows DPAPI for your Windows account. Clear it in Settings › Privacy |
+| Start with Windows | `HKCU\Software\Microsoft\Windows\CurrentVersion\Run`, value `Translate` | The path to `Translate.exe`; removed when you turn the setting off |
 | Diagnostic log | `%APPDATA%\Translate\logs` | States, counts and timings only — never candidate text or translations. Capped at 2 MB. Open it from Settings › Privacy |
 
 ## Removing everything
 
-Quit Translate (panel ⋯ menu or Settings › About), delete its folder and `%APPDATA%\Translate`, and remove the
+Turn off Settings › General › Start with Windows and save, quit Translate (Settings › About), delete its folder and `%APPDATA%\Translate`, and remove the
 `Translate:service:` entries in Windows Credential Manager › Windows Credentials.

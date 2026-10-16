@@ -795,10 +795,11 @@ export function OverviewPage({ go }: { go: (p: 'general' | 'translation') => voi
         </Section>
 
         <Section title={t('settings.overview.reach')} desc={t('settings.overview.reachDesc')}>
-          <ReachRow icon={<Kbd>⊞</Kbd>} label={t('settings.overview.reachRelaunch')} />
+          <ReachRow icon={<Kbd>.exe</Kbd>} label={t('settings.overview.reachRelaunch')} />
           <ReachRow icon={<Shortcut keys={d.shortcuts.settings} />} label={t('settings.general.sc.settings')} />
           <ReachRow icon={<Shortcut keys={d.shortcuts.pause} />} label={t('settings.general.sc.pause')} />
-          <ReachRow icon={<Kbd>⋯</Kbd>} label={t('settings.overview.reachBar')} />
+          <ReachRow icon={<Shortcut keys={d.shortcuts.toggleBar} />} label={t('settings.general.sc.toggleBar')} />
+          <ReachRow icon={<Power className="size-3.5 text-fg-3" />} label={t('settings.overview.reachQuit')} />
         </Section>
       </div>
     </>

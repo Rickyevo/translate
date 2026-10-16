@@ -285,9 +285,9 @@
       "pause": "Pause translation",
       "reach": "Reaching Translate",
       "reachDesc": "There's no tray icon. Use these instead:",
-      "reachRelaunch": "Open Translate again from Start",
+      "reachRelaunch": "Run Translate.exe again",
       "reachShortcut": "Press {{key}}",
-      "reachBar": "Use the panel's ⋯ menu",
+      "reachQuit": "Quit: Settings › About",
       "active": "Translate while typing"
     }
   },

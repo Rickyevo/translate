@@ -43,10 +43,11 @@ Translate isn't code-signed yet, so Windows SmartScreen may warn on first launch
 **Run anyway**. You can check the download against `SHA256SUMS.txt` from the same release:
 
 ```powershell
-Get-FileHash .\Translate-0.6.1-win-x64.zip -Algorithm SHA256
+Get-FileHash .\Translate-0.1.0-win-x64.zip -Algorithm SHA256
 ```
 
-Nothing appears when it starts: Translate runs in the background. Type pinyin with WeChat Input Method in any app and
+Nothing appears when it starts: Translate runs in the background, and from then on starts with Windows (you can turn
+that off in Settings › General). Type pinyin with WeChat Input Method in any app and
 the panel appears under the candidates.
 
 ## Set up a translation service
@@ -80,10 +81,11 @@ intended for coding tools only.
 | Ctrl+Alt+P | Pause or resume translating |
 | Ctrl+Alt+O | Open Settings |
 
-The panel's **⋯** menu has Pause, Hide, Settings and Quit; the **中 → EN** label switches the target language, and
-right-clicking a row inserts, copies or retries it. To insert with the mouse, turn on **Settings › Appearance ›
-Keep the panel clickable**: WeType's candidate window covers the area right under the candidates and takes all clicks
-there, so this setting moves the panel clear of it.
+Right-click a row to insert, copy or retry it. The panel's footer shows the language pair (**中 → EN**); the target
+language, pausing and quitting (under **About**) are in Settings.
+
+To insert with the mouse, turn on **Settings › Appearance › Keep the panel clickable**: WeType's candidate window
+covers the area right under the candidates and takes all clicks there, so this setting moves the panel clear of it.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="screenshots/readme/hero-ja-dark.png">
@@ -99,15 +101,15 @@ there, so this setting moves the panel clear of it.
   candidates.
 - **Tested on one PC** so far: Windows 11, one monitor, 100 % scaling. Multiple monitors, other display scaling and
   Windows on ARM are untested.
-- **No installer, Start menu entry or auto-start yet.** The "Start with Windows" switch in Settings has no effect in
-  this version; to start Translate with Windows, put a shortcut to `Translate.exe` in `shell:startup`.
+- **No installer or Start menu entry.** Translate starts with Windows by default (Settings › General › Start with
+  Windows) from wherever you unzipped it; if you move the folder, run `Translate.exe` once from the new place.
 - **Not code-signed.**
 - The built-in dictionary covers Chinese → English only.
 
 ## Uninstall
 
-Quit Translate (panel ⋯ › Quit, or Settings › About), then delete its folder and `%APPDATA%\Translate`. Remove saved
-keys in Windows Credential Manager › Windows Credentials: entries starting with `Translate:service:`.
+Turn off **Settings › General › Start with Windows** and press Save, then quit Translate (Settings › About › Quit).
+Delete its folder and `%APPDATA%\Translate`. Remove saved keys in Windows Credential Manager › Windows Credentials: entries starting with `Translate:service:`.
 
 ## How it works
 

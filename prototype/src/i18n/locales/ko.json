@@ -285,9 +285,9 @@
       "pause": "번역 일시 중지",
       "reach": "Translate 여는 방법",
       "reachDesc": "트레이 아이콘이 없습니다. 대신 다음을 사용하세요:",
-      "reachRelaunch": "시작 메뉴에서 Translate 다시 열기",
+      "reachRelaunch": "Translate.exe 다시 실행",
       "reachShortcut": "{{key}} 누르기",
-      "reachBar": "패널의 ⋯ 메뉴 사용",
+      "reachQuit": "종료: 설정 › 정보",
       "active": "입력 중 번역"
     }
   },

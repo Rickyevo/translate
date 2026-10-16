@@ -1,9 +1,11 @@
 {
   "name": "translate",
   "productName": "Translate",
-  "version": "0.6.1",
+  "version": "0.1.0",
   "private": true,
-  "description": "Real-time translation companion for input-method candidates",
+  "description": "Live translations of WeChat Input Method candidates on Windows",
+  "author": "Rickywu05",
+  "license": "MIT",
   "main": "dist/main/main.js",
   "type": "commonjs",
   "devDependencies": {

@@ -133,7 +133,7 @@ function PanelApp() {
   // menus (Radix poppers) opening or closing, not about every text swap in the rows.
   // A popper is inserted before it is positioned (floating-ui moves it a frame later via its style, and its
   // content animates in), so measuring only at insertion saw a menu at the origin and the window never grew to fit
-  // it: the ⋯ menu opened outside its window, invisible and unclickable. The wrapper itself is therefore observed
+  // it: a menu (the row context menu) opened outside its window, invisible and unclickable. The wrapper itself is therefore observed
   // (position via style, size via ResizeObserver) for as long as it is open.
   const reportRef = useRef<() => void>(() => {})
   useLayoutEffect(() => {
@@ -201,11 +201,6 @@ function PanelApp() {
             onInsert={(n) => api.insert(list.gen, n)}
             onCopy={(n) => api.copy(list.gen, n)}
             onRetry={(n) => api.retry(list.gen, n)}
-            onTarget={(t) => api.setTarget(t)}
-            onPause={() => api.menu('pause')}
-            onHide={() => api.menu('hide')}
-            onSettings={() => api.menu('settings')}
-            onQuit={() => api.menu('quit')}
           />
           {s.notice && (
             <div className="anim-fade pointer-events-none absolute inset-x-1 bottom-1 z-10 flex justify-center">

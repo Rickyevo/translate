@@ -570,18 +570,6 @@ ipcMain.on('mouse', (_e, which: 'panel' | 'preview', inside: boolean) => {
 ipcMain.on('panel:insert', (_e, gen: number, n: number) => insert(gen, n))
 ipcMain.on('panel:copy', (_e, gen: number, n: number) => copy(gen, n))
 ipcMain.on('panel:retry', (_e, gen: number, n: number) => backend.send('retry', { gen, n }))
-ipcMain.on('panel:target', (_e, t: Target) => {
-  settings = { ...settings, target: t }
-  saveSettingsFile(settings)
-  backend.send('config.set', { config: backendConfig() })
-  pushState()
-})
-ipcMain.on('panel:menu', (_e, a: string) => {
-  if (a === 'pause') setPaused(!paused)
-  if (a === 'hide') (barHidden = true), hidePanel(), pushState()
-  if (a === 'settings') openSettings()
-  if (a === 'quit') app.quit()
-})
 ipcMain.on('preview:need', (_e, need) => {
   previewNeed = need
   layoutPreview()
@@ -594,6 +582,7 @@ async function saveSettings(s: Settings) {
   settings = { ...s, apiKey: '' }
   draft = null
   saveSettingsFile(settings)
+  syncLoginItem()
   backend.send('config.set', { config: backendConfig() })
   pushState()
   layoutPanel()
@@ -624,11 +613,33 @@ nativeTheme.on('updated', () => {
   settingsWin?.webContents.send('theme', theme())
 })
 
+/* ------------------------------------------------------------------ start with Windows */
+
+// A per-user Run entry (HKCU\Software\Microsoft\Windows\CurrentVersion\Run, "Translate") pointing at this
+// Translate.exe. Synced at every start and on Save, so a portable copy that was moved re-registers its new path the next
+// time it runs. Packaged builds with the real profile only: test and verification runs (isolated profile) never touch
+// it, except the autostart test itself (TRANSLATE_LOGIN_ITEM_TEST).
+const LOGIN_ITEM = { name: 'Translate', path: process.execPath }
+const loginItems = app.isPackaged && (!process.env.TRANSLATE_USER_DATA || !!process.env.TRANSLATE_LOGIN_ITEM_TEST)
+function syncLoginItem() {
+  if (!loginItems) return
+  try {
+    // Always written: getLoginItemSettings doesn't reliably report an entry written for a custom name/path, so
+    // checking it first could leave a stale entry behind when the setting is turned off.
+    const want = !!settings.autostart
+    app.setLoginItemSettings({ ...LOGIN_ITEM, openAtLogin: want })
+    log.info(`start with Windows: ${want ? 'on' : 'off'}`)
+  } catch (e) {
+    log.warn('start with Windows: ' + String(e))
+  }
+}
+
 /* ------------------------------------------------------------------ lifecycle */
 
 app.whenReady().then(() => {
   backend.start()
   registerGlobal()
+  syncLoginItem()
   if (testPort) startTestControl(testPort)
   else if (observePort) startTestControl(observePort, true)
   log.info(`started v${app.getVersion()} packaged=${app.isPackaged} keepPanel=${keepPanel} previewSeparate=${previewSeparate}`)

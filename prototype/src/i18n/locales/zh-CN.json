@@ -285,9 +285,9 @@
       "pause": "暂停翻译",
       "reach": "如何找到 Translate",
       "reachDesc": "没有托盘图标，可以通过以下方式打开：",
-      "reachRelaunch": "从开始菜单再次打开 Translate",
+      "reachRelaunch": "再次运行 Translate.exe",
       "reachShortcut": "按 {{key}}",
-      "reachBar": "使用翻译面板的 ⋯ 菜单",
+      "reachQuit": "退出：设置 › 关于",
       "active": "输入时翻译"
     }
   },

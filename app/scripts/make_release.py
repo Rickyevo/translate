@@ -36,20 +36,21 @@ FIRST SETUP
 
 USE
   Alt+1...9 insert a translation, Alt+Shift+1...9 copy it, Alt+0 hides the panel, Alt+` shows the full text.
-  Ctrl+Alt+P pauses or resumes. Quit from the panel's ... menu or Settings > About.
+  Ctrl+Alt+P pauses or resumes. Right-click a row to insert, copy or retry. Quit from Settings > About.
 
 PRIVACY
   Candidates you type are translated only by the service you choose (or not at all in Local-only mode).
   Your API key is kept in Windows Credential Manager. Logs never contain what you type.
   Only short dictionary words are cached on disk (encrypted for your Windows account).
 
-REMOVE
-  Quit Translate, delete this folder and %APPDATA%\\Translate. API keys: Windows Credential Manager >
-  Windows Credentials > entries starting with "Translate:service:".
-
 START WITH WINDOWS
-  The "Start with Windows" switch in Settings has no effect in this version. To start Translate with Windows, press
-  Win+R, open shell:startup and put a shortcut to Translate.exe there.
+  After its first run, Translate starts with Windows from this folder (Settings > General > Start with Windows).
+  If you move the folder, run Translate.exe once from the new place.
+
+REMOVE
+  Turn off Settings > General > Start with Windows and Save, quit Translate (Settings > About), then delete this
+  folder and %APPDATA%\\Translate. API keys: Windows Credential Manager > Windows Credentials > entries starting
+  with "Translate:service:".
 
 Translate is an independent project, not made by, affiliated with or endorsed by Tencent or WeChat.
 It is tested with WeChat Input Method 3.0.0.34; other versions may not work.

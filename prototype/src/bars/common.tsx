@@ -1,20 +1,12 @@
-import type { ReactNode } from 'react'
-import { useTranslation } from 'react-i18next'
-import { BookOpen, CircleAlert, CloudOff, FlaskConical, HardDrive, KeyRound, Pause, MoreHorizontal, Settings2, EyeOff, Power, Play } from 'lucide-react'
+import { BookOpen, CircleAlert, CloudOff, FlaskConical, HardDrive, KeyRound, Pause } from 'lucide-react'
 import type { Banner, CandidateList, Item, Target } from '../data/scenarios'
 import type { Settings } from '../store'
-import { Menu, MenuContent, MenuItem, MenuSeparator, MenuTrigger, cx } from '../ui/primitives'
 
 export interface BarActions {
   paused: boolean
   onInsert?: (n: number) => void
   onCopy?: (n: number) => void
   onRetry?: (n: number) => void
-  onTarget?: (t: Target) => void
-  onPause?: () => void
-  onHide?: () => void
-  onSettings?: () => void
-  onQuit?: () => void
 }
 
 export interface BarProps extends BarActions {
@@ -35,7 +27,6 @@ export interface BarProps extends BarActions {
   placement?: 'below' | 'above'
   /** Horizontal room: peek flips side near the right screen edge. */
   edge?: 'none' | 'right'
-  menuOpen?: boolean
   /** Changes when a new composition starts; width may only grow within one. */
   compositionKey?: unknown
   /** Row whose context menu is open (kept highlighted). */
@@ -72,50 +63,6 @@ export function bannerMeta(b: Banner) {
 }
 
 export const toneText = { warning: 'text-warning', danger: 'text-danger', neutral: 'text-fg-3' }
-
-/** The bar's ⋯ menu: the tray-free home for pause / settings / quit. */
-export function BarMenu({ paused, onPause, onHide, onSettings, onQuit, s, trigger, open }: BarActions & { s: Settings; trigger: ReactNode; open?: boolean }) {
-  const { t } = useTranslation()
-  return (
-    <Menu modal={false} open={open}>
-      <MenuTrigger asChild>{trigger}</MenuTrigger>
-      <MenuContent side="bottom" align="end">
-        <MenuItem icon={paused ? <Play className="size-3.5" /> : <Pause className="size-3.5" />} shortcut={s.shortcuts.pause} onSelect={onPause}>
-          {paused ? t('bar.menu.resume') : t('bar.menu.pause')}
-        </MenuItem>
-        <MenuItem icon={<EyeOff className="size-3.5" />} shortcut={s.shortcuts.toggleBar} onSelect={onHide}>
-          {t('bar.menu.hide')}
-        </MenuItem>
-        <MenuItem icon={<Settings2 className="size-3.5" />} shortcut={s.shortcuts.settings} onSelect={onSettings}>
-          {t('bar.menu.settings')}
-        </MenuItem>
-        <MenuSeparator />
-        <MenuItem icon={<Power className="size-3.5" />} onSelect={onQuit}>
-          {t('bar.menu.quit')}
-        </MenuItem>
-      </MenuContent>
-    </Menu>
-  )
-}
-
-export function MoreButton({ label, className, ...p }: { label: string; className?: string } & React.ButtonHTMLAttributes<HTMLButtonElement>) {
-  return (
-    <button
-      type="button"
-      aria-label={label}
-      title={label}
-      tabIndex={-1}
-      onMouseDown={(e) => e.preventDefault() /* never take focus from the input field */}
-      className={cx(
-        'inline-flex shrink-0 items-center justify-center rounded-sm text-fg-3 transition-colors duration-[var(--dur-1)] hover:bg-hover hover:text-fg-2 data-[state=open]:bg-press data-[state=open]:text-fg',
-        className,
-      )}
-      {...p}
-    >
-      <MoreHorizontal className="size-3.5" strokeWidth={2} />
-    </button>
-  )
-}
 
 export function insertable(item: Item) {
   return item.state === 'done' && !!item.translation

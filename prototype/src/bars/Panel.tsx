@@ -1,17 +1,16 @@
 import { useLayoutEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import * as RCtx from '@radix-ui/react-context-menu'
-import * as RMenu from '@radix-ui/react-dropdown-menu'
-import { Check, ChevronDown, CircleAlert, Copy, CornerDownLeft, Pause, RotateCw } from 'lucide-react'
-import { TARGETS, estimateWidth, type Item, type Target } from '../data/scenarios'
+import { CircleAlert, Copy, CornerDownLeft, Pause, RotateCw } from 'lucide-react'
+import { estimateWidth, type Item, type Target } from '../data/scenarios'
 import { Kbd, cx } from '../ui/primitives'
 import { POPPER, useScope } from '../ui/scope'
-import { BarMenu, MoreButton, TARGET_CODE, bannerMeta, insertable, langAttr, toneText, type BarProps } from './common'
+import { TARGET_CODE, bannerMeta, insertable, langAttr, toneText, type BarProps } from './common'
 
 /**
  * The translation panel.
  * Vertical list: key chip · translation · original candidate, plus a 24px footer
- * (language pair / status · ⋯). Width fits content within [216, 320] px @13px and
+ * (language pair or status, plain text). Width fits content within [216, 320] px @13px and
  * only grows during one composition, so rows never jump while results arrive.
  */
 export function Panel(p: BarProps) {
@@ -61,7 +60,6 @@ export function Panel(p: BarProps) {
               <Kbd key={k}>{k}</Kbd>
             ))}
           </span>
-          <BarMenu {...p} s={s} open={p.menuOpen} trigger={<MoreButton label={t('bar.more')} className="-mr-1 size-[22px]" />} />
         </div>
       </div>
     )
@@ -135,17 +133,15 @@ export function Panel(p: BarProps) {
           })}
         </div>
 
-        <div className="flex h-6 items-center gap-1 border-t border-line-soft pl-1.5 pr-0.5 text-12">
+        <div className="flex h-6 items-center gap-1 border-t border-line-soft px-1.5 text-12">
           {meta ? (
             <span className={cx('flex min-w-0 items-center gap-1.5 pl-0.5', meta.tone === 'danger' ? 'text-danger-text' : 'text-fg-3')}>
               <meta.icon className={cx('size-3 shrink-0', toneText[meta.tone])} strokeWidth={2.25} />
               <span className="truncate">{t(meta.long)}</span>
             </span>
           ) : (
-            <TargetSwitch target={s.target} onTarget={p.onTarget} />
+            <LanguagePair target={s.target} />
           )}
-          <span className="ml-auto" />
-          <BarMenu {...p} s={s} open={p.menuOpen} trigger={<MoreButton label={t('bar.more')} className="size-5" />} />
         </div>
       </div>
 
@@ -186,47 +182,17 @@ function RowMenu({ it, p, children }: { it: Item; p: BarProps; children: React.R
   )
 }
 
-/** Footer language pair doubles as a quick target-language switch. */
-function TargetSwitch({ target, onTarget }: { target: Target; onTarget?: (t: Target) => void }) {
-  const { t } = useTranslation()
-  const { portal } = useScope()
+/** Footer language pair: plain text (the target language is chosen in Settings). */
+function LanguagePair({ target }: { target: Target }) {
   return (
-    <RMenu.Root modal={false}>
-      <RMenu.Trigger asChild>
-        <button
-          type="button"
-          tabIndex={-1}
-          aria-label={t('bar.targetMenu')}
-          onMouseDown={(e) => e.preventDefault()}
-          className="flex h-5 items-center gap-1 rounded-sm px-1 text-fg-3 transition-colors hover:bg-hover hover:text-fg-2 data-[state=open]:bg-press data-[state=open]:text-fg"
-        >
-          <span className="size-1.5 rounded-full bg-success" />
-          <span lang="zh-CN" className="ml-0.5">
-            中
-          </span>
-          <span className="text-fg-4">→</span>
-          <span>{TARGET_CODE[target]}</span>
-          <ChevronDown className="size-3 opacity-70" strokeWidth={2} />
-        </button>
-      </RMenu.Trigger>
-      <RMenu.Portal container={portal}>
-        <RMenu.Content avoidCollisions={POPPER.avoidCollisions} side="bottom" align="start" sideOffset={6} className="anim-pop z-50 min-w-[168px] rounded-lg bg-raised p-1 text-fg shadow-pop" onCloseAutoFocus={(e) => e.preventDefault()}>
-          <div className="px-2 pb-1 pt-0.5 text-12 text-fg-3">{t('bar.targetMenu')}</div>
-          {TARGETS.map((x) => (
-            <RMenu.Item
-              key={x.id}
-              onSelect={() => onTarget?.(x.id)}
-              className="flex h-7 cursor-default select-none items-center gap-2 rounded-sm px-2 text-13 outline-none data-[highlighted]:bg-hover"
-            >
-              <span className="flex-1" lang={x.id}>
-                {x.native}
-              </span>
-              {x.id === target && <Check className="size-3.5 text-accent-text" strokeWidth={2.25} />}
-            </RMenu.Item>
-          ))}
-        </RMenu.Content>
-      </RMenu.Portal>
-    </RMenu.Root>
+    <span className="flex h-5 items-center gap-1 px-1 text-fg-3">
+      <span className="size-1.5 rounded-full bg-success" />
+      <span lang="zh-CN" className="ml-0.5">
+        中
+      </span>
+      <span className="text-fg-4">→</span>
+      <span>{TARGET_CODE[target]}</span>
+    </span>
   )
 }
 

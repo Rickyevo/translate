@@ -1,33 +1,30 @@
 # Changelog
 
-## 0.6.1 — 2026-10-16
+## 0.1.0 — 2026-10-16
 
 First public release.
 
-- The floating panel and the full-text preview are flat: a thin border instead of a drop shadow.
-- The release zip now includes Translate's own license (`LICENSE.txt`); Electron's is `LICENSE.electron.txt`.
+- Translations of WeChat Input Method candidates in a panel under the candidate window, while you type pinyin.
+- Insert a translation with Alt+1…9 or a click, or copy it with Alt+Shift+1…9, without taking focus from your app.
+- Full-text preview for long candidates (automatic for candidate 1, Alt+\` on request).
+- Built-in CC-CEDICT dictionary for instant Chinese → English words.
+- Translation services: OpenAI, Claude, Gemini, Grok, DeepSeek, OpenCode Go, or any OpenAI-, Claude- or
+  Gemini-compatible endpoint; keys in Windows Credential Manager.
+- Hybrid cache: common words on disk (encrypted), everything else in memory only.
+- Seven target languages; interface in English, 简体中文, 日本語 and 한국어; light and dark themes.
+- Start with Windows (on by default; Settings › General).
+- Portable: Python runtime and all dependencies bundled; no installer, admin rights or other tools needed.
 
-## 0.6.0 — 2026-10-16
+### Changes since the last development build
 
-- Portable release: Python runtime and all dependencies bundled; runs without Python, Node or other tools installed.
-- The pause switch is now "Translate while typing": on while translating, off when paused, and it follows pausing
-  done from the panel or with Ctrl+Alt+P.
-- Text fields in Settings match the other controls.
-- No more flicker while typing: the panel window keeps its size and only its content changes.
+- **Start with Windows works.** The switch was shown but did nothing; it now adds or removes a per-user startup entry
+  for `Translate.exe`, re-synced at every start so a moved folder is picked up.
+- **Simpler panel footer.** The ⋯ menu and the target-language dropdown are gone; the footer shows the language pair
+  as plain text. Pause, Hide, Settings and Quit stay available from shortcuts and Settings.
+- Settings › Overview no longer points to a Start menu entry (the portable release has none) or to the removed menu.
+- `SHA256SUMS.txt` and `README-FIRST.txt` in the release had doubled carriage returns, which broke checksum tools.
 
-## 0.5.x — development builds
+## Before 0.1.0
 
-- Real translation services: OpenAI, Claude, Gemini, Grok, OpenCode Go, DeepSeek and custom endpoints, with
-  configurable model, endpoint and authentication; keys in Windows Credential Manager.
-- Built-in CC-CEDICT dictionary for instant Chinese → English words; hybrid cache (words on disk, encrypted;
-  everything else in memory only).
-- One batched request per candidate list, short debounce while typing, a second request if the service stalls, and
-  reasoning turned off for speed.
-- Translations still loading keep the previous text, dimmed, instead of flashing placeholders.
-- The panel's ⋯ menu opens reliably.
-
-## 0.4 and earlier — development builds
-
-- Real WeChat Input Method candidates and pinyin composition; insertion by Alt+1…9 or click without taking focus.
-- Optional "Keep the panel clickable" placement.
-- Panel and Settings design, four interface languages, Overlap app icon, full-text preview for long candidates.
+Development builds were numbered up to 0.6.1 internally and were never published. Their history is in
+`docs/stage1-report.md` … `docs/stage5-report.md` and `docs/release.md`.

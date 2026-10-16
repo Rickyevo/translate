@@ -491,10 +491,6 @@ export function DesktopDemo() {
                       if (n === undefined) window.setTimeout(() => fieldRef.current?.focus(), 0) // the panel never keeps focus
                     }}
                     onCopy={copy}
-                    onTarget={(tg) => {
-                      useSettings.setState((x) => ({ saved: { ...x.saved, target: tg }, draft: { ...x.draft, target: tg } }))
-                      fieldRef.current?.focus()
-                    }}
                     hoverRow={hoverTarget}
                     onHoverRow={onHoverRow}
                     onLeadTruncated={(v) => v !== leadTruncated && setLeadTruncated(v)}
@@ -506,10 +502,6 @@ export function DesktopDemo() {
                     paused={paused}
                     onInsert={(n) => insertFrom(list.gen, n)}
                     onRetry={retry}
-                    onPause={togglePause}
-                    onHide={() => setp({ barHidden: true })}
-                    onSettings={() => openSettings()}
-                    onQuit={doQuit}
                   />
                   {notice && (
                     <div className="anim-fade pointer-events-none absolute inset-x-1 bottom-1 z-10 flex justify-center">

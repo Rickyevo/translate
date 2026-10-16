@@ -136,14 +136,14 @@ always win. (An unlayered `button{color:inherit}` in stage 1 silently overrode t
 
 | Topic | Decision |
 |---|---|
-| Structure | Rows: key chip · translation · original (right-aligned, ≤ 28% of the width). 24 px footer: language pair or status, plus the ⋯ menu |
+| Structure | Rows: key chip · translation · original (right-aligned, ≤ 28% of the width). 24 px footer: language pair or status, plain text (0.1.0: the ⋯ menu was removed) |
 | Number ↔ translation | 16 px chip column, 8 px gap; reads as a key; Alt fills all chips with accent |
 | Translation as primary | Only fg-tone text in the row; the original is 12 px fg-3, and fg-2 on hover |
 | Footprint | Content-fit width 216–320 px; 28 px rows. Five short words ≈ 216 × 177 px (stage 1: 300 × 205, about 38% less area). Optional compact density, 24 px rows |
 | Stability | Fixed row height; width grows within a composition and never shrinks until the next one; skeletons sized from candidate length. Within a composition a row that is still translating keeps the previous keystroke's text at 45% opacity (≤ 600 ms after the last keystroke) instead of flashing to a skeleton — the lead-preview rule (§9.1) applied to rows |
 | Long text | Truncates in its row. The full text appears in the **lead preview** (§9.1): automatically for a cut-off #1, on hover for other cut-off rows, and by key on request. The old per-row peek is removed, so long text has exactly one place |
 | Failure | “Failed” row; the preview explains the reason and offers Retry; clicking the row retries. If the footer names a list-wide cause, the rows show neutral text |
-| Footer, healthy | `● 中 → EN ▾`: a quick target-language switch that applies immediately, and is the only setting changed outside the settings window |
+| Footer, healthy | `● 中 → EN`: plain text showing the language pair. The target language is changed in Settings (0.1.0: the footer dropdown was removed) |
 | Footer, degraded | Offline / local-only / unreachable / key rejected / paused, each with a status-colored icon |
 | Footer, no service | `📖 Dictionary only — set up a service` (neutral book icon): no key or model yet. Cache and dictionary still translate; other rows show *No local entry* |
 | Footer, simulated (test builds only) | `⚗ Simulated translations — not real`: the replay test source with the `[sim]` translator. Never shown in normal use since stage 5 |
@@ -188,13 +188,14 @@ the saved values, including previewed ones. Settings opens on **Overview**.
 
 | Need | How |
 |---|---|
-| Open settings | Run Translate again (single-instance hand-off) · **Ctrl+Alt+O** · panel ⋯ → Settings · notification button |
-| Pause / resume | **Ctrl+Alt+P** · panel ⋯ · Overview switch · settings sidebar |
-| Change target language | Panel footer switch · Overview · General |
-| Hide panel | **Alt+0** · panel ⋯ |
+| Open settings | Run Translate again (single-instance hand-off) · **Ctrl+Alt+O** · notification button |
+| Pause / resume | **Ctrl+Alt+P** · Overview switch · settings sidebar |
+| Change target language | Overview · General |
+| Hide panel | **Alt+0** |
 | Read a long translation | Automatic lead preview · **Alt+`** · Alt+↑/↓ |
-| Quit | Panel ⋯ → Quit · About → Quit · optional Jump List task |
+| Quit | About → Quit |
 | Attention | Panel footer status (always) + one notification per blocking incident |
+| Start with Windows | General › Start with Windows (on by default): a per-user Run entry for this `Translate.exe`, re-synced at every start |
 
 ## 12. App icon: Overlap (selected)
 
