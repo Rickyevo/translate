@@ -2,6 +2,11 @@
 
 ## 0.2.0 — 2026-10-16
 
+- **Microsoft Pinyin support.** Translate now also works with Microsoft Pinyin (Windows 11), the input method built
+  into Windows. Settings › General › Input method: *Automatic* (whichever one you type with), *WeChat Input Method*
+  or *Microsoft Pinyin*. Microsoft Pinyin's candidates are read through UI Automation, with no attachment to any
+  process, and Frida is only loaded once WeChat Input Method is actually running. Overview and About name the input
+  method in use; About shows the real version (it said "0.1.0 (prototype)").
 - **New host: Tauri 2 + the WebView2 Runtime built into Windows**, replacing Electron. The interface code is
   unchanged and pixel-identical (panel, full-text preview and every Settings page, light and dark). Download about
   61 MB instead of 198 MB; unpacked about 156 MB instead of 474 MB. Memory: about 16 MB before the panel is first

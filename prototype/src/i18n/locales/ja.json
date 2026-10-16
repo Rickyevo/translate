@@ -127,7 +127,10 @@
         "scroll": "全文をスクロール"
       },
       "change": "変更",
-      "recording": "キーを押してください…"
+      "recording": "キーを押してください…",
+      "ime": "入力方式",
+      "imeDesc": "Translate が連携する入力方式です。「自動」では、入力に使っている方式に合わせます。",
+      "imeAuto": "自動"
     },
     "translation": {
       "title": "翻訳",
@@ -267,7 +270,9 @@
       "quit": "Translate を終了",
       "quitDesc": "次に Translate を開くまで、バックグラウンド翻訳を停止します。",
       "license": "辞書データ：CC-CEDICT、CC BY-SA 4.0",
-      "dict": "ローカル辞書"
+      "dict": "ローカル辞書",
+      "imeMsPinyin": "Microsoft Pinyin",
+      "notRunning": "未起動"
     },
     "overview": {
       "title": "概要",

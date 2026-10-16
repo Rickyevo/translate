@@ -54,6 +54,6 @@ export interface TranslateApi {
   svcKeys(): Promise<Record<string, boolean>>
   cacheStats(): Promise<{ count: number; bytes: number }>
   cacheClear(): Promise<{ count: number; bytes: number }>
-  statusGet(): Promise<{ ime: string; service: string }>
+  statusGet(): Promise<{ ime: string; service: string; imeName?: string }>
   openLogs(): void
 }

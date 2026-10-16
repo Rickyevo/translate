@@ -5,6 +5,8 @@ There is no account, no telemetry, no analytics and no update check.
 
 ## What Translate reads
 
+- **Microsoft Pinyin's candidate list**, while you compose, through UI Automation — Windows' accessibility interface,
+  the same one Narrator uses to read candidates aloud. Nothing is attached to or changed in any process.
 - **WeChat Input Method's candidate list and pinyin**, while you compose. Translate attaches to WeType's
   `wetype_server.exe` process with [Frida](https://frida.re) and observes the messages WeType sends to its own
   candidate window. It does not change WeType or what WeType does with your input.

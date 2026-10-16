@@ -145,6 +145,30 @@ def is_password_edit(hwnd: int) -> bool:
     return bool(user32.GetWindowLongW(hwnd, -16) & 0x20)
 
 
+class _PROCESSENTRY32W(ctypes.Structure):
+    _fields_ = [("dwSize", wt.DWORD), ("cntUsage", wt.DWORD), ("th32ProcessID", wt.DWORD), ("th32DefaultHeapID", ctypes.c_void_p),
+                ("th32ModuleID", wt.DWORD), ("cntThreads", wt.DWORD), ("th32ParentProcessID", wt.DWORD), ("pcPriClassBase", ctypes.c_long),
+                ("dwFlags", wt.DWORD), ("szExeFile", ctypes.c_wchar * 260)]
+
+
+def process_running(exe: str) -> bool:
+    """Whether a process with this image name runs (toolhelp snapshot; names only)."""
+    kernel32.CreateToolhelp32Snapshot.restype = wt.HANDLE
+    snap = kernel32.CreateToolhelp32Snapshot(0x2, 0)  # TH32CS_SNAPPROCESS
+    if not snap or snap == wt.HANDLE(-1).value:
+        return False
+    try:
+        e = _PROCESSENTRY32W(dwSize=ctypes.sizeof(_PROCESSENTRY32W))
+        ok = kernel32.Process32FirstW(snap, ctypes.byref(e))
+        while ok:
+            if e.szExeFile.lower() == exe.lower():
+                return True
+            ok = kernel32.Process32NextW(snap, ctypes.byref(e))
+        return False
+    finally:
+        kernel32.CloseHandle(snap)
+
+
 def process_exe(pid: int) -> str:
     h = kernel32.OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, False, pid)
     if not h:

@@ -1,5 +1,6 @@
 {
   "uiLang": "system",
+  "ime": "auto",
   "target": "en",
   "count": 5,
   "autostart": true,

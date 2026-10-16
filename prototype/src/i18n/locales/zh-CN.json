@@ -127,7 +127,10 @@
         "scroll": "滚动完整译文"
       },
       "change": "修改",
-      "recording": "请按下按键…"
+      "recording": "请按下按键…",
+      "ime": "输入法",
+      "imeDesc": "Translate 跟随的输入法。“自动”会跟随你正在使用的那一个。",
+      "imeAuto": "自动"
     },
     "translation": {
       "title": "翻译",
@@ -267,7 +270,9 @@
       "quit": "退出 Translate",
       "quitDesc": "停止后台翻译，直到再次打开 Translate。",
       "license": "词典数据：CC-CEDICT，CC BY-SA 4.0",
-      "dict": "本地词典"
+      "dict": "本地词典",
+      "imeMsPinyin": "微软拼音",
+      "notRunning": "未运行"
     },
     "overview": {
       "title": "概览",

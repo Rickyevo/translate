@@ -6,7 +6,7 @@
 
 # Translate
 
-**WeChat Input Method の変換候補をリアルタイムに翻訳。**<br>
+**WeChat Input Method と Microsoft Pinyin の変換候補をリアルタイムに翻訳。**<br>
 ピンイン入力中に候補の意味を確認し、翻訳をそのまま入力できます。
 
 [![最新リリース](https://img.shields.io/github/v/release/Rickywu05/wetype-translate?label=release&color=0f7b6c)](https://github.com/Rickywu05/wetype-translate/releases/latest)
@@ -109,7 +109,8 @@ Translate は Windows の **WeChat Input Method（微信输入法・WeType）** 
 | 項目 | 要件 |
 |---|---|
 | Windows | 10 または 11、x64 |
-| 入力メソッド | [WeType for Windows](https://z.weixin.qq.com/)、検証済み **3.0.0.34** |
+| 入力メソッド | [WeChat Input Method](https://z.weixin.qq.com/)（検証済み **3.0.0.34**）または **Microsoft Pinyin**（Windows 11、ビルド 26200 で検証） |
+| 入力方式の選択 | 設定 → 全般 → 入力方式：*自動*（入力に使っている方式に合わせる）、*WeChat Input Method*、*Microsoft Pinyin* |
 | 翻訳サービス | 任意。フレーズ、文章、英語以外の翻訳先には自分の API キーが必要 |
 | 容量 | ダウンロード約 61 MB、展開後約 156 MB |
 | WebView2 | Windows 11 と最新の Windows 10 に組み込まれている Microsoft Edge WebView2 ランタイム（ない場合は Translate が案内します） |

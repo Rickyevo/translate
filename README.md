@@ -6,7 +6,7 @@
 
 # Translate
 
-**Live translations for WeChat Input Method (微信输入法).**<br>
+**Live translations for WeChat Input Method (微信输入法) and Microsoft Pinyin (微软拼音).**<br>
 See what every candidate means while you type pinyin, and insert the translation instead of the Chinese.
 
 [![Latest release](https://img.shields.io/github/v/release/Rickywu05/wetype-translate?label=release&color=0f7b6c)](https://github.com/Rickywu05/wetype-translate/releases/latest)
@@ -31,7 +31,8 @@ See what every candidate means while you type pinyin, and insert the translation
 
 <br>
 
-Translate is a small, quiet companion for **WeChat Input Method (WeType)** on Windows. As you type pinyin, a panel
+Translate is a small, quiet companion for **WeChat Input Method (WeType)** and **Microsoft Pinyin** on Windows. As you
+type pinyin, a panel
 under the candidate window shows the translation of each candidate. Press **Alt+1…9** to type the translation into
 whatever app you're using — a chat, an email, a document — without leaving the keyboard.
 
@@ -63,7 +64,8 @@ whatever app you're using — a chat, an email, a document — without leaving t
 2. **Unzip** it anywhere, for example `%LOCALAPPDATA%\Programs\Translate`.
 3. **Run** `Translate.exe`. No installer, admin rights, Python or other tools are needed.
 
-Translate runs in the background — nothing appears until you type pinyin with WeChat Input Method in any app. From then
+Translate runs in the background — nothing appears until you type pinyin with WeChat Input Method or Microsoft Pinyin in
+any app. From then
 on it starts with Windows (turn that off in Settings › General).
 
 > [!TIP]
@@ -121,9 +123,13 @@ plan-based subscriptions (OpenCode Go, for example) are intended for coding tool
 Right-click a row to insert, copy or retry it. To use the mouse, turn on **Settings › Appearance › Keep the panel
 clickable** — WeType's candidate window takes all clicks right under the candidates, so this moves the panel clear of it.
 
+Which input method Translate follows is in **Settings › General › Input method**: *Automatic* (whichever one you type
+with), *WeChat Input Method* or *Microsoft Pinyin*.
+
 ## Privacy
 
-- **Read locally:** WeType's candidate list and pinyin, the candidate window's position, and the foreground app's name
+- **Read locally:** the input method's candidate list (WeType: its own messages; Microsoft Pinyin: Windows' accessibility
+  interface), the candidate window's position, the caret, and the foreground app's name
   (to skip detectable password fields and excluded apps).
 - **Sent:** uncached candidate texts and the target language — only to the translation service you chose, and nothing
   in **Local only** mode or without a service. Nothing goes to the authors of Translate: no account, telemetry or
@@ -138,7 +144,7 @@ Full details: [docs/privacy.md](docs/privacy.md).
 | | |
 |---|---|
 | **Windows** | 10 or 11, x64 |
-| **WeChat Input Method** | [WeType for Windows](https://z.weixin.qq.com/); tested with **3.0.0.34** |
+| **Input method** | [WeChat Input Method](https://z.weixin.qq.com/) (tested with **3.0.0.34**) and/or **Microsoft Pinyin** (Windows 11; tested on build 26200) |
 | **Translation service** | Optional — your own API key, for phrases, sentences and languages other than English |
 | **Disk space** | About 61 MB download, 156 MB unpacked |
 | **WebView2** | The Microsoft Edge WebView2 Runtime, built into Windows 11 and current Windows 10 (Translate tells you if it's missing) |
@@ -149,6 +155,8 @@ Full details: [docs/privacy.md](docs/privacy.md).
   stop it from seeing candidates until Translate is updated — please
   [open an issue](https://github.com/Rickywu05/wetype-translate/issues) with your WeType version.
 - **Security software** may flag Translate, because it attaches to WeType's process (with Frida) to read candidates.
+  Microsoft Pinyin needs no such attachment.
+- **Microsoft Pinyin on Windows 10**, and its *use previous version* setting, are untested.
 - **Not code-signed** yet, so SmartScreen warns on first launch.
 - **Placement** follows WeType's bar wherever it is drawn (any layout, display scaling or screen edge). Mixed
   scaling across several monitors and Windows on ARM are untested.
@@ -177,7 +185,7 @@ Get-FileHash .\Translate-0.2.0-win-x64.zip -Algorithm SHA256
 
 <br>
 
-That's expected: Translate has no window or tray icon. Type pinyin with WeChat Input Method and the panel appears under
+That's expected: Translate has no window or tray icon. Type pinyin with WeChat Input Method or Microsoft Pinyin and the panel appears under
 the candidates. Run `Translate.exe` again or press <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>O</kbd> to open Settings.
 
 </details>
@@ -217,7 +225,8 @@ Turn off **Settings › General › Start with Windows** and press Save, then qu
 
 ```mermaid
 flowchart LR
-  A["WeChat Input Method<br/>(wetype_server.exe)"] -- candidate lists --> B["Translate engine<br/>(bundled Python + Frida)"]
+  A["WeChat Input Method<br/>(wetype_server.exe)"] -- candidate lists (Frida) --> B["Translate engine<br/>(bundled Python)"]
+  P["Microsoft Pinyin<br/>(TextInputHost.exe)"] -- candidate lists (UI Automation) --> B
   B --> C{"Cache"}
   C -- miss --> D{"Dictionary"}
   D -- miss or refine --> E["Your translation service"]
@@ -226,7 +235,8 @@ flowchart LR
 ```
 
 The engine attaches to WeType's `wetype_server.exe` with Frida, decodes the candidate lists WeType sends to its own
-candidate window, and tracks that window's position. Each list goes through the cache, the dictionary and then one
+candidate window, and tracks that window's position. For Microsoft Pinyin it reads the candidate window through UI
+Automation (the accessibility interface Narrator uses) — no attachment at all. Each list goes through the cache, the dictionary and then one
 batched request to your service. Inserting cancels the pinyin composition and types the translation with `SendInput`,
 without taking focus from your app.
 

@@ -39,6 +39,8 @@ interface Review {
   paused: boolean
   barHidden: boolean
   settingsOpen: boolean
+  /** App version (from the host; the design lab shows 'prototype'). */
+  version: string
   setp: (p: Partial<Omit<Review, 'setp'>>) => void
 }
 
@@ -55,6 +57,7 @@ export const useReview = create<Review>((set) => ({
   paused: false,
   barHidden: false,
   settingsOpen: false,
+  version: 'prototype',
   setp: (p) => set(p),
 }))
 

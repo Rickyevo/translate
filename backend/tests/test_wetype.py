@@ -233,8 +233,10 @@ class SourceTests(unittest.TestCase):
         self.assertEqual(self.source.foreground["hwnd"], 77)
 
     def test_backend_selects_live_and_test_sources(self):
-        self.assertIsInstance(Backend(False).source, WeTypeSource)
-        self.assertNotIsInstance(Backend(True).source, WeTypeSource)
+        from translate_backend.ime import ImeSources
+        self.assertIsInstance(Backend(False).source, ImeSources)
+        self.assertIsInstance(Backend(False).source.sources["wetype"], WeTypeSource)
+        self.assertNotIsInstance(Backend(True).source, ImeSources)
 
 
 if __name__ == "__main__":

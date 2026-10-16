@@ -1,0 +1,262 @@
+[
+ {
+  "name": "app starts and attaches to WeType",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "Tk (Win32 caret) \u00b7 middle: candidates arrive and the panel shows",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "Tk (Win32 caret) \u00b7 middle: panel clear of WeType's bar",
+  "ok": true,
+  "detail": "bar y=520.0..556.0 line y=502..523 panel y=560..736 dir=below caret=reported measured=True"
+ },
+ {
+  "name": "Tk (Win32 caret) \u00b7 middle: panel clear of the typing line",
+  "ok": true,
+  "detail": "bar y=520.0..556.0 line y=502..523 panel y=560..736 dir=below caret=reported measured=True"
+ },
+ {
+  "name": "Tk (Win32 caret) \u00b7 middle: panel inside the work area",
+  "ok": true,
+  "detail": "panel {'x': 697, 'y': 560, 'w': 226, 'h': 176} work {'x': 0, 'y': 0, 'w': 1920, 'h': 1032}"
+ },
+ {
+  "name": "Tk (Win32 caret) \u00b7 middle: Alt+1 inserts the translation, no pinyin left",
+  "ok": true,
+  "detail": "chars=4 pinyin_left=False chinese_left=False"
+ },
+ {
+  "name": "Tk (Win32 caret) \u00b7 top edge: candidates arrive and the panel shows",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "Tk (Win32 caret) \u00b7 top edge: panel clear of WeType's bar",
+  "ok": true,
+  "detail": "bar y=59.0..95.0 line y=41..62 panel y=99..275 dir=below caret=reported measured=True"
+ },
+ {
+  "name": "Tk (Win32 caret) \u00b7 top edge: panel clear of the typing line",
+  "ok": true,
+  "detail": "bar y=59.0..95.0 line y=41..62 panel y=99..275 dir=below caret=reported measured=True"
+ },
+ {
+  "name": "Tk (Win32 caret) \u00b7 top edge: panel inside the work area",
+  "ok": true,
+  "detail": "panel {'x': 697, 'y': 99, 'w': 290, 'h': 176} work {'x': 0, 'y': 0, 'w': 1920, 'h': 1032}"
+ },
+ {
+  "name": "Tk (Win32 caret) \u00b7 top edge: Alt+1 inserts the translation, no pinyin left",
+  "ok": true,
+  "detail": "chars=4 pinyin_left=False chinese_left=False"
+ },
+ {
+  "name": "Tk (Win32 caret) \u00b7 bottom edge: candidates arrive and the panel shows",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "Tk (Win32 caret) \u00b7 bottom edge: panel clear of WeType's bar",
+  "ok": true,
+  "detail": "bar y=981.0..1017.0 line y=963..984 panel y=783..959 dir=above caret=reported measured=True"
+ },
+ {
+  "name": "Tk (Win32 caret) \u00b7 bottom edge: panel clear of the typing line",
+  "ok": true,
+  "detail": "bar y=981.0..1017.0 line y=963..984 panel y=783..959 dir=above caret=reported measured=True"
+ },
+ {
+  "name": "Tk (Win32 caret) \u00b7 bottom edge: panel inside the work area",
+  "ok": true,
+  "detail": "panel {'x': 697, 'y': 783, 'w': 226, 'h': 176} work {'x': 0, 'y': 0, 'w': 1920, 'h': 1032}"
+ },
+ {
+  "name": "Tk (Win32 caret) \u00b7 bottom edge: Alt+1 inserts the translation, no pinyin left",
+  "ok": true,
+  "detail": "chars=4 pinyin_left=False chinese_left=False"
+ },
+ {
+  "name": "Tk (Win32 caret) \u00b7 bottom-right corner: candidates arrive and the panel shows",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "Tk (Win32 caret) \u00b7 bottom-right corner: panel clear of WeType's bar",
+  "ok": true,
+  "detail": "bar y=981.0..1017.0 line y=963..984 panel y=783..959 dir=above caret=reported measured=True"
+ },
+ {
+  "name": "Tk (Win32 caret) \u00b7 bottom-right corner: panel clear of the typing line",
+  "ok": true,
+  "detail": "bar y=981.0..1017.0 line y=963..984 panel y=783..959 dir=above caret=reported measured=True"
+ },
+ {
+  "name": "Tk (Win32 caret) \u00b7 bottom-right corner: panel inside the work area",
+  "ok": true,
+  "detail": "panel {'x': 1299, 'y': 783, 'w': 226, 'h': 176} work {'x': 0, 'y': 0, 'w': 1920, 'h': 1032}"
+ },
+ {
+  "name": "Tk (Win32 caret) \u00b7 bottom-right corner: Alt+1 inserts the translation, no pinyin left",
+  "ok": true,
+  "detail": "chars=4 pinyin_left=False chinese_left=False"
+ },
+ {
+  "name": "Tk (Win32 caret) \u00b7 very bottom (bar flipped): candidates arrive and the panel shows",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "Tk (Win32 caret) \u00b7 very bottom (bar flipped): panel clear of WeType's bar",
+  "ok": true,
+  "detail": "bar y=973.0..1009.0 line y=1009..1030 panel y=793..969 dir=above caret=reported (WeType flipped its bar above the caret) measured=True"
+ },
+ {
+  "name": "Tk (Win32 caret) \u00b7 very bottom (bar flipped): panel clear of the typing line",
+  "ok": true,
+  "detail": "bar y=973.0..1009.0 line y=1009..1030 panel y=793..969 dir=above caret=reported (WeType flipped its bar above the caret) measured=True"
+ },
+ {
+  "name": "Tk (Win32 caret) \u00b7 very bottom (bar flipped): panel inside the work area",
+  "ok": true,
+  "detail": "panel {'x': 697, 'y': 793, 'w': 281, 'h': 176} work {'x': 0, 'y': 0, 'w': 1920, 'h': 1032}"
+ },
+ {
+  "name": "Tk (Win32 caret) \u00b7 very bottom (bar flipped): Alt+1 inserts the translation, no pinyin left",
+  "ok": true,
+  "detail": "chars=4 pinyin_left=False chinese_left=False"
+ },
+ {
+  "name": "Edge (accessibility caret) \u00b7 middle: test window under the click point",
+  "ok": false,
+  "detail": "another window covers it; nothing clicked or typed"
+ },
+ {
+  "name": "Edge (accessibility caret) \u00b7 top edge: candidates arrive and the panel shows",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "Edge (accessibility caret) \u00b7 top edge: panel clear of WeType's bar",
+  "ok": true,
+  "detail": "bar y=60.0..96.0 line y=39.0..60.0 panel y=100..276 dir=below caret=reported measured=True"
+ },
+ {
+  "name": "Edge (accessibility caret) \u00b7 top edge: panel clear of the typing line",
+  "ok": true,
+  "detail": "bar y=60.0..96.0 line y=39.0..60.0 panel y=100..276 dir=below caret=reported measured=True"
+ },
+ {
+  "name": "Edge (accessibility caret) \u00b7 top edge: panel inside the work area",
+  "ok": true,
+  "detail": "panel {'x': 700, 'y': 100, 'w': 226, 'h': 176} work {'x': 0, 'y': 0, 'w': 1920, 'h': 1032}"
+ },
+ {
+  "name": "Edge (accessibility caret) \u00b7 top edge: Chromium reports its caret (accessibility)",
+  "ok": true,
+  "detail": "reported"
+ },
+ {
+  "name": "Edge (accessibility caret) \u00b7 top edge: Alt+1 inserts the translation, no pinyin left",
+  "ok": true,
+  "detail": "chars=4 pinyin_left=False chinese_left=False"
+ },
+ {
+  "name": "Edge (accessibility caret) \u00b7 bottom edge: candidates arrive and the panel shows",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "Edge (accessibility caret) \u00b7 bottom edge: panel clear of WeType's bar",
+  "ok": true,
+  "detail": "bar y=942.0..978.0 line y=921.0..942.0 panel y=741..917 dir=above caret=reported measured=True"
+ },
+ {
+  "name": "Edge (accessibility caret) \u00b7 bottom edge: panel clear of the typing line",
+  "ok": true,
+  "detail": "bar y=942.0..978.0 line y=921.0..942.0 panel y=741..917 dir=above caret=reported measured=True"
+ },
+ {
+  "name": "Edge (accessibility caret) \u00b7 bottom edge: panel inside the work area",
+  "ok": true,
+  "detail": "panel {'x': 700, 'y': 741, 'w': 281, 'h': 176} work {'x': 0, 'y': 0, 'w': 1920, 'h': 1032}"
+ },
+ {
+  "name": "Edge (accessibility caret) \u00b7 bottom edge: Chromium reports its caret (accessibility)",
+  "ok": true,
+  "detail": "reported"
+ },
+ {
+  "name": "Edge (accessibility caret) \u00b7 bottom edge: Alt+1 inserts the translation, no pinyin left",
+  "ok": true,
+  "detail": "chars=4 pinyin_left=False chinese_left=False"
+ },
+ {
+  "name": "Edge (accessibility caret) \u00b7 bottom-right corner: candidates arrive and the panel shows",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "Edge (accessibility caret) \u00b7 bottom-right corner: panel clear of WeType's bar",
+  "ok": true,
+  "detail": "bar y=942.0..978.0 line y=921.0..942.0 panel y=741..917 dir=above caret=reported measured=True"
+ },
+ {
+  "name": "Edge (accessibility caret) \u00b7 bottom-right corner: panel clear of the typing line",
+  "ok": true,
+  "detail": "bar y=942.0..978.0 line y=921.0..942.0 panel y=741..917 dir=above caret=reported measured=True"
+ },
+ {
+  "name": "Edge (accessibility caret) \u00b7 bottom-right corner: panel inside the work area",
+  "ok": true,
+  "detail": "panel {'x': 1299, 'y': 741, 'w': 290, 'h': 176} work {'x': 0, 'y': 0, 'w': 1920, 'h': 1032}"
+ },
+ {
+  "name": "Edge (accessibility caret) \u00b7 bottom-right corner: Chromium reports its caret (accessibility)",
+  "ok": true,
+  "detail": "reported"
+ },
+ {
+  "name": "Edge (accessibility caret) \u00b7 bottom-right corner: Alt+1 inserts the translation, no pinyin left",
+  "ok": true,
+  "detail": "chars=4 pinyin_left=False chinese_left=False"
+ },
+ {
+  "name": "Edge (accessibility caret) \u00b7 very bottom (bar flipped): candidates arrive and the panel shows",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "Edge (accessibility caret) \u00b7 very bottom (bar flipped): panel clear of WeType's bar",
+  "ok": true,
+  "detail": "bar y=996.0..1032.0 line y=975.0..996.0 panel y=795..971 dir=above caret=reported measured=True"
+ },
+ {
+  "name": "Edge (accessibility caret) \u00b7 very bottom (bar flipped): panel clear of the typing line",
+  "ok": true,
+  "detail": "bar y=996.0..1032.0 line y=975.0..996.0 panel y=795..971 dir=above caret=reported measured=True"
+ },
+ {
+  "name": "Edge (accessibility caret) \u00b7 very bottom (bar flipped): panel inside the work area",
+  "ok": true,
+  "detail": "panel {'x': 700, 'y': 795, 'w': 226, 'h': 176} work {'x': 0, 'y': 0, 'w': 1920, 'h': 1032}"
+ },
+ {
+  "name": "Edge (accessibility caret) \u00b7 very bottom (bar flipped): Chromium reports its caret (accessibility)",
+  "ok": true,
+  "detail": "reported"
+ },
+ {
+  "name": "Edge (accessibility caret) \u00b7 very bottom (bar flipped): Alt+1 inserts the translation, no pinyin left",
+  "ok": true,
+  "detail": "chars=4 pinyin_left=False chinese_left=False"
+ },
+ {
+  "name": "candidate data flowed from WeType",
+  "ok": false,
+  "detail": ""
+ }
+]

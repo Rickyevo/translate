@@ -53,8 +53,12 @@ export function serviceOf(s: Pick<Settings, 'provider' | 'services'>, id: Provid
 
 /* ---------------- Settings (saved vs. draft) ---------------- */
 
+/** Which input method Translate follows: whichever is typing ('auto'), or only one. */
+export type ImePref = 'auto' | 'wetype' | 'mspinyin'
+
 export interface Settings {
   uiLang: UiLangPref
+  ime: ImePref
   target: Target
   count: number
   autostart: boolean
@@ -83,6 +87,7 @@ export interface Settings {
 
 export const DEFAULT_SETTINGS: Settings = {
   uiLang: 'system',
+  ime: 'auto',
   target: 'en',
   count: 5,
   autostart: true,

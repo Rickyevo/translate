@@ -6,7 +6,7 @@
 
 # Translate
 
-**微信输入法候选词实时翻译助手。**<br>
+**微信输入法与微软拼音候选词实时翻译助手。**<br>
 输入拼音时查看候选译文，直接把所选译文输入当前应用。
 
 [![最新版本](https://img.shields.io/github/v/release/Rickywu05/wetype-translate?label=release&color=0f7b6c)](https://github.com/Rickywu05/wetype-translate/releases/latest)
@@ -116,7 +116,8 @@ Translate 是一个安静运行在 Windows 后台的微信输入法（WeType）�
 | 项目 | 要求 |
 |---|---|
 | Windows | 10 或 11，x64 |
-| 微信输入法 | [Windows 版](https://z.weixin.qq.com/)，已测试 **3.0.0.34** |
+| 输入法 | [微信输入法](https://z.weixin.qq.com/)（已测试 **3.0.0.34**）和/或 **微软拼音**（Windows 11，已在 26200 版本测试） |
+| 选择输入法 | 设置 → 通用 → 输入法：*自动*（跟随你正在使用的输入法）、*微信输入法* 或 *微软拼音* |
 | 翻译服务 | 可选；短语、句子和非英文目标需要自己的 API Key |
 | 空间 | 下载约 61 MB，解压约 156 MB |
 | WebView2 | Windows 11 及较新的 Windows 10 已内置 Microsoft Edge WebView2 运行时（缺失时 Translate 会提示） |

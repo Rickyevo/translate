@@ -127,7 +127,10 @@
         "scroll": "Scroll full text"
       },
       "change": "Change",
-      "recording": "Press keys…"
+      "recording": "Press keys…",
+      "ime": "Input method",
+      "imeDesc": "Which input method Translate follows. Automatic follows whichever one you type with.",
+      "imeAuto": "Automatic"
     },
     "translation": {
       "title": "Translation",
@@ -267,7 +270,9 @@
       "quit": "Quit Translate",
       "quitDesc": "Stops background translation until you open Translate again.",
       "license": "Dictionary data: CC-CEDICT, CC BY-SA 4.0",
-      "dict": "Local dictionary"
+      "dict": "Local dictionary",
+      "imeMsPinyin": "Microsoft Pinyin",
+      "notRunning": "Not running"
     },
     "overview": {
       "title": "Overview",

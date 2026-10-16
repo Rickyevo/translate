@@ -15,6 +15,10 @@ Frida 17.23.3 (wxWindows Library Licence, Version 3.1)
   resources\backend\vendor\frida\ — https://frida.re, https://github.com/frida/frida.
   Used unmodified, as a library, to observe the WeChat Input Method's candidate list locally.
 
+comtypes 1.4.17 (MIT License)
+  resources\backend\vendor\comtypes\ — https://github.com/enthought/comtypes. Used to read Microsoft Pinyin's candidate
+  window through UI Automation; see comtypes-1.4.17.dist-info\licenses\LICENSE.txt next to it.
+
 CC-CEDICT (Creative Commons Attribution-ShareAlike 4.0)
   resources\backend\translate_backend\data\cedict.tsv — derived from CC-CEDICT
   (https://www.mdbg.net/chinese/dictionary?page=cedict); see cedict.LICENSE next to it.

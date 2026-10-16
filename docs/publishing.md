@@ -7,7 +7,7 @@ Repository: https://github.com/Rickywu05/wetype-translate
 Use these settings for the existing repository:
 
 - **Description:** `Live translations of WeChat Input Method (微信输入法) candidates on Windows — insert the translation instead of the Chinese.`
-- **Topics:** `wechat-input-method`, `wetype`, `ime`, `translation`, `chinese`, `pinyin`, `windows`, `tauri`, `webview2`, `llm`
+- **Topics:** `wechat-input-method`, `wetype`, `microsoft-pinyin`, `ime`, `translation`, `chinese`, `pinyin`, `windows`, `tauri`, `webview2`, `llm`
 - **Social preview** (Settings › General): `screenshots/readme/hero-en-light.png`.
 - Optional: turn off Wiki and Projects; turn on Issues.
 

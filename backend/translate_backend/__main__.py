@@ -30,6 +30,8 @@ from .translate import providers as tproviders, secrets as tsecrets
 from .translate.pipeline import Pipeline
 from .wetype import encode
 from .wetype.source import WeTypeSource
+from .ime import ImeSources
+from .mspinyin.source import MsPinyinSource
 
 VERSION = "0.2.0"
 COMPOSITION_CANCEL_TIMEOUT = 0.5  # s to wait for the IME to confirm Esc cancelled the composition
@@ -55,7 +57,11 @@ class DryInput:
     def send_key(self, vk: int) -> int:
         self.log.append({"key": vk})
         src = self.b.source
-        if vk == win32.VK_ESCAPE and isinstance(src, WeTypeSource):
+        active = src._primary if isinstance(src, ImeSources) else src
+        if vk == win32.VK_ESCAPE and isinstance(active, MsPinyinSource):
+            if self.on_escape in ("clear", "hide"):  # Microsoft Pinyin: Esc closes its candidate window
+                self.b.events.put({"type": "_source", "event": {"kind": "mspy", "ime": "mspinyin", "texts": [], "rect": None, "foreground": dict(active.foreground)}})
+        elif vk == win32.VK_ESCAPE and isinstance(active, WeTypeSource):
             if self.on_escape == "clear":
                 self.b.events.put({"type": "_source", "event": {"kind": "bytes", "epoch": src._epoch, "handle": "replay", "data": encode.composition("")}})
             elif self.on_escape == "hide":
@@ -77,7 +83,7 @@ class Backend:
         self._backlog: collections.deque = collections.deque()  # messages deferred while an insert waits
         self.paused = False
         self.config: dict = {"target": "en", "count": 5, "denylist": [], "localOnly": False}
-        self.replay = test_mode and source == "wetype-replay"
+        self.replay = test_mode and source in ("wetype-replay", "mspy-replay")
         self.input = DryInput(self) if self.replay else RealInput()
         self.scheduler = None
         self.translator = None
@@ -87,8 +93,8 @@ class Backend:
         if test_mode and not self.replay:
             self.source = SimSource(self._emit_list, self._emit_translation, self._emit_end)
         else:
-            self.source = WeTypeSource(self._emit_list, self._emit_translation, self._emit_end,
-                                       self._post_source, self._ime_status, replay=self.replay)
+            self.source = ImeSources(self._emit_list, self._emit_translation, self._emit_end,
+                                     self._post_source, self._ime_status, replay=self.replay)
             self.scheduler = Scheduler(self.events.put)
             if self.replay and "--translator=live" not in sys.argv:
                 self.translator = SimTranslator(self.scheduler)
@@ -99,7 +105,7 @@ class Backend:
 
     @property
     def live(self) -> bool:
-        return isinstance(self.source, WeTypeSource)
+        return isinstance(self.source, ImeSources)
 
     def _post_source(self, event):
         self.events.put({"type": "_source", "event": event})
@@ -108,8 +114,8 @@ class Backend:
     def translation_mode(self) -> str:
         return "live" if self.pipeline else "simulated" if self.translator else "fixture"
 
-    def _ime_status(self, state, code=None):
-        send("status", ime={"state": state, "code": code}, translationMode=self.translation_mode)
+    def _ime_status(self, state, code=None, name=None, all_states=None):
+        send("status", ime={"state": state, "code": code, "name": name, "all": all_states or {}}, translationMode=self.translation_mode)
 
     def _service_state(self, state: str) -> None:
         send("status", service={"state": state})
@@ -322,7 +328,7 @@ class Backend:
 
     def _debug(self, msg: dict) -> None:
         t = msg["type"]
-        if t.startswith("debug.wetype.") or t == "debug.input":
+        if t.startswith(("debug.wetype.", "debug.mspy.")) or t == "debug.input":
             return self._debug_replay(msg)
         if self.live:
             return reply(msg, "error", code="unknown_type", message=f"Not available with this source: {t}")
@@ -360,6 +366,15 @@ class Backend:
             chunk = max(1, int(msg.get("chunk", len(data) or 1)))
             for i in range(0, len(data), chunk):
                 src.accept({"kind": "bytes", "epoch": int(msg.get("epoch", src._epoch)), "handle": msg.get("handle", "replay"), "data": data[i:i + chunk]})
+        elif t == "debug.mspy.connection":
+            src.accept({"kind": "connection", "ime": "mspinyin", "state": msg.get("state", "connected"), "epoch": 1, "code": msg.get("code")})
+        elif t == "debug.mspy.list":
+            # What the UI Automation observer posts: Microsoft Pinyin's candidates and its window.
+            fg = msg.get("foreground") or src.foreground or {"hwnd": 1, "pid": 4242, "exe": "replay-target.exe"}
+            src.accept({"kind": "mspy", "ime": "mspinyin", "texts": list(msg.get("texts") or []), "rect": msg.get("rect"),
+                        "canvas": msg.get("canvas"), "foreground": fg})
+        elif t == "debug.mspy.close":
+            src.accept({"kind": "mspy", "ime": "mspinyin", "texts": [], "rect": None, "foreground": src.foreground})
         elif t == "debug.wetype.typing":
             self._replay_typing(msg)
         elif t == "debug.input":
@@ -439,7 +454,7 @@ class Backend:
 
         mode = self.translation_mode
         send("ready", version=VERSION, protocol=PROTOCOL_VERSION, pid=os.getpid(), dpiAware=win32.enable_dpi_awareness(),
-             testMode=self.test_mode, adapters=["wetype-replay" if self.replay else "wetype"] if self.live else ["sim"],
+             testMode=self.test_mode, adapters=(["replay"] if self.replay else ["wetype", "mspinyin"]) if self.live else ["sim"],
              translationMode=mode)
         threading.Thread(target=pump, name="stdin", daemon=True).start()
         while self.running:

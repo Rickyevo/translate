@@ -26,6 +26,7 @@ def denied(exe: str, names) -> bool:
 
 
 class WeTypeSource:
+    name = "wetype"
     """State is mutated only by the backend dispatch thread; workers enqueue notifications.
 
     Generations: every distinct candidate list gets a new `gen`. A pinyin change invalidates the current
@@ -48,7 +49,7 @@ class WeTypeSource:
         self.paused = False
         self.composing = False  # a pinyin composition is in progress (pipe) and its window is visible
         self.connection = "starting"
-        self._gen = 0
+        self._genbox = [0]  # shared between input methods (ime.py), so a takeover's lists are always newer
         self._shown = None  # gen the host is displaying and has not been told has ended
         self._pinyin = ""
         self._words = []
@@ -65,6 +66,14 @@ class WeTypeSource:
         self._stats = {"lists": 0, "pinyin": 0, "dup": 0, "dropped": 0, "late": 0}
         self._stop = threading.Event()
         self._threads = []
+
+    @property
+    def _gen(self) -> int:
+        return self._genbox[0]
+
+    @_gen.setter
+    def _gen(self, v: int) -> None:
+        self._genbox[0] = v
 
     # ---- host-facing -------------------------------------------------------------------------
     def configure(self, config):
@@ -367,6 +376,12 @@ class WeTypeSource:
         vendor = Path(__file__).resolve().parents[2] / "vendor"
         if vendor.is_dir() and str(vendor) not in sys.path:
             sys.path.insert(0, str(vendor))
+        # Frida's runtime costs ~47 MB once imported: wait until WeType is actually running (Automatic mode with only
+        # Microsoft Pinyin in use never loads it).
+        while not self._stop.is_set() and not win32.process_running("wetype_server.exe"):
+            self._stop.wait(3)
+        if self._stop.is_set():
+            return
         try:
             import frida
         except ImportError:

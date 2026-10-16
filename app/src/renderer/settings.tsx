@@ -35,9 +35,9 @@ function SettingsApp() {
   const eff = effectiveSettings(st)
 
   useEffect(() => {
-    api.getSettings().then(({ saved, theme, paused }) => {
+    api.getSettings().then(({ saved, theme, paused, version }) => {
       useSettings.setState({ saved, draft: saved })
-      useReview.setState({ paused, page: page ?? 'overview' })
+      useReview.setState({ paused, version, page: page ?? 'overview' })
       setOsTheme(theme)
       setReady(true)
     })

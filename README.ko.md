@@ -6,7 +6,7 @@
 
 # Translate
 
-**WeChat 입력기 후보를 실시간으로 번역합니다.**<br>
+**WeChat 입력기와 Microsoft 병음의 후보를 실시간으로 번역합니다.**<br>
 병음을 입력하면서 후보의 뜻을 확인하고 번역을 바로 입력하세요.
 
 [![최신 버전](https://img.shields.io/github/v/release/Rickywu05/wetype-translate?label=release&color=0f7b6c)](https://github.com/Rickywu05/wetype-translate/releases/latest)
@@ -109,7 +109,8 @@ Translate는 Windows의 **WeChat 입력기(微信输入法, WeType)** 를 위한
 | 항목 | 요구 사항 |
 |---|---|
 | Windows | 10 또는 11, x64 |
-| 입력기 | [WeType for Windows](https://z.weixin.qq.com/), 검증 버전 **3.0.0.34** |
+| 입력기 | [WeChat 입력기](https://z.weixin.qq.com/)(검증 버전 **3.0.0.34**) 또는 **Microsoft 병음**(Windows 11, 빌드 26200에서 검증) |
+| 입력기 선택 | 설정 → 일반 → 입력기: *자동*(지금 입력에 쓰는 입력기를 따름), *WeChat 입력기*, *Microsoft 병음* |
 | 번역 서비스 | 선택 사항. 구문, 문장, 영어 외 대상 언어에는 본인의 API 키 필요 |
 | 공간 | 다운로드 약 61 MB, 압축 해제 후 약 156 MB |
 | WebView2 | Windows 11과 최신 Windows 10에 기본 포함된 Microsoft Edge WebView2 런타임(없으면 Translate가 안내합니다) |

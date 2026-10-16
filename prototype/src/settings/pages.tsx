@@ -4,7 +4,7 @@ import { ArrowRight, Check, Copy, Eye, EyeOff, FolderOpen, Pause, Monitor, Moon,
 import { UI_LANGS, UI_LANG_NATIVE, systemLang, type UiLangPref } from '../i18n'
 import { TARGETS, buildList, type Target } from '../data/scenarios'
 import { effectiveSettings, useReview, useSettings, type Density, type LeadMode, type OrigMode, type Settings, type ThemePref } from '../store'
-import { PROVIDERS, PROVIDER_IDS, serviceOf, type AuthKind, type Protocol, type ProviderId, type ServiceCfg } from '../model'
+import { PROVIDERS, PROVIDER_IDS, serviceOf, type AuthKind, type ImePref, type Protocol, type ProviderId, type ServiceCfg } from '../model'
 import { bridge } from './bridge'
 import { Button, IconButton, Kbd, Message, Segmented, Select, Shortcut, Slider, Switch, TextInput, cx } from '../ui/primitives'
 import { Scope } from '../ui/scope'
@@ -33,6 +33,23 @@ export function GeneralPage() {
       <PageHeader title={t('settings.general.title')} desc={t('settings.general.desc')} />
       <div className="flex flex-col gap-7">
         <Section title={t('settings.general.language')}>
+          <Row
+            label={t('settings.general.ime')}
+            desc={t('settings.general.imeDesc')}
+            control={
+              <Select<ImePref>
+                label={t('settings.general.ime')}
+                className="w-[184px]"
+                value={d.ime}
+                onValueChange={(v) => set('ime', v)}
+                options={[
+                  { value: 'auto', label: t('settings.general.imeAuto') },
+                  { value: 'wetype', label: t('settings.about.imeVal') },
+                  { value: 'mspinyin', label: t('settings.about.imeMsPinyin') },
+                ]}
+              />
+            }
+          />
           <Row
             label={t('settings.general.uiLang')}
             desc={t('settings.general.uiLangDesc')}
@@ -659,9 +676,11 @@ export function PrivacyPage() {
 export function AboutPage({ onQuit }: { onQuit: () => void }) {
   const { t } = useTranslation()
   const [copied, setCopied] = useState(false)
+  const version = useReview((r) => r.version)
+  const ime = useImeStatus()
   const pad = 'px-4 py-3'
   const rows: [string, React.ReactNode][] = [
-    [t('settings.about.version'), '0.1.0 (prototype)'],
+    [t('settings.about.version'), version],
     [
       t('settings.about.engine'),
       <span className="inline-flex items-center gap-1.5">
@@ -672,8 +691,8 @@ export function AboutPage({ onQuit }: { onQuit: () => void }) {
     [
       t('settings.about.ime'),
       <span className="inline-flex items-center gap-1.5">
-        <span className="size-1.5 rounded-full bg-success" />
-        {t('settings.about.imeVal')} 1.2 — {t('settings.about.connected')}
+        <span className={cx('size-1.5 rounded-full', ime.ok ? 'bg-success' : 'bg-fg-4')} />
+        {ime.name} — {ime.ok ? t('settings.about.connected') : t('settings.about.notRunning')}
       </span>,
     ],
     // Required attribution (CC BY-SA 4.0) for the local dictionary.
@@ -720,6 +739,23 @@ export function AboutPage({ onQuit }: { onQuit: () => void }) {
   )
 }
 
+
+/** Which input method Translate is following and whether it's connected (from the engine; the design lab shows WeType). */
+function useImeStatus(): { name: string; ok: boolean } {
+  const { t } = useTranslation()
+  const [st, setSt] = useState<{ ime: string; imeName?: string }>({ ime: 'connected', imeName: 'wetype' })
+  useEffect(() => {
+    if (!bridge) return
+    let alive = true
+    const read = () => bridge!.status().then((s) => alive && setSt(s)).catch(() => {})
+    read()
+    const id = window.setInterval(read, 2000)
+    return () => ((alive = false), window.clearInterval(id))
+  }, [])
+  const name = st.imeName === 'mspinyin' ? t('settings.about.imeMsPinyin') : t('settings.about.imeVal')
+  return { name, ok: st.ime === 'connected' }
+}
+
 /* =========================================================== Overview (direction B) */
 
 export function OverviewPage({ go }: { go: (p: 'general' | 'translation') => void }) {
@@ -727,6 +763,7 @@ export function OverviewPage({ go }: { go: (p: 'general' | 'translation') => voi
   const [d, set] = useDraft()
   const paused = useReview((r) => r.paused)
   const setp = useReview((r) => r.setp)
+  const ime = useImeStatus()
   const lang = TARGETS.find((x) => x.id === d.target)!.native
   const [keys, setKeys] = useState<Partial<Record<ProviderId, boolean>>>({})
   useEffect(() => {
@@ -745,7 +782,7 @@ export function OverviewPage({ go }: { go: (p: 'general' | 'translation') => voi
             <div className="flex-1">
               <div className="text-14 font-semibold text-fg">{paused ? t('settings.overview.statusPaused') : t('settings.overview.statusOk', { lang })}</div>
               <div className="text-12 text-fg-3">
-                {t('settings.about.imeVal')} · {t('settings.about.connected')}
+                {ime.name} · {ime.ok ? t('settings.about.connected') : t('settings.about.notRunning')}
               </div>
             </div>
             <label className="flex items-center gap-2.5 text-13 text-fg-2">

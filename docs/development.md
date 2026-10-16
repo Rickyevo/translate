@@ -11,7 +11,7 @@ How the project is laid out, how to build it from a fresh clone, and how it is t
 | `app/src/renderer/` | The panel and Settings pages (React; the UI itself lives in `prototype/src`) |
 | `app/scripts/` | Build, packaging and release scripts; test suites, probes and resource measurements |
 | `app/build/THIRD_PARTY_NOTICES.txt` | License notices shipped with the release |
-| `backend/` | Python backend (stdlib + ctypes + vendored Frida): protocol, WeType adapter (`translate_backend/wetype/`), Win32 input and window events, translation pipeline (`translate/`), CC-CEDICT data; `tests/` (no IME, no input); `tools/` research and capture tools (development only, not packaged) |
+| `backend/` | Python backend (stdlib + ctypes + vendored Frida and comtypes): protocol, input methods (`translate_backend/ime.py` selects; `wetype/` WeType via Frida; `mspinyin/` Microsoft Pinyin via UI Automation), Win32 input and window events, translation pipeline (`translate/`), CC-CEDICT data; `tests/` (no IME, no input); `tools/` research and capture tools (development only, not packaged) |
 | `prototype/` | Design lab and the shared UI source (the app imports components from `prototype/src`) |
 | `prototype/src/styles/tokens.css` | Design tokens (both themes) |
 | `prototype/src/i18n/locales/` | zh-CN, en, ja, ko catalogs |
@@ -38,6 +38,8 @@ with the Visual Studio Build Tools, and WeChat Input Method for anything beyond 
 
 ```
 python -m pip install --target backend/vendor frida==17.23.3   # the WeType adapter's Frida dependency
+python -m pip install --target backend/vendor --no-deps comtypes==1.4.17   # Microsoft Pinyin (UI Automation)
+python -c "import sys; sys.path.insert(0, 'backend/vendor'); import comtypes.client; comtypes.client.GetModule('UIAutomationCore.dll')"   # pre-generate its wrappers
 cd app && npm install && cd ..
 cd prototype && npm install && cd ..
 ```
@@ -68,6 +70,7 @@ python -X utf8 scripts/stage4_replay_test.py [--packaged]                 # real
 python -X utf8 scripts/stage5_service_test.py [--packaged]                # translation pipeline vs a local mock service
 python -X utf8 scripts/stage5_real_test.py                                # your configured service, sample texts, no input
 python -X utf8 scripts/placement_test.py                                  # panel vs WeType's bar and canvas, edges (packaged)
+python -X utf8 scripts/mspy_replay_test.py                                # Microsoft Pinyin through the app (packaged)
 python -X utf8 scripts/overview_card_test.py                              # Overview's service card (packaged)
 python -X utf8 scripts/parity_shots.py <reference exe> <candidate exe>    # pixel parity of two host builds
 python -X utf8 scripts/live_placement_probe.py <Translate.exe> [seconds]   # LIVE, read-only: you type; checks placement

@@ -44,7 +44,7 @@ user32.GetWindowThreadProcessId.argtypes = [wt.HWND, ctypes.POINTER(wt.DWORD)]
 MOUSEEVENTF_MOVE, MOUSEEVENTF_ABSOLUTE, MOUSEEVENTF_VIRTUALDESK = 0x0001, 0x8000, 0x4000
 MOUSEEVENTF_LEFTDOWN, MOUSEEVENTF_LEFTUP, MOUSEEVENTF_RIGHTDOWN, MOUSEEVENTF_RIGHTUP, MOUSEEVENTF_WHEEL = 0x2, 0x4, 0x8, 0x10, 0x800
 KEYEVENTF_KEYUP = 0x2
-VK = {"space": 0x20, "backspace": 0x08, "alt": 0x12, "ctrl": 0x11, "shift": 0x10, "a": 0x41, "c": 0x43, "esc": 0x1B, "backquote": 0xC0, "down": 0x28, "up": 0x26, "pgdn": 0x22, "pgup": 0x21, "end": 0x23}
+VK = {"space": 0x20, "backspace": 0x08, "alt": 0x12, "ctrl": 0x11, "shift": 0x10, "a": 0x41, "c": 0x43, "esc": 0x1B, "backquote": 0xC0, "down": 0x28, "up": 0x26, "pgdn": 0x22, "pgup": 0x21, "end": 0x23, "1": 0x31}
 for d in range(10):
     VK[str(d)] = 0x30 + d
 

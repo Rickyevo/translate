@@ -127,7 +127,10 @@
         "scroll": "전체 번역 스크롤"
       },
       "change": "변경",
-      "recording": "키를 누르세요…"
+      "recording": "키를 누르세요…",
+      "ime": "입력기",
+      "imeDesc": "Translate가 따르는 입력기입니다. '자동'은 지금 입력에 쓰는 입력기를 따릅니다.",
+      "imeAuto": "자동"
     },
     "translation": {
       "title": "번역",
@@ -267,7 +270,9 @@
       "quit": "Translate 종료",
       "quitDesc": "Translate를 다시 열 때까지 백그라운드 번역을 중지합니다.",
       "license": "사전 데이터: CC-CEDICT, CC BY-SA 4.0",
-      "dict": "로컬 사전"
+      "dict": "로컬 사전",
+      "imeMsPinyin": "Microsoft 병음",
+      "notRunning": "실행 중 아님"
     },
     "overview": {
       "title": "개요",

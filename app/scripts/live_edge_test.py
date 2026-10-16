@@ -1,4 +1,5 @@
-"""LIVE: panel placement with the real WeChat Input Method near screen edges — this script types.
+"""LIVE: panel placement with the real input method (WeChat Input Method or Microsoft Pinyin — whichever is active)
+near screen edges — this script types.
 
 Opens its own test windows — a classic Win32 text box (Tk: system caret) and an Edge text area (Chromium: accessibility
 caret) — at the middle, the top edge, the bottom edge (WeType keeps its bar below the caret), the very bottom (WeType
@@ -8,7 +9,7 @@ the typing line, and it stays inside the work area. Esc cancels each composition
 windows: if another window comes to the front, it stops without sending anything.
 
 Privacy: positions, generations and counts only — never candidate or typed text.
-Prerequisites: WeType is the active input method in Chinese mode; quit your own Translate; don't touch the PC
+Prerequisites: WeType or Microsoft Pinyin is the active input method in Chinese mode; quit your own Translate; don't touch the PC
 (about 2 minutes). Run from app/:  python -X utf8 scripts/live_edge_test.py [Translate.exe]
 """
 from __future__ import annotations
@@ -19,6 +20,7 @@ import os
 import subprocess
 import sys
 import time
+import re
 import urllib.request
 from ctypes import wintypes as wt
 from pathlib import Path
@@ -93,6 +95,11 @@ class Tk:
         c = json.loads(self.p.stdout.readline())["caret"]
         return {"x": self.rect["x"] + c[0], "y": self.rect["y"] + c[1], "w": max(2, c[2]), "h": c[3]} if c else None
 
+    def text(self) -> str:
+        self.p.stdin.write("get\n")
+        self.p.stdin.flush()
+        return json.loads(self.p.stdout.readline())["text"]
+
     def clear(self):
         self.p.stdin.write("clear\n")
         self.p.stdin.flush()
@@ -153,6 +160,13 @@ class Edge:
 
     def caret(self):
         return None  # judged against the caret the app reports (and the bar)
+
+    def text(self) -> str:
+        import cdp
+        try:
+            return cdp.evaluate(EDGE_CDP, "document.getElementById('t').value", "data:text/html") or ""
+        except Exception:  # noqa: BLE001
+            return ""
 
     def text_len(self) -> int:
         import cdp
@@ -249,12 +263,24 @@ def run_case(target, label, wa, pinyin="shijian"):
     flipped = bool(truth and truth["y"] > bar["y"])
     detail = (f"bar y={bar['y']}..{bar['y'] + bar['h']} line y={line['y']}..{line['y'] + line['h']} "
               f"panel y={panel['y']}..{panel['y'] + panel['h']} dir={s.get('dir')} caret={'reported' if reported else 'not reported'}"
-              f"{' (WeType flipped its bar above the caret)' if flipped else ''} measured={s.get('barMeasured')}")
-    check(f"{tag}: panel clear of WeType's bar", not overlap(panel, bar), detail)
+              f"{' (the bar was flipped above the caret)' if flipped else ''} measured={s.get('barMeasured')}")
+    check(f"{tag}: panel clear of the input method's bar", not overlap(panel, bar), detail)
     check(f"{tag}: panel clear of the typing line", not overlap(panel, line), detail)
     check(f"{tag}: panel inside the work area", inside(panel, wa), f"panel {panel} work {wa}")
     if isinstance(target, Edge):
         check(f"{tag}: Chromium reports its caret (accessibility)", reported is not None, "reported" if reported else "not reported: the line-height fallback applies")
+    if "--insert" in sys.argv:
+        # Alt+1 inserts the first translation; the composition is cancelled first, so no pinyin or Chinese is left.
+        wait(lambda s: s["list"] and s["list"]["states"][0] == "done", 4.0)
+        win.chord("alt", "1", expected=target.hwnd)
+        time.sleep(0.8)
+        text = target.text()
+        chinese = bool(re.search(r"[㐀-鿿]", text))
+        check(f"{tag}: Alt+1 inserts the translation, no pinyin left", bool(text.strip()) and pinyin not in text and not chinese,
+              f"chars={len(text)} pinyin_left={pinyin in text} chinese_left={chinese}")
+        target.clear()
+        time.sleep(0.3)
+        return True
     win.chord("esc", expected=target.hwnd)
     wait(lambda s: s["list"] is None, 2.0)
     target.clear()
@@ -309,8 +335,9 @@ def main() -> int:
             app.wait(8)
         except subprocess.TimeoutExpired:
             app.kill()
-    flowing = log.exists() and "ime data flowing" in log.read_text(encoding="utf-8", errors="replace")
-    check("candidate data flowed from WeType", flowing)
+    # Candidates arrived from whichever input method is active (WeType pipe data, or Microsoft Pinyin via UI Automation).
+    arrived = [r for r in results if "candidates arrive" in r["name"]]
+    check("candidates arrived from the active input method", arrived and any(r["ok"] for r in arrived), f"{sum(r['ok'] for r in arrived)}/{len(arrived)} cases")
     out = ROOT / "measurements" / "stage6"
     out.mkdir(parents=True, exist_ok=True)
     (out / f"live-edge-{time.strftime('%Y%m%d-%H%M%S')}.json").write_text(json.dumps(results, indent=1), encoding="utf-8")

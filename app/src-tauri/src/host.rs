@@ -103,6 +103,7 @@ pub struct Host {
     shortcuts_on: bool,
     translation_mode: String,
     ime_state: String,
+    ime_name: String,
     service_state: String,
     last_insert: Value,
     panel_created: u64,
@@ -175,6 +176,7 @@ impl Host {
             shortcuts_on: false,
             translation_mode: "fixture".into(),
             ime_state: "starting".into(),
+            ime_name: String::new(),
             service_state: String::new(),
             last_insert: Value::Null,
             panel_created: 0,
@@ -283,7 +285,7 @@ impl Host {
         json!({
             "target": s.get("target"), "count": s.get("count"), "denylist": s.get("denylist"), "localOnly": s.get("localOnly"),
             "localDict": s.get("localDict"), "provider": s.get("provider"), "services": s.get("services"),
-            "timeout": s.get("timeout"), "jsonMode": s.get("jsonMode"),
+            "timeout": s.get("timeout"), "jsonMode": s.get("jsonMode"), "ime": s.get("ime"),
             "dataDir": self.o.user_data.to_string_lossy(), // the encrypted translation cache lives here
         })
     }
@@ -358,6 +360,12 @@ impl Host {
             "status" => {
                 if let Some(st) = m.get("ime").and_then(|i| i.get("state")).and_then(Value::as_str) {
                     self.ime_state = st.into();
+                    if let Some(n) = m["ime"].get("name").and_then(Value::as_str) {
+                        if n != self.ime_name {
+                            log::info(format!("input method {n}"));
+                        }
+                        self.ime_name = n.into();
+                    }
                     let code = m["ime"].get("code").and_then(Value::as_str).map(|c| format!(" {c}")).unwrap_or_default();
                     log::info(format!("ime {st}{code}"));
                 }
@@ -1159,7 +1167,7 @@ impl Host {
             "svc:keys" => self.request("secret.status", json!({}), 3000, Box::new(move |_, m| Self::reply_with(reply, m.get("keys").cloned().unwrap_or(json!({}))))),
             "cache:stats" => self.request("cache.stats", json!({}), 3000, Box::new(move |_, m| Self::reply_with(reply, m))),
             "cache:clear" => self.request("cache.clear", json!({}), 3000, Box::new(move |_, m| Self::reply_with(reply, m))),
-            "status:get" => Self::reply_with(reply, json!({ "ime": self.ime_state, "service": self.service_state })),
+            "status:get" => Self::reply_with(reply, json!({ "ime": self.ime_state, "service": self.service_state, "imeName": self.ime_name })),
             "logs:open" => {
                 win::open_path(&self.o.user_data.join("logs").to_string_lossy());
                 Self::reply_with(reply, Value::Null)
@@ -1241,6 +1249,7 @@ impl Host {
             "dir": if self.dir == Dir::Below { "below" } else { "above" },
             "scale": k,
             "imeState": self.ime_state,
+            "imeName": self.ime_name,
             "translationMode": self.translation_mode,
             "lastInsert": self.last_insert,
             "serviceState": self.service_state,
@@ -1299,6 +1308,10 @@ impl Host {
             "/wetype" => {
                 let t = q["t"].as_str().unwrap_or("").to_string();
                 self.request(&format!("debug.wetype.{t}"), q.get("f").cloned().unwrap_or(json!({})), 3000, fwd(reply));
+            }
+            "/mspy" => {
+                let t = q["t"].as_str().unwrap_or("").to_string();
+                self.request(&format!("debug.mspy.{t}"), q.get("f").cloned().unwrap_or(json!({})), 3000, fwd(reply));
             }
             "/input" => self.request("debug.input", q.clone(), 3000, fwd(reply)),
             "/insert" => {
