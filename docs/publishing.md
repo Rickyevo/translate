@@ -8,13 +8,13 @@ On GitHub, create an **empty** repository (no README, license or .gitignore — 
 specific than "translate" is easier to find, for example `wetype-translate`.
 
 - **Description:** `Live translations of WeChat Input Method (微信输入法) candidates on Windows — insert the translation instead of the Chinese.`
-- **Topics:** `wechat-input-method`, `wetype`, `ime`, `translation`, `chinese`, `pinyin`, `windows`, `electron`, `llm`
+- **Topics:** `wechat-input-method`, `wetype`, `ime`, `translation`, `chinese`, `pinyin`, `windows`, `tauri`, `webview2`, `llm`
 - **Social preview** (Settings › General): `screenshots/readme/hero-en-light.png`.
 - Optional: turn off Wiki and Projects; turn on Issues.
 
 ## 2. Fill in the repository name
 
-`docs/release-notes/0.1.1.md` links to the README and changelog with the placeholder `Rickywu05/wetype-translate`. Replace it with the
+`docs/release-notes/0.2.0.md` links to the README and changelog with the placeholder `Rickywu05/wetype-translate`. Replace it with the
 real `owner/name`.
 
 ## 3. Push
@@ -31,14 +31,14 @@ is not included; `docs/development.md` explains how to restore it.
 
 Releases › Draft a new release:
 
-- **Tag:** `v0.1.1` on `main`. **Title:** `Translate 0.1.1`.
-- **Notes:** the contents of `docs/release-notes/0.1.1.md`.
-- **Assets:** `release/Translate-0.1.1-win-x64.zip` and `release/SHA256SUMS.txt`.
+- **Tag:** `v0.2.0` on `main`. **Title:** `Translate 0.2.0`.
+- **Notes:** the contents of `docs/release-notes/0.2.0.md`.
+- **Assets:** `release/Translate-0.2.0-win-x64.zip` and `release/SHA256SUMS.txt`.
 
 Or with the GitHub CLI:
 
 ```
-gh release create v0.1.1 release/Translate-0.1.1-win-x64.zip release/SHA256SUMS.txt --title "Translate 0.1.1" --notes-file docs/release-notes/0.1.1.md
+gh release create v0.2.0 release/Translate-0.2.0-win-x64.zip release/SHA256SUMS.txt --title "Translate 0.2.0" --notes-file docs/release-notes/0.2.0.md
 ```
 
 ## Checked before publishing

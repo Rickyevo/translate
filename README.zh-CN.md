@@ -118,7 +118,8 @@ Translate 是一个安静运行在 Windows 后台的微信输入法（WeType）�
 | Windows | 10 或 11，x64 |
 | 微信输入法 | [Windows 版](https://z.weixin.qq.com/)，已测试 **3.0.0.34** |
 | 翻译服务 | 可选；短语、句子和非英文目标需要自己的 API Key |
-| 空间 | 当前公开发布包下载约 200 MB，解压约 475 MB |
+| 空间 | 下载约 61 MB，解压约 156 MB |
+| WebView2 | Windows 11 及较新的 Windows 10 已内置 Microsoft Edge WebView2 运行时（缺失时 Translate 会提示） |
 
 ## 已知限制
 
@@ -137,7 +138,7 @@ Translate 是一个安静运行在 Windows 后台的微信输入法（WeType）�
 程序尚未签名，SmartScreen 可能不认识它。确认下载来源后，可选择“更多信息 → 仍要运行”。发布页附有 `SHA256SUMS.txt`，可核对文件：
 
 ```powershell
-Get-FileHash .\Translate-0.1.1-win-x64.zip -Algorithm SHA256
+Get-FileHash .\Translate-0.2.0-win-x64.zip -Algorithm SHA256
 ```
 
 </details>
@@ -167,21 +168,19 @@ Ctrl+Alt+P 暂停或恢复。退出在设置 → 关于 → 退出 Translate。
 
 ## 工作原理
 
-内置 Python 引擎通过 Frida 观察 `wetype_server.exe` 发给候选窗的消息，提取候选并跟踪窗口位置。译文来自缓存、本地词典和所选服务，界面由 Electron 展示。插入时取消拼音组合，通过 `SendInput` 输入 Unicode 译文。
+内置 Python 引擎通过 Frida 观察 `wetype_server.exe` 发给候选窗的消息，提取候选并跟踪窗口位置。译文来自缓存、本地词典和所选服务，界面由 Tauri + WebView2 展示。插入时取消拼音组合，通过 `SendInput` 输入 Unicode 译文。
 
 [开发说明](docs/development.md) · [设计系统](DESIGN.md) · [通信协议](docs/protocol.md) · [发布构建](docs/release.md) · [更新记录](CHANGELOG.md)
 
 ## 从源码构建
 
-需要 Windows 10/11 x64、Node 22+、Python 3.12：
+需要 Windows 10/11 x64、Node 22+、Python 3.12 和 Rust（MSVC，含 Visual Studio Build Tools）：
 
 ```powershell
 python -m pip install --target backend/vendor frida==17.23.3
 cd app
 npm install
-node node_modules/electron/install.js
-npm run build
-node scripts/package.mjs
+python -X utf8 scripts/package.py
 ```
 
 完整依赖、测试和便携版打包步骤见 [开发说明](docs/development.md)。
@@ -194,6 +193,6 @@ node scripts/package.mjs
 
 [MIT](LICENSE) © 2026 Rickywu05
 
-本地词典来自 [CC-CEDICT](https://www.mdbg.net/chinese/dictionary?page=cedict)，使用 CC BY-SA 4.0。Electron、Python、Frida 等组件采用各自许可证，见 [第三方声明](app/build/THIRD_PARTY_NOTICES.txt)。
+本地词典来自 [CC-CEDICT](https://www.mdbg.net/chinese/dictionary?page=cedict)，使用 CC BY-SA 4.0。Python、Frida、Tauri 等组件采用各自许可证，见 [第三方声明](app/build/THIRD_PARTY_NOTICES.txt)。
 
 <div align="center"><sub>Translate 是独立项目，与腾讯或微信没有隶属、合作或官方背书关系。</sub></div>

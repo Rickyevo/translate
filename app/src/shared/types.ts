@@ -39,7 +39,7 @@ export interface TranslateApi {
   retry(gen: number, n: number): void
   previewNeed(need: { wanted: boolean; requested: boolean; w: number; h: number }): void
   // settings
-  getSettings(): Promise<{ saved: Settings; theme: ThemeName; paused: boolean; translatedOnce: boolean; version: string }>
+  getSettings(): Promise<{ saved: Settings; theme: ThemeName; paused: boolean; version: string }>
   saveSettings(s: Settings): Promise<void>
   draftSettings(s: Settings): void
   setPaused(p: boolean): void
@@ -48,8 +48,6 @@ export interface TranslateApi {
   onTheme(cb: (t: ThemeName) => void): void
   /** Pause state changed elsewhere (Ctrl+Alt+P). */
   onPaused(cb: (paused: boolean) => void): void
-  /** The first real translation was shown (setup step 3). */
-  onTranslatedOnce(cb: () => void): void
   // settings → backend (see prototype/src/settings/bridge.ts)
   svcTest(service: unknown, key: string): Promise<{ ok: boolean; ms?: number; error?: string; status?: number; detail?: string }>
   svcModels(service: unknown, key: string): Promise<{ ok: boolean; models?: string[]; error?: string; status?: number; detail?: string }>

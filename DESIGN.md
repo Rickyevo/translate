@@ -119,8 +119,8 @@ the nudge. Under reduced motion there is no pop, and the nudge becomes a dashed 
 **Desktop app rendering budget** (stage 3, measured):
 - Loading placeholders are **static** in the app; the prototype's shimmer is gone. An animated
   placeholder repaints the whole transparent window every frame.
-- `backdrop-filter` is not used in the app. An Electron window cannot blur the desktop behind it, so
-  the effect only cost compositing.
+- `backdrop-filter` is not used in the app. A transparent app window cannot blur the desktop behind it,
+  so the effect only cost compositing.
 - The app renders in software, without the GPU process. That is pixel-identical for these surfaces
   and saves about 75 MB.
 
@@ -149,8 +149,8 @@ always win. (An unlayered `button{color:inherit}` in stage 1 silently overrode t
 | Footer, simulated (test builds only) | `⚗ Simulated translations — not real`: the replay test source with the `[sim]` translator. Never shown in normal use since stage 5 |
 | Pointer | Click inserts; right-click shows Insert · Copy · Retry. The panel never takes focus from the app |
 | Keyboard | Alt+1…9 insert, Alt+Shift+1…9 copy, Alt+0 hide or show the panel; Alt+` show or hide the full text, Alt+↑/↓ preview another candidate, Alt+PgUp/PgDn scroll it (all only while a list is visible) |
-| Readability | `--bar-bg` at 97% opacity by default (setting 70–100%), backdrop blur, a 1 px border (no shadow) |
-| Screen edges | The stack flips above the caret near the bottom and slides left near the right edge. The lead preview places itself (§9.1) |
+| Readability | `--bar-bg` opaque by default (setting 90–100 %), a 1 px border (no shadow) |
+| Screen edges | The panel goes under the bar, or above it when there is no room below — then also above the **typing line**: near the bottom of the screen WeType usually keeps its bar *below* the caret, so directly above the bar is the line being typed on. The caret comes from the app (system caret, else the accessibility caret object); when the app reports none, one line's height (the bar's) is kept clear above the bar. It slides left near the right edge and stays inside the monitor's work area. The lead preview places itself (§9.1). Geometry: `app/src-tauri/src/layout.rs`, unit-tested over 9 screens (1366×768 to 3840×2160, 100–200 %, negative-origin monitors) × 5 bar layouts × 13 heights × 3 horizontal positions × caret above/below, reported or not × both modes |
 | Finding the bar | WeType draws its bar somewhere inside a larger transparent canvas (628×314 at 96 dpi); where depends on the WeType version, its layout (pinyin above or inline), the display scaling and edge flips, and its messages don't say. The engine renders that window alone into memory (`PrintWindow`, full content), takes the box of drawn pixels and discards the image (~8 ms, cached 50 ms). If the bar isn't drawn yet it uses the last box measured at that size (else a default band) and measures again 60–180 ms later. The panel is anchored to that box, left-aligned with it |
 | Opacity | Opaque by default (Appearance › Panel opacity, 90–100 %). The blur behind the panel can't reach other apps, so lower values let their text show through |
 | IME window and the mouse | WeChat Input Method's candidate window runs with UIAccess: it sits in a z-band above every normal window, and its whole canvas (628×314 at 96 dpi, transparent parts included) takes the mouse. A panel directly under the bar therefore displays correctly and works by keyboard, but takes no clicks, hover or wheel. **Appearance › Keep the panel clickable** (off by default) places the panel, and the lead preview, clear of that window instead: further from the candidates, fully clickable. With no room clear of it on either side, it falls back to the bar. A UIAccess build (signed, installed under Program Files) would remove the trade-off |
@@ -166,14 +166,14 @@ always win. (An unlayered `button{color:inherit}` in stage 1 silently overrode t
 | Size | Width max(panel width, 360) up to 400. Height fits the text up to 6 lines, then scrolls inside with a bottom fade. Height only grows within a composition |
 | Stability | Content swaps in place with no animation. While the new #1 is still translating, the previous text stays at 45% opacity with a hairline progress line for ≤ 600 ms, then two skeleton lines. Rows above never move |
 | Other rows | Hovering a cut-off or failed row for 150 ms moves the same card to that row; it returns to #1 300 ms after leaving. Alt+↓/↑ step through candidates |
-| Placement | `src/layout/placePreview.ts`, pure DIP geometry, reused by Electron. Order: **outer side** (away from the caret) → **beside** (more room; top-aligned with row 1) → **best fit ≥ 2 lines, scrolls** → **overlay on our own rows** (only on Alt+`) → **none** (row 1 shows ⋯). Never covers the typing band or the IME window; stays inside the monitor's work area with an 8 px margin |
+| Placement | `src/layout/placePreview.ts` (prototype) and its port in `app/src-tauri/src/layout.rs` (physical pixels, the app). Order: **outer side** (away from the caret) → **beside** (more room; top-aligned with row 1) → **best fit ≥ 2 lines, scrolls** → **overlay on our own rows** (only on Alt+`) → **none** (row 1 shows ⋯). Never covers the typing band or the IME window; stays inside the monitor's work area with an 8 px margin |
 | Dismissal | Commit or cancel of the composition, panel hidden, pause, focus moving to another app. × or Alt+` collapses it for the current composition only. Esc belongs to the IME |
 | Focus | The body is passive: no insert on click, no text selection. Every mousedown is swallowed; the wheel scrolls it. Only *Insert* / Alt+N insert |
 
 ## 10. Settings model
 
-Pages: **Overview** (status + pause + target language, setup checklist, how to reach the app without a
-tray) · **General** (languages, startup, shortcuts incl. copy) · **Translation** (lookup order, local
+Pages: **Overview** (status + pause + target language; a *Connect a translation service* card only while no service
+is set up — the one real setup step; how to reach the app without a tray) · **General** (languages, startup, shortcuts incl. copy) · **Translation** (lookup order, local
 dictionary, service: provider — OpenAI, Claude, Gemini, Grok, OpenCode Go, DeepSeek, Custom — endpoint,
 authentication, key, model with *Load models*, timeout, JSON output, *Test connection*) · **Appearance** (live preview first; theme, text size, density, opacity,
 offset, originals) · **Privacy** · **About**.

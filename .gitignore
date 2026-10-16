@@ -47,6 +47,6 @@ docs/research/*
 !docs/research/*-notes.md
 *.tsbuildinfo
 
-# Spike build output
-spike/tauri-panel/target/
-spike/out/
+# Tauri host build output
+app/src-tauri/target/
+app/src-tauri/gen/

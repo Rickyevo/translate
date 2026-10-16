@@ -74,7 +74,64 @@ def foreground() -> dict:
             user32.ClientToScreen(gti.hwndCaret, ctypes.byref(tl))
             user32.ClientToScreen(gti.hwndCaret, ctypes.byref(br))
             info["caret"] = {"x": tl.x, "y": tl.y, "w": max(1, br.x - tl.x), "h": br.y - tl.y}
+        if "caret" not in info and gti.hwndFocus:
+            caret = accessible_caret(int(gti.hwndFocus))  # apps without a system caret (Chromium, Electron, Firefox…)
+            if caret:
+                info["caret"] = caret
+    if "caret" in info and info["caret"]["h"] <= 0:
+        del info["caret"]
     return info
+
+
+# --- Accessibility caret (MSAA OBJID_CARET) ------------------------------------------------------
+# Browsers and Chromium/Electron apps draw their own caret and report it through the standard accessibility caret
+# object instead of the system caret. Only its screen rectangle is read (four numbers; no text).
+_ole = None
+_com_threads: set[int] = set()
+
+
+class _GUID(ctypes.Structure):
+    _fields_ = [("a", wt.DWORD), ("b", wt.WORD), ("c", wt.WORD), ("d", ctypes.c_ubyte * 8)]
+
+
+class _VARIANT(ctypes.Structure):
+    _fields_ = [("vt", ctypes.c_ushort), ("r1", ctypes.c_ushort), ("r2", ctypes.c_ushort), ("r3", ctypes.c_ushort), ("val", ctypes.c_longlong), ("pad", ctypes.c_longlong)]
+
+
+_IID_IACCESSIBLE = _GUID(0x618736E0, 0x3C3D, 0x11CF, (ctypes.c_ubyte * 8)(0x81, 0x0C, 0x00, 0xAA, 0x00, 0x38, 0x9B, 0x71))
+OBJID_CARET = -8
+_ACC_LOCATION = ctypes.WINFUNCTYPE(ctypes.c_long, ctypes.c_void_p, ctypes.POINTER(ctypes.c_long), ctypes.POINTER(ctypes.c_long), ctypes.POINTER(ctypes.c_long), ctypes.POINTER(ctypes.c_long), _VARIANT)
+_RELEASE = ctypes.WINFUNCTYPE(ctypes.c_ulong, ctypes.c_void_p)
+
+
+def accessible_caret(hwnd: int) -> dict | None:
+    global _ole
+    try:
+        if _ole is None:
+            _ole = ctypes.WinDLL("oleacc")
+            _ole.AccessibleObjectFromWindow.argtypes = [wt.HWND, wt.DWORD, ctypes.POINTER(_GUID), ctypes.POINTER(ctypes.c_void_p)]
+            ctypes.windll.ole32.CoInitializeEx.argtypes = [ctypes.c_void_p, wt.DWORD]
+            user32.IsHungAppWindow.argtypes = [wt.HWND]
+        if user32.IsHungAppWindow(hwnd):
+            return None
+        tid = kernel32.GetCurrentThreadId()
+        if tid not in _com_threads:
+            ctypes.windll.ole32.CoInitializeEx(None, 0x2)  # COINIT_APARTMENTTHREADED, once per thread
+            _com_threads.add(tid)
+        acc = ctypes.c_void_p()
+        if _ole.AccessibleObjectFromWindow(hwnd, OBJID_CARET & 0xFFFFFFFF, ctypes.byref(_IID_IACCESSIBLE), ctypes.byref(acc)) != 0 or not acc.value:
+            return None
+        vtbl = ctypes.cast(ctypes.cast(acc, ctypes.POINTER(ctypes.c_void_p))[0], ctypes.POINTER(ctypes.c_void_p))
+        try:
+            x, y, w, h = (ctypes.c_long() for _ in range(4))
+            hr = _ACC_LOCATION(vtbl[22])(acc, ctypes.byref(x), ctypes.byref(y), ctypes.byref(w), ctypes.byref(h), _VARIANT(3, 0, 0, 0, 0, 0))
+        finally:
+            _RELEASE(vtbl[2])(acc)
+        if hr != 0 or h.value <= 0 or (x.value == 0 and y.value == 0):
+            return None
+        return {"x": x.value, "y": y.value, "w": max(1, w.value), "h": h.value}
+    except Exception:  # noqa: BLE001 — an app without (or with a broken) caret object: no caret
+        return None
 
 
 def process_exe(pid: int) -> str:

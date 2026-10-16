@@ -111,7 +111,8 @@ Translate は Windows の **WeChat Input Method（微信输入法・WeType）** 
 | Windows | 10 または 11、x64 |
 | 入力メソッド | [WeType for Windows](https://z.weixin.qq.com/)、検証済み **3.0.0.34** |
 | 翻訳サービス | 任意。フレーズ、文章、英語以外の翻訳先には自分の API キーが必要 |
-| 容量 | 現行公開版はダウンロード約 200 MB、展開後約 475 MB |
+| 容量 | ダウンロード約 61 MB、展開後約 156 MB |
+| WebView2 | Windows 11 と最新の Windows 10 に組み込まれている Microsoft Edge WebView2 ランタイム（ない場合は Translate が案内します） |
 
 ## 既知の制限
 
@@ -130,7 +131,7 @@ Translate は Windows の **WeChat Input Method（微信输入法・WeType）** 
 コード署名がないため警告される場合があります。配布元を確認したうえで「詳細情報 → 実行」を選べます。配布ページの `SHA256SUMS.txt` と比較できます。
 
 ```powershell
-Get-FileHash .\Translate-0.1.1-win-x64.zip -Algorithm SHA256
+Get-FileHash .\Translate-0.2.0-win-x64.zip -Algorithm SHA256
 ```
 
 </details>
@@ -160,21 +161,19 @@ Ctrl+Alt+P で一時停止／再開します。終了は Settings → About → 
 
 ## 仕組み
 
-同梱 Python エンジンが Frida を通じて `wetype_server.exe` から候補ウィンドウへのメッセージを観察し、候補とウィンドウ位置を取得します。キャッシュ、辞書、選択したサービスから翻訳を取得し、Electron のパネルに表示します。挿入時はピンイン変換を解除して `SendInput` で Unicode テキストを入力します。
+同梱 Python エンジンが Frida を通じて `wetype_server.exe` から候補ウィンドウへのメッセージを観察し、候補とウィンドウ位置を取得します。キャッシュ、辞書、選択したサービスから翻訳を取得し、Tauri + WebView2 のパネルに表示します。挿入時はピンイン変換を解除して `SendInput` で Unicode テキストを入力します。
 
 [開発ガイド](docs/development.md) · [デザイン](DESIGN.md) · [通信仕様](docs/protocol.md) · [リリース構築](docs/release.md) · [変更履歴](CHANGELOG.md)
 
 ## ソースからビルド
 
-Windows 10/11 x64、Node 22+、Python 3.12 が必要です。
+Windows 10/11 x64、Node 22+、Python 3.12、Rust（MSVC、Visual Studio Build Tools）が必要です。
 
 ```powershell
 python -m pip install --target backend/vendor frida==17.23.3
 cd app
 npm install
-node node_modules/electron/install.js
-npm run build
-node scripts/package.mjs
+python -X utf8 scripts/package.py
 ```
 
 依存関係、テスト、ポータブル配布の構築は [開発ガイド](docs/development.md) を参照してください。
@@ -187,6 +186,6 @@ node scripts/package.mjs
 
 [MIT](LICENSE) © 2026 Rickywu05
 
-辞書は [CC-CEDICT](https://www.mdbg.net/chinese/dictionary?page=cedict)（CC BY-SA 4.0）由来です。Electron、Python、Frida などのライセンスは [第三者ライセンス](app/build/THIRD_PARTY_NOTICES.txt) を参照してください。
+辞書は [CC-CEDICT](https://www.mdbg.net/chinese/dictionary?page=cedict)（CC BY-SA 4.0）由来です。Python、Frida、Tauri などのライセンスは [第三者ライセンス](app/build/THIRD_PARTY_NOTICES.txt) を参照してください。
 
 <div align="center"><sub>Translate は独立プロジェクトであり、Tencent または WeChat による製品、提携製品、公認製品ではありません。</sub></div>

@@ -1,0 +1,9 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Translate",
+  "version": "0.2.0",
+  "identifier": "app.translate.desktop",
+  "build": { "frontendDist": "../dist/renderer" },
+  "app": { "windows": [], "security": { "csp": null }, "withGlobalTauri": false },
+  "bundle": { "active": false, "icon": ["icons/icon.ico"] }
+}

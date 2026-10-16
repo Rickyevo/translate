@@ -274,13 +274,6 @@
       "desc": "打字时，Translate 在后台为你翻译候选。",
       "statusOk": "正在翻译为 {{lang}}",
       "statusPaused": "已暂停",
-      "setup": "完成设置",
-      "setupDone": "已完成 {{done}}/{{total}}",
-      "step1": "选择翻译目标语言",
-      "step2": "连接翻译服务",
-      "step2Desc": "翻译短语或英语以外的语言时需要。",
-      "step3": "在任意应用中输入拼音",
-      "step3Desc": "译文会显示在候选窗口下方。",
       "quick": "快捷控制",
       "pause": "暂停翻译",
       "reach": "如何找到 Translate",
@@ -288,7 +281,10 @@
       "reachRelaunch": "再次运行 Translate.exe",
       "reachShortcut": "按 {{key}}",
       "reachQuit": "退出：设置 › 关于",
-      "active": "输入时翻译"
+      "active": "输入时翻译",
+      "serviceTitle": "连接翻译服务",
+      "serviceDesc": "单个词语已可翻译成英文。连接服务后，还能翻译短语、句子和其他语言。",
+      "serviceSetup": "去设置"
     }
   },
   "showcase": {

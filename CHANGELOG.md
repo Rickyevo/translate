@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.2.0 — 2026-10-16
+
+- **New host: Tauri 2 + the WebView2 Runtime built into Windows**, replacing Electron. The interface code is
+  unchanged and pixel-identical (panel, full-text preview and every Settings page, light and dark). Download about
+  61 MB instead of 198 MB; unpacked about 156 MB instead of 474 MB. Memory: about 16 MB before the panel is first
+  needed (was 74 MB) and about 20 MB after it is released when you stop typing (was 83 MB); about 146 MB while the
+  panel and preview are showing (was 123 MB).
+- **The panel no longer covers the line you're typing on** near the bottom of the screen. With no room under
+  WeType's bar it goes above the bar — and above the typing line, which is right above the bar there. The caret
+  comes from the app (system caret or accessibility caret object); without one, a line's height is kept clear.
+- **Settings › Overview**: the three-step checklist is replaced by a single *Connect a translation service* card,
+  shown only while no service is set up. (Its first step was always done, and its last was just using the app.)
+  `progress.json` is no longer written.
+- The test-control DevTools port is accepted only together with `--test-control`.
+
 ## 0.1.1 — 2026-10-16
 
 - **Panel placement works on other PCs.** The panel was positioned from fixed offsets measured on one WeType layout

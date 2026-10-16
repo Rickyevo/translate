@@ -1,44 +1,61 @@
-# Release build (0.1.1)
+# Release build (0.2.0)
 
-Portable Windows x64 release: `release/Translate-0.1.1-win-x64.zip` (198 MB; 474 MB unpacked, 100 files) and
+Portable Windows x64 release: `release/Translate-0.2.0-win-x64.zip` (61 MB; 156 MB unpacked, 80 files) and
 `release/SHA256SUMS.txt`. Unzip anywhere and run `Translate.exe` — no installer, no admin rights, no Python, Node or
-other development tools. Not code-signed (SmartScreen warns on first launch). User notes: `README-FIRST.txt` in the zip.
+other development tools. The interface runs in the Microsoft Edge WebView2 Runtime that is part of Windows (if it is
+missing, Translate says so and offers the download page). Not code-signed (SmartScreen warns on first launch). User
+notes: `README-FIRST.txt` in the zip.
 
 ## What is bundled
 
 | Part | Where | Notes |
 |---|---|---|
-| Electron 44 app | `Translate.exe`, `resources/app.asar` | asar integrity, hardened fuses, 4 UI locales |
+| Tauri 2 host | `Translate.exe` (≈ 4 MB) | Rust; the UI (`app/dist/renderer`) is embedded; WebView2 with software rendering, DevTools only with `--test-control` |
 | Python 3.12.9 runtime | `resources/python/` (19 MB) | `TranslateEngine.exe` + DLLs + stdlib as precompiled `python312.zip`; isolated by `python312._pth` (ignores PYTHONPATH/PYTHONHOME, user site and any installed Python). Built from the local CPython by `app/scripts/bundle_python.py` |
-| Backend | `resources/backend/` | precompiled; Frida 17.23.3 in `vendor/`; CC-CEDICT data |
-| Licenses | `LICENSE.txt` (Translate, MIT), `THIRD_PARTY_NOTICES.txt`, `LICENSE.electron.txt`, `LICENSES.chromium.html`, `resources/python/LICENSE.txt`, `cedict.LICENSE` | |
+| Backend | `resources/backend/` | precompiled; Frida 17.23.3 in `vendor/` (129 MB, most of the size); CC-CEDICT data |
+| Licenses | `LICENSE.txt` (Translate, MIT), `THIRD_PARTY_NOTICES.txt`, `THIRD_PARTY_RUST.txt` (every Rust crate in the exe, with license texts), `resources/python/LICENSE.txt`, `cedict.LICENSE` | |
 
 ## Build
 
 ```
 cd app
-npm run build
-node scripts/package.mjs --out=release-build      # needs CPython 3.12 on PATH (bundled from it)
+python -X utf8 scripts/package.py                 # renderer, host (cargo), engine + Python runtime → release-build/
 python -X utf8 scripts/make_release.py release-build/Translate-win32-x64
 ```
 
-`make_release.py` builds the zip from a staging copy in `.cache/release-stage/` and refreshes the unpacked
-`release/Translate-<version>-win-x64/` only when no running Translate uses it.
+Needs Node, CPython 3.12 (bundled from it) and Rust (MSVC) on PATH. `make_release.py` builds the zip from a staging
+copy in `.cache/release-stage/` and refreshes the unpacked `release/Translate-<version>-win-x64/` only when no running
+Translate uses it.
 
-## Verification of 0.1.0 (on the release, copied out of the source tree, in an environment with only Windows folders on PATH and no PYTHON*/NODE* variables)
+## Verification of 0.2.0 (on the release, copied out of the source tree; release check in an environment with only Windows folders on PATH and no PYTHON*/NODE* variables)
 
 | Check | Result |
 |---|---|
-| `release_verify.py` on the folder extracted from the zip | 9 / 9 — backend is the bundled `TranslateEngine.exe`; 0 of 81 mapped files from outside the release; Frida, OpenSSL, ctypes load from the release; IME attached in 1.6 s; no visible windows; clean exit, no leftovers |
-| Start with Windows and panel footer (`autostart_test.py`) | 8 / 8 — Run entry added at start and on Save, removed when turned off; footer has no buttons or menus; version 0.1.0; nothing left behind |
-| Setup checklist step 3 (`setup_progress_test.py`) | 6 / 6 — not done on a fresh profile; done on the first real translation, live in an open Settings window; kept after Save and after a restart; `progress.json` holds one flag |
-| Stage-4 replay suite | 40 / 40 |
+| `release_verify.py` on the folder extracted from the zip | 9 / 9 — bundled `TranslateEngine.exe`; 0 of 90 mapped files from outside the release; IME attached in 1.4 s; no visible windows; clean exit, no leftovers |
+| Visual parity with 0.1.1 (`parity_shots.py`) | 28 / 28 captures pixel-identical: panel, lead preview, Overview, General, Translation, Appearance, Privacy — light and dark |
+| Placement geometry (`cargo test`) | 9 screens (1366×768 … 3840×2160, 100–200 %, negative-origin monitors) × 5 bar layouts × 13 heights × 3 horizontal positions × caret above/below, reported or not × default/clickable: never over the bar or typing line, always inside the work area; the reported bottom-edge case; mutation check (no line clearance) fails both tests |
+| Placement in the app (`placement_test.py`) | 35 / 35 |
+| Stage-4 replay suite | 40 / 40 (incl. lead preview via `window.open`, idle release and recreation, engine restart) |
 | Translation pipeline vs local mock | 19 / 19 |
+| Start with Windows + footer | 8 / 8 |
+| Overview service card | 4 / 4 |
 | Settings UI (dropdowns, scrollbars) | 11 / 11 |
-| README captures with the real service (`readme_shots.py`) | language pair shown as plain text |
-| Backend unit tests | 59 / 59 |
-| Real service accuracy and speed (development build 0.5.2) | 15 / 15, p50 1.65 s |
-| Zip contents | no settings, caches, logs, keys or personal paths; `SHA256SUMS.txt` checks with `sha256sum -c` |
+| Backend unit tests | 64 / 64 |
+| Memory (private, whole process tree; replay) | idle before the first list 16 MB (0.1.1: 74), panel + preview shown 146 MB (123), after the idle release 20 MB (83) |
+
+## 0.2.0
+
+- **Host**: Electron replaced by Tauri 2 + WebView2 (`app/src-tauri/`); the renderer and the engine are unchanged. The
+  pages get the same `window.translate` API from `bridge.js`. The preview is still opened by the panel page with
+  `window.open` into a window of the same WebView2 environment, so it shares the panel's renderer. Click-through is a
+  window region (only the drawn panel takes the mouse) instead of Electron's forwarded mouse events.
+- **Placement**: also clear of the typing line when the panel goes above WeType's bar (DESIGN §9 "Screen edges"); the
+  engine passes the app's caret (system caret, else MSAA `OBJID_CARET`) with the bar.
+- **Overview**: one *Connect a translation service* card instead of the three-step checklist.
+- Settings without a native frame: Tauri's size bookkeeping for frameless resizable windows is off by the caption
+  height, so the page reports its viewport and the host sizes the window to give exactly 860 × 620.
+
+## Earlier releases
 
 ## 0.1.1
 

@@ -1,4 +1,4 @@
-"""Launch the Translate app (dev build or packaged exe) with the test-control endpoint, and talk to it."""
+"""Launch the Translate app (the Tauri host, Translate.exe) with the test-control endpoint, and talk to it."""
 from __future__ import annotations
 
 import json
@@ -11,9 +11,9 @@ from pathlib import Path
 
 APP = Path(__file__).resolve().parents[2]
 ROOT = APP.parent
-DEV_ELECTRON = APP / "node_modules" / "electron" / "dist" / "electron.exe"
-# TRANSLATE_EXE overrides the packaged build under test (e.g. out-next/ while out/ is in use).
-PACKAGED = Path(os.environ["TRANSLATE_EXE"]) if os.environ.get("TRANSLATE_EXE") else APP / "out" / "Translate-win32-x64" / "Translate.exe"
+# The host build under test: TRANSLATE_EXE, else the release build of app/src-tauri. Outside a packaged release the
+# engine runs from the repository's backend/ with this Python (TRANSLATE_PYTHON).
+PACKAGED = Path(os.environ["TRANSLATE_EXE"]) if os.environ.get("TRANSLATE_EXE") else APP / "src-tauri" / "target" / "release" / "Translate.exe"
 
 
 def clean_env() -> dict:
@@ -31,8 +31,8 @@ def clean_env() -> dict:
 class App:
     def __init__(self, port: int = 47321, packaged: bool = False, extra_args: list[str] | None = None, env: dict | None = None):
         self.port = port
-        exe = PACKAGED if packaged else DEV_ELECTRON
-        args = [str(exe)] + ([] if packaged else [str(APP)]) + [f"--test-control={port}"] + (extra_args or [])
+        exe = PACKAGED  # `packaged` is kept for callers; there is one host build now
+        args = [str(exe), f"--test-control={port}"] + (extra_args or [])
         e = {**os.environ, "TRANSLATE_PYTHON": sys.executable, **(env or {})}
         if os.environ.get("TRANSLATE_CLEAN_ENV"):
             e = {**clean_env(), **(env or {})}  # release verification: no Python/Node/dev tools in the environment

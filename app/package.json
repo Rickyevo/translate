@@ -1,22 +1,18 @@
 {
   "name": "translate",
   "productName": "Translate",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "private": true,
   "description": "Live translations of WeChat Input Method candidates on Windows",
   "author": "Rickywu05",
   "license": "MIT",
-  "main": "dist/main/main.js",
   "type": "commonjs",
   "devDependencies": {
-    "@electron/fuses": "^2.1.3",
-    "@electron/packager": "^20.3.0",
     "@tailwindcss/vite": "^4.3.3",
     "@types/node": "^22.20.5",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^5.2.0",
-    "electron": "^44.7.2",
     "esbuild": "^0.25.12",
     "tailwindcss": "^4.3.3",
     "typescript": "5.9",
@@ -41,9 +37,8 @@
   },
   "scripts": {
     "build:renderer": "vite build",
-    "build:main": "node scripts/build-main.mjs",
-    "build": "npm run build:main && npm run build:renderer",
-    "start": "electron .",
+    "build": "node scripts/gen_defaults.mjs && vite build && cargo build --release --manifest-path src-tauri/Cargo.toml",
+    "package": "python -X utf8 scripts/package.py",
     "typecheck": "tsc -p . --noEmit"
   }
 }

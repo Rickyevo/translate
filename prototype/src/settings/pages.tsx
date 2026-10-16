@@ -726,7 +726,6 @@ export function OverviewPage({ go }: { go: (p: 'general' | 'translation') => voi
   const { t } = useTranslation()
   const [d, set] = useDraft()
   const paused = useReview((r) => r.paused)
-  const translatedOnce = useReview((r) => r.translatedOnce)
   const setp = useReview((r) => r.setp)
   const lang = TARGETS.find((x) => x.id === d.target)!.native
   const [keys, setKeys] = useState<Partial<Record<ProviderId, boolean>>>({})
@@ -734,12 +733,6 @@ export function OverviewPage({ go }: { go: (p: 'general' | 'translation') => voi
     bridge?.keys().then(setKeys)
   }, [])
   const serviceReady = d.localOnly || !!keys[d.provider] || !!d.apiKey || serviceOf(d).auth === 'none'
-  const steps: { done: boolean; title: string; desc?: string; go?: () => void }[] = [
-    { done: true, title: t('settings.overview.step1'), go: () => go('general') },
-    { done: serviceReady, title: t('settings.overview.step2'), desc: t('settings.overview.step2Desc'), go: () => go('translation') },
-    { done: translatedOnce, title: t('settings.overview.step3'), desc: t('settings.overview.step3Desc') },
-  ]
-  const done = steps.filter((s) => s.done).length
   return (
     <>
       <PageHeader title={t('settings.overview.title')} desc={t('settings.overview.desc')} />
@@ -775,25 +768,24 @@ export function OverviewPage({ go }: { go: (p: 'general' | 'translation') => voi
           />
         </Section>
 
-        <Section title={t('settings.overview.setup')} aside={<span className="pt-0.5 text-12 text-fg-3 tnum">{t('settings.overview.setupDone', { done, total: steps.length })}</span>}>
-          {steps.map((s, i) => (
-            <button key={i} type="button" onClick={s.go} disabled={!s.go} className="focus-ring flex w-full items-center gap-3 px-4 py-3 text-left enabled:hover:bg-hover">
-              <span
-                className={cx(
-                  'inline-flex size-5 shrink-0 items-center justify-center rounded-full text-11 font-semibold tnum',
-                  s.done ? 'bg-accent text-on-accent' : 'text-fg-3 shadow-[inset_0_0_0_1.5px_var(--c-line-strong)]',
-                )}
-              >
-                {s.done ? <Check className="size-3" strokeWidth={3} /> : i + 1}
+        {/* The only real setup: a translation service (optional). Shown until one is connected or Local only is on. */}
+        {!serviceReady && (
+          <Section>
+            <div className="flex items-center gap-3 px-4 py-3.5">
+              <span className="inline-flex size-8 shrink-0 items-center justify-center rounded-lg bg-sunken text-fg-3">
+                <Cloud className="size-4" />
               </span>
-              <span className="flex-1">
-                <span className={cx('block text-13 font-medium', s.done ? 'text-fg-3' : 'text-fg')}>{s.title}</span>
-                {s.desc && !s.done && <span className="block text-12 text-fg-3">{s.desc}</span>}
-              </span>
-              {s.go && <ArrowRight className="size-3.5 text-fg-4" />}
-            </button>
-          ))}
-        </Section>
+              <div className="flex-1">
+                <div className="text-14 font-semibold text-fg">{t('settings.overview.serviceTitle')}</div>
+                <div className="text-12 text-fg-3">{t('settings.overview.serviceDesc')}</div>
+              </div>
+              <Button onClick={() => go('translation')}>
+                {t('settings.overview.serviceSetup')}
+                <ArrowRight className="size-3.5" />
+              </Button>
+            </div>
+          </Section>
+        )}
 
         <Section title={t('settings.overview.reach')} desc={t('settings.overview.reachDesc')}>
           <ReachRow icon={<Kbd>.exe</Kbd>} label={t('settings.overview.reachRelaunch')} />

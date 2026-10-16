@@ -274,13 +274,6 @@
       "desc": "Translate runs in the background while you type.",
       "statusOk": "Translating into {{lang}}",
       "statusPaused": "Paused",
-      "setup": "Finish setting up",
-      "setupDone": "{{done}} of {{total}} done",
-      "step1": "Choose what to translate into",
-      "step2": "Connect a translation service",
-      "step2Desc": "Needed for phrases and languages other than English.",
-      "step3": "Type pinyin in any app",
-      "step3Desc": "Translations appear under the candidate window.",
       "quick": "Quick controls",
       "pause": "Pause translation",
       "reach": "Reaching Translate",
@@ -288,7 +281,10 @@
       "reachRelaunch": "Run Translate.exe again",
       "reachShortcut": "Press {{key}}",
       "reachQuit": "Quit: Settings › About",
-      "active": "Translate while typing"
+      "active": "Translate while typing",
+      "serviceTitle": "Connect a translation service",
+      "serviceDesc": "Single words already translate into English. A service adds phrases, sentences and the other languages.",
+      "serviceSetup": "Set up"
     }
   },
   "showcase": {

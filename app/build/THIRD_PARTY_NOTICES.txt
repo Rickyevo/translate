@@ -1,8 +1,11 @@
 Translate — third-party components included in this release
 (Translate itself is under the MIT License: LICENSE.txt)
 
-Electron (MIT License) and Chromium (BSD-style and other licenses)
-  See LICENSE.electron.txt and LICENSES.chromium.html in this folder.
+Tauri 2, wry, tao, serde, tiny_http, windows-sys and other Rust crates (MIT and/or Apache License 2.0, and others)
+  Compiled into Translate.exe — see THIRD_PARTY_RUST.txt in this folder for every crate and its license text.
+
+Microsoft Edge WebView2 Runtime
+  The user interface runs in the WebView2 Runtime that is part of Windows; it is not included in this release.
 
 Python 3.12 runtime (Python Software Foundation License Version 2)
   resources\python\ — see resources\python\LICENSE.txt. Includes OpenSSL 3 (Apache License 2.0),

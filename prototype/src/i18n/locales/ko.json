@@ -274,13 +274,6 @@
       "desc": "입력하는 동안 Translate가 백그라운드에서 후보를 번역합니다.",
       "statusOk": "{{lang}}(으)로 번역 중",
       "statusPaused": "일시 중지됨",
-      "setup": "설정 마치기",
-      "setupDone": "{{total}}개 중 {{done}}개 완료",
-      "step1": "번역할 언어 선택",
-      "step2": "번역 서비스 연결",
-      "step2Desc": "구문이나 영어 외 언어에 필요합니다.",
-      "step3": "아무 앱에서나 병음 입력",
-      "step3Desc": "후보 창 아래에 번역이 나타납니다.",
       "quick": "빠른 제어",
       "pause": "번역 일시 중지",
       "reach": "Translate 여는 방법",
@@ -288,7 +281,10 @@
       "reachRelaunch": "Translate.exe 다시 실행",
       "reachShortcut": "{{key}} 누르기",
       "reachQuit": "종료: 설정 › 정보",
-      "active": "입력 중 번역"
+      "active": "입력 중 번역",
+      "serviceTitle": "번역 서비스 연결",
+      "serviceDesc": "단어는 이미 영어로 번역됩니다. 서비스를 연결하면 구문, 문장, 다른 언어도 번역할 수 있습니다.",
+      "serviceSetup": "설정하기"
     }
   },
   "showcase": {

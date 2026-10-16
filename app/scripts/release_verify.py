@@ -34,6 +34,19 @@ def state():
         return json.loads(r.read())
 
 
+def never_drawn(h) -> bool:
+    """A layered, click-through window that was never given content (no layered attributes, no bitmap) is never drawn:
+    the Tauri/tao event-loop helper window ("Tao Thread Event Target", 16×16) is such a window."""
+    import ctypes
+    from ctypes import wintypes as wt
+    u = ctypes.windll.user32
+    ex = u.GetWindowLongW(h, -20) & 0xFFFFFFFF
+    layered_clickthrough = ex & 0x80000 and ex & 0x20  # WS_EX_LAYERED | WS_EX_TRANSPARENT
+    key, alpha, flags = wt.DWORD(), ctypes.c_byte(), wt.DWORD()
+    has_attrs = u.GetLayeredWindowAttributes(h, ctypes.byref(key), ctypes.byref(alpha), ctypes.byref(flags))
+    return bool(layered_clickthrough and not has_attrs)
+
+
 def visible_windows(pids):
     import ctypes
     from ctypes import wintypes as wt
@@ -44,7 +57,7 @@ def visible_windows(pids):
         nonlocal n
         pid = wt.DWORD()
         ctypes.windll.user32.GetWindowThreadProcessId(h, ctypes.byref(pid))
-        if pid.value in pids and ctypes.windll.user32.IsWindowVisible(h):
+        if pid.value in pids and ctypes.windll.user32.IsWindowVisible(h) and not never_drawn(h):
             n += 1
         return True
 

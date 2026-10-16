@@ -11,6 +11,9 @@ There is no account, no telemetry, no analytics and no update check.
 - **The candidate window's position, and where WeType draws its bar inside it**, to place the panel under it.
   Translate renders WeType's candidate window alone into memory (never the screen or other windows), takes the box
   of drawn pixels, and discards the image; only that box's four numbers are used. Nothing is saved or logged.
+- **The caret's position in the app you're typing in**, when the app reports one (the standard Windows caret or the
+  accessibility caret object), so the panel doesn't cover the line you're typing on. Only its rectangle is read —
+  never text.
 - **The foreground app's program name, and whether the focused field is a password field.** Translate does nothing
   in password fields or in apps on the excluded list (Settings › Privacy; by default KeePassXC, Remote Desktop and
   1Password).
@@ -32,14 +35,15 @@ password prompts may not expose that flag; use Local only mode or exclude the ap
 | What | Where | Notes |
 |---|---|---|
 | Settings | `%APPDATA%\Translate\config.json` | No key and no typed text |
-| Setup progress | `%APPDATA%\Translate\progress.json` | One flag: whether Translate has shown you a translation yet (for Settings › Overview). No text, times or counts |
 | API keys | Windows Credential Manager, `Translate:service:<provider>` | Stored for your Windows account, separately per provider; never written to config files or logs, never shown back in Settings |
 | Translation cache (memory) | — | Every translation of this session; gone when Translate quits |
 | Translation cache (disk) | `%APPDATA%\Translate` | Only dictionary headwords of 1–4 Chinese characters, with short translations. Longer text, digits, Latin letters and non-headwords stay in memory. Dictionary membership is a heuristic, not a guarantee that a word is non-sensitive. Encrypted with Windows DPAPI for your Windows account. Clear it in Settings › Privacy |
 | Start with Windows | `HKCU\Software\Microsoft\Windows\CurrentVersion\Run`, value `Translate` | The path to `Translate.exe`; removed when you turn the setting off |
+| Interface cache | `%LOCALAPPDATA%\Translate\WebView2` | The WebView2 profile for Translate's own pages (no browsing; no typed text) |
 | Diagnostic log | `%APPDATA%\Translate\logs` | States, counts and timings only — never candidate text or translations. Capped at 2 MB. Open it from Settings › Privacy |
 
 ## Removing everything
 
-Turn off Settings › General › Start with Windows and save, quit Translate (Settings › About), delete its folder and `%APPDATA%\Translate`, and remove the
+Turn off Settings › General › Start with Windows and save, quit Translate (Settings › About), delete its folder, `%APPDATA%\Translate` and
+`%LOCALAPPDATA%\Translate`, and remove the
 `Translate:service:` entries in Windows Credential Manager › Windows Credentials.

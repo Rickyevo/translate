@@ -81,7 +81,7 @@ on it starts with Windows (turn that off in Settings › General).
 <div align="center">
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="screenshots/readme/settings-overview-dark.png">
-  <img alt="Settings, Overview page: translating into English, WeChat Input Method connected, setup checklist" src="screenshots/readme/settings-overview-light.png" width="680">
+  <img alt="Settings, Overview page: translating into English, WeChat Input Method connected" src="screenshots/readme/settings-overview-light.png" width="680">
 </picture>
 </div>
 
@@ -140,7 +140,8 @@ Full details: [docs/privacy.md](docs/privacy.md).
 | **Windows** | 10 or 11, x64 |
 | **WeChat Input Method** | [WeType for Windows](https://z.weixin.qq.com/); tested with **3.0.0.34** |
 | **Translation service** | Optional — your own API key, for phrases, sentences and languages other than English |
-| **Disk space** | About 200 MB download, 475 MB unpacked |
+| **Disk space** | About 61 MB download, 156 MB unpacked |
+| **WebView2** | The Microsoft Edge WebView2 Runtime, built into Windows 11 and current Windows 10 (Translate tells you if it's missing) |
 
 ## Known limitations
 
@@ -166,7 +167,7 @@ Translate isn't code-signed yet, so SmartScreen doesn't recognise it. Choose **M
 the download against `SHA256SUMS.txt` from the same release:
 
 ```powershell
-Get-FileHash .\Translate-0.1.1-win-x64.zip -Algorithm SHA256
+Get-FileHash .\Translate-0.2.0-win-x64.zip -Algorithm SHA256
 ```
 
 </details>
@@ -220,7 +221,7 @@ flowchart LR
   B --> C{"Cache"}
   C -- miss --> D{"Dictionary"}
   D -- miss or refine --> E["Your translation service"]
-  B -- translations --> F["Panel<br/>(Electron)"]
+  B -- translations --> F["Panel<br/>(Tauri + WebView2)"]
   F -- "Alt+1…9" --> G["Your app<br/>(SendInput)"]
 ```
 
@@ -234,15 +235,14 @@ More: [Development guide](docs/development.md) · [Design system](DESIGN.md) ·
 
 ## Build from source
 
-Requires Windows 10/11 x64, Node 22+, Python 3.12 and Frida 17.23.3 vendored into `backend/vendor`:
+Requires Windows 10/11 x64, Node 22+, Python 3.12, Rust (MSVC, with the Visual Studio Build Tools) and Frida 17.23.3
+vendored into `backend/vendor`:
 
 ```powershell
 python -m pip install --target backend/vendor frida==17.23.3
 cd app
 npm install
-node node_modules/electron/install.js
-npm run build
-node scripts/package.mjs
+python -X utf8 scripts/package.py
 ```
 
 See [docs/development.md](docs/development.md) for tests and the portable release build.
@@ -258,7 +258,7 @@ candidate text or translations.
 [MIT](LICENSE) © 2026 Rickywu05
 
 The local dictionary is derived from [CC-CEDICT](https://www.mdbg.net/chinese/dictionary?page=cedict) (CC BY-SA 4.0).
-Release downloads bundle Electron, Python, Frida and other components under their own licenses — see
+Release downloads bundle Python, Frida, Tauri and other components under their own licenses — see
 [THIRD_PARTY_NOTICES.txt](app/build/THIRD_PARTY_NOTICES.txt).
 
 <br>

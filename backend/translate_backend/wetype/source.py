@@ -287,6 +287,9 @@ class WeTypeSource:
             try:
                 rect = win32.wetype_candidate_rect(watcher.target_hwnd or None)
                 fg = win32.foreground()
+                # The line being typed on (when the app reports a caret): the panel must not cover it either.
+                if rect and fg.get("caret"):
+                    rect = {**rect, "caret": fg["caret"]}
                 # Only metadata is inspected here; no text APIs or keyboard hooks.
                 key = (rect, fg.get("hwnd"), fg.get("pid"), fg.get("focus"), fg.get("password", False))
                 if key != previous[0]:

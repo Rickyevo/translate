@@ -1,5 +1,5 @@
-"""Screenshots for the README / GitHub release: in-app captures (each window's own pixels via capturePage — never the
-desktop or other apps) of the packaged app, light and dark.
+"""Screenshots for the README / GitHub release: each window's own page pixels (DevTools screenshot — never the desktop
+or other apps) of the packaged app, light and dark.
 
 Candidates come from the replay source (fixed sample sentences — never your typing); translations come from the
 translation service you configured (your saved provider/model; the key stays in Windows Credential Manager and is
@@ -19,6 +19,7 @@ import time
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent / "harness"))
+import cdp  # noqa: E402
 from app import ROOT, App  # noqa: E402
 from PIL import Image  # noqa: E402
 
@@ -32,11 +33,29 @@ LISTS = {
 }
 
 
+CDP = 9611
+
+
 def grab(app: App, win: str) -> Image.Image:
-    r = app.call("/capture", {"win": win}, timeout=10)
-    if not r or not r.get("ok"):
+    """The window's own page pixels (DevTools screenshot, transparent background) — never the desktop."""
+    import json as _json
+    import urllib.request
+    targets = _json.load(urllib.request.urlopen(f"http://127.0.0.1:{CDP}/json", timeout=5))
+    want = {"panel": ("panel.html", ""), "preview": ("", "Translate preview"), "settings": ("settings.html", "")}[win]
+    page = next((t for t in targets if t.get("type") == "page" and want[0] in t.get("url", "") and want[1] in t.get("title", "")), None)
+    if not page:
         raise RuntimeError(f"no {win} window to capture")
-    img = Image.open(io.BytesIO(base64.b64decode(r["png"]))).convert("RGBA")
+    s = cdp._ws_connect(page["webSocketDebuggerUrl"])
+    try:
+        for i, (m, prm) in enumerate([("Emulation.setDefaultBackgroundColorOverride", {"color": {"r": 0, "g": 0, "b": 0, "a": 0}}), ("Page.captureScreenshot", {"format": "png"})], 1):
+            cdp._send(s, _json.dumps({"id": i, "method": m, "params": prm}))
+            while True:
+                msg = _json.loads(cdp._recv(s))
+                if msg.get("id") == i:
+                    break
+        img = Image.open(io.BytesIO(base64.b64decode(msg["result"]["data"]))).convert("RGBA")
+    finally:
+        s.close()
     box = img.getchannel("A").point(lambda a: 255 if a > 8 else 0).getbbox()
     return img.crop(box) if box else img
 
@@ -71,7 +90,7 @@ def main() -> int:
     (USERDATA / "config.json").write_text(json.dumps(base), encoding="utf-8")
     OUT.mkdir(parents=True, exist_ok=True)
     env = {k: v for k, v in os.environ.items() if k != "TRANSLATE_SECRETS"}  # the real vault: your stored key
-    app = App(port=47431, packaged=True, extra_args=["--test-source=wetype-replay", "--translator=live"], env=env)
+    app = App(port=47431, packaged=True, extra_args=["--test-source=wetype-replay", "--translator=live", f"--remote-debugging-port={CDP}"], env=env)
     saved = []
     try:
         app.call("/wetype", {"t": "connection", "f": {"state": "connected"}})

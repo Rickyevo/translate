@@ -7,7 +7,8 @@ How the project is laid out, how to build it from a fresh clone, and how it is t
 
 | Path | Contents |
 |---|---|
-| `app/` | Electron 44 app: `src/main` (windows, hotkeys, backend supervisor), `src/preload`, `src/renderer` (panel, settings) |
+| `app/src-tauri/` | Tauri 2 / WebView2 host (Rust): `host.rs` (state, lists, windows, placement, Settings, test control), `layout.rs` (panel and preview placement, unit-tested), `backend.rs` (engine process), `system.rs` (shortcuts, single instance, theme), `win.rs` (Win32), `bridge.js` (the pages' `window.translate`) |
+| `app/src/renderer/` | The panel and Settings pages (React; the UI itself lives in `prototype/src`) |
 | `app/scripts/` | Build, packaging and release scripts; test suites, probes and resource measurements |
 | `app/build/THIRD_PARTY_NOTICES.txt` | License notices shipped with the release |
 | `backend/` | Python backend (stdlib + ctypes + vendored Frida): protocol, WeType adapter (`translate_backend/wetype/`), Win32 input and window events, translation pipeline (`translate/`), CC-CEDICT data; `tests/` (no IME, no input); `tools/` research and capture tools (development only, not packaged) |
@@ -29,20 +30,17 @@ How the project is laid out, how to build it from a fresh clone, and how it is t
 
 ## From a fresh clone
 
-Not in the repository (see `.gitignore`): `node_modules/`, build output (`app/dist`, `app/out`, `release/`), local
+Not in the repository (see `.gitignore`): `node_modules/`, build output (`app/dist`, `app/src-tauri/target`, `release/`), local
 caches (`.cache/`) and the vendored Frida runtime — its `_frida.pyd` is 129 MB, over GitHub's file limit.
 
-Requirements: Windows 10/11 x64, Node 22+, Python 3.12 on PATH (or set `TRANSLATE_PYTHON`), and WeChat Input Method
-for anything beyond the replay tests.
+Requirements: Windows 10/11 x64, Node 22+, Python 3.12 on PATH (or set `TRANSLATE_PYTHON`), Rust (stable, MSVC target)
+with the Visual Studio Build Tools, and WeChat Input Method for anything beyond the replay tests.
 
 ```
 python -m pip install --target backend/vendor frida==17.23.3   # the WeType adapter's Frida dependency
-cd app && npm install && node node_modules/electron/install.js && cd ..
+cd app && npm install && cd ..
 cd prototype && npm install && cd ..
 ```
-
-`node node_modules/electron/install.js` is needed once because the project's npm settings skip install scripts, which
-includes Electron's binary download.
 
 Translation-service keys are never stored in the repository or in config files: each user enters theirs in
 Settings › Translation and it goes to Windows Credential Manager.
@@ -51,9 +49,10 @@ Settings › Translation and it goes to Windows Credential Manager.
 
 ```
 cd app
-npm run build                           # main + preload (esbuild) and renderer (Vite)
-npm start                               # dev run (unpackaged; uses the Python on PATH)
-node scripts/package.mjs                # production package → app/out/Translate-win32-x64/Translate.exe
+npm run build                           # defaults.json, renderer (Vite), host (cargo build --release)
+src-tauri\target\release\Translate.exe  # run (engine from ../backend with the Python on PATH)
+python -X utf8 scripts/package.py       # production package → app/release-build/Translate-win32-x64/
+cd src-tauri && cargo test --release     # placement geometry, settings, shortcuts
 ```
 
 The portable release (bundled Python runtime, zip, checksums) is described in [release.md](release.md).
@@ -69,19 +68,22 @@ python -X utf8 scripts/stage4_replay_test.py [--packaged]                 # real
 python -X utf8 scripts/stage5_service_test.py [--packaged]                # translation pipeline vs a local mock service
 python -X utf8 scripts/stage5_real_test.py                                # your configured service, sample texts, no input
 python -X utf8 scripts/placement_test.py                                  # panel vs WeType's bar and canvas, edges (packaged)
-python -X utf8 scripts/setup_progress_test.py                             # setup checklist step 3 (packaged)
+python -X utf8 scripts/overview_card_test.py                              # Overview's service card (packaged)
+python -X utf8 scripts/parity_shots.py <reference exe> <candidate exe>    # pixel parity of two host builds
+python -X utf8 scripts/live_placement_probe.py <Translate.exe> [seconds]   # LIVE, read-only: you type; checks placement
 python -X utf8 scripts/autostart_test.py                                   # Start with Windows + panel footer (packaged)
 python -X utf8 scripts/settings_ui_probe.py                               # settings dropdowns and scrollbars
 python -X utf8 scripts/release_verify.py <release folder>                 # release in an environment without dev tools
 python -X utf8 scripts/stage4_live_test.py [--clickable] [--edge]         # LIVE: real WeType + real keys/clicks
-python -X utf8 scripts/focus_test.py [--packaged] [--only tk|edge]        # LIVE: real mouse/keyboard input, ~3 min
-python -X utf8 scripts/measure_stage4.py --label NAME [--quick]           # live idle + replay typing resources
-python -X utf8 scripts/readme_shots.py                                    # README screenshots (in-app captures)
+python -X utf8 scripts/readme_shots.py                                    # README screenshots (DevTools captures)
 python -I ../backend/tools/build_cedict.py <cedict_1_0_ts_utf-8_mdbg.zip> # rebuild the local dictionary
 ```
 
 Test runs use an isolated profile in `.cache/test-userdata`, never your `%APPDATA%\Translate`. Screenshots are taken
-with the app's own window capture, never of the desktop.
+from the pages themselves (DevTools, enabled only together with `--test-control`), never of the desktop.
+
+Electron-era measurement scripts (`measure.py`, `measure_report.py`, `measure_stage4.py`, `focus_test.py`) are kept for
+the stage-3/4 reports; they assume Electron's process layout.
 
 ## Prototype
 

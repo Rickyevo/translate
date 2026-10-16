@@ -1,0 +1,32 @@
+{
+  "uiLang": "system",
+  "target": "en",
+  "count": 5,
+  "autostart": true,
+  "localDict": true,
+  "provider": "openai",
+  "services": {},
+  "apiKey": "",
+  "timeout": 8,
+  "jsonMode": true,
+  "theme": "system",
+  "textSize": 13,
+  "density": "comfortable",
+  "opacity": 1,
+  "offsetX": 0,
+  "offsetY": 4,
+  "showOriginal": "always",
+  "leadMode": "auto",
+  "clickable": false,
+  "localOnly": false,
+  "denylist": [
+    "KeePassXC.exe",
+    "mstsc.exe",
+    "1Password.exe"
+  ],
+  "shortcuts": {
+    "toggleBar": "Alt+0",
+    "pause": "Ctrl+Alt+P",
+    "settings": "Ctrl+Alt+O"
+  }
+}

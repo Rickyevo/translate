@@ -1,7 +1,8 @@
 """Make the distributable: release/Translate-<version>-win-x64.zip (+ SHA256SUMS.txt) from a packaged build.
 
 The zip holds one folder, Translate-<version>-win-x64/, with Translate.exe, the bundled Python runtime and backend,
-Translate's license (LICENSE.txt), third-party notices (Electron's license as LICENSE.electron.txt) and README-FIRST.txt.
+Translate's license (LICENSE.txt), third-party notices (THIRD_PARTY_NOTICES.txt, THIRD_PARTY_RUST.txt) and
+README-FIRST.txt.
 The zip is built from a staging copy in .cache/; release/<name>/ is refreshed only when no running Translate uses it. Portable: unzip anywhere and run; no installer, no admin rights, no Python or
 other tools needed. Run from app/:  python -X utf8 scripts/make_release.py <packaged folder>
 """
@@ -15,7 +16,7 @@ import zipfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-VERSION = json.loads((ROOT / "app" / "package.json").read_text(encoding="utf-8"))["version"]
+VERSION = json.loads((ROOT / "app" / "src-tauri" / "tauri.conf.json").read_text(encoding="utf-8"))["version"]
 NAME = f"Translate-{VERSION}-win-x64"
 
 README = f"""Translate {VERSION} — translation companion for WeChat Input Method (Windows 10/11, x64)
@@ -24,7 +25,7 @@ START
   Unzip this folder anywhere you like (for example %LOCALAPPDATA%\\Programs\\Translate) and run Translate.exe.
   Nothing appears at first: Translate runs quietly in the background. Type pinyin with WeChat Input Method in any
   app and the translation panel appears under the candidates. No installer, no admin rights, and no Python or other
-  tools are needed — everything is in this folder.
+  tools are needed — everything is in this folder; the interface uses the WebView2 Runtime built into Windows.
 
   This build is not code-signed, so Windows SmartScreen may warn on first launch: choose "More info", then "Run anyway".
 
@@ -73,7 +74,6 @@ def main() -> None:
     stage = ROOT / ".cache" / "release-stage" / NAME
     shutil.rmtree(stage.parent, ignore_errors=True)
     shutil.copytree(src, stage)
-    (stage / "LICENSE").rename(stage / "LICENSE.electron.txt")
     shutil.copyfile(ROOT / "LICENSE", stage / "LICENSE.txt")
     shutil.copyfile(ROOT / "app" / "build" / "THIRD_PARTY_NOTICES.txt", stage / "THIRD_PARTY_NOTICES.txt")
     (stage / "README-FIRST.txt").write_text(README, encoding="utf-8", newline=chr(13) + chr(10))

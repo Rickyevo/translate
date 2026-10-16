@@ -90,7 +90,8 @@ def main() -> int:
         check("panel footer has no buttons or menus", dom["footer"] is not None and dom["buttons"] == 0, json.dumps(dom, ensure_ascii=False))
         check("no ⋯ menu button on the panel", not dom["more"])
         log = (USERDATA / "logs" / "translate.log").read_text(encoding="utf-8")
-        check("version is 0.1.0", "started v0.1.0" in log)
+        version = json.loads((ROOT / "app" / "src-tauri" / "tauri.conf.json").read_text(encoding="utf-8"))["version"]
+        check(f"version is {version}", f"started v{version}" in log)
     finally:
         app.quit()
         time.sleep(0.5)
