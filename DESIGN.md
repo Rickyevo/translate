@@ -85,8 +85,9 @@ Spacing: 4 px base with 2 px half-steps: 2, 4, 6, 8, 10, 12, 14, 16, 20, 24, 28,
 
 Radius by hierarchy: key chips `xs`, menu items `sm`, controls and rows `md`, popovers `lg`, cards and
 the panel `xl`. Shadows are layered: a 1 px ring, a contact shadow and an ambient shadow. Tokens:
-`--sh-control`, `--sh-pop`, `--sh-bar` (the strongest ring, so the panel reads on any app), and
-`--sh-window`.
+`--sh-control`, `--sh-pop` and `--sh-window`. The floating panel and its lead preview are **flat**: `--sh-bar` is
+a 1 px border only (14% ink in light, 16% white in dark), no drop shadow — the border and the 97% opaque
+background define them on any app.
 
 ## 5. Icons (UI)
 
@@ -148,7 +149,7 @@ always win. (An unlayered `button{color:inherit}` in stage 1 silently overrode t
 | Footer, simulated (test builds only) | `⚗ Simulated translations — not real`: the replay test source with the `[sim]` translator. Never shown in normal use since stage 5 |
 | Pointer | Click inserts; right-click shows Insert · Copy · Retry. The panel never takes focus from the app |
 | Keyboard | Alt+1…9 insert, Alt+Shift+1…9 copy, Alt+0 hide or show the panel; Alt+` show or hide the full text, Alt+↑/↓ preview another candidate, Alt+PgUp/PgDn scroll it (all only while a list is visible) |
-| Readability | `--bar-bg` at 97% opacity by default (setting 70–100%), backdrop blur, ring + two shadow layers |
+| Readability | `--bar-bg` at 97% opacity by default (setting 70–100%), backdrop blur, a 1 px border (no shadow) |
 | Screen edges | The stack flips above the caret near the bottom and slides left near the right edge. The lead preview places itself (§9.1) |
 | IME window and the mouse | WeChat Input Method's candidate window runs with UIAccess: it sits in a z-band above every normal window, and its whole 628×314 canvas (about 112 px above and 135 px below the drawn bar, transparent parts included) takes the mouse. A panel directly under the bar therefore displays correctly and works by keyboard, but takes no clicks, hover or wheel. **Appearance › Keep the panel clickable** (off by default) places the panel, and the lead preview, clear of that window instead: further from the candidates, fully clickable. With no room clear of it on either side, it falls back to the bar. A UIAccess build (signed, installed under Program Files) would remove the trade-off |
 

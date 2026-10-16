@@ -31,7 +31,7 @@ from .translate.pipeline import Pipeline
 from .wetype import encode
 from .wetype.source import WeTypeSource
 
-VERSION = "0.6.0"
+VERSION = "0.6.1"
 COMPOSITION_CANCEL_TIMEOUT = 0.5  # s to wait for the IME to confirm Esc cancelled the composition
 SETTLE_AFTER_CANCEL = 0.015       # s between the confirmed cancel and typing (lets the IME's text service settle)
 

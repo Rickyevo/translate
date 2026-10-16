@@ -1,6 +1,6 @@
-# Release build (0.6.0)
+# Release build (0.6.1)
 
-Portable Windows x64 release: `release/Translate-0.6.0-win-x64.zip` (198 MB; 474 MB unpacked, 99 files) and
+Portable Windows x64 release: `release/Translate-0.6.1-win-x64.zip` (198 MB; 474 MB unpacked, 99 files) and
 `release/SHA256SUMS.txt`. Unzip anywhere and run `Translate.exe` — no installer, no admin rights, no Python, Node or
 other development tools. Not code-signed (SmartScreen warns on first launch). User notes: `README-FIRST.txt` in the zip.
 
@@ -33,6 +33,13 @@ python -X utf8 scripts/make_release.py release-build/Translate-win32-x64
 | Settings UI (dropdowns, scrollbars) | 11 / 11 |
 | Real service (OpenCode Go, your key; on 0.5.2 + bundled runtime) | 15 / 15, p50 1.65 s |
 | Backend unit tests | 59 / 59 |
+
+## 0.6.1
+
+- **Floating panel and lead preview are flat**: no drop shadow, a 1 px border only (`--sh-bar`), per your request;
+  Settings unchanged. `screenshots/stage5/panel-border-only.png` (in-app capture, light and dark).
+- Verified: release extracted from the zip, clean environment 9 / 9; stage-4 replay 40 / 40; panel menu 7 / 7;
+  0 blink frames; 1 window resize while typing.
 
 ## 0.6.0 fixes (reported during release)
 

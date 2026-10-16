@@ -1,7 +1,7 @@
 {
   "name": "translate",
   "productName": "Translate",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "private": true,
   "description": "Real-time translation companion for input-method candidates",
   "main": "dist/main/main.js",

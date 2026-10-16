@@ -720,6 +720,13 @@ function startTestControl(port: number, readOnly = false) {
       if (url === '/cache') return json(res, await backend.request(q.clear ? 'cache.clear' : 'cache.stats'))
       // Replay source only (synthetic candidates): translations, for scoring accuracy against a real service.
       if (url === '/translations' && testSource === 'wetype-replay') return json(res, list ? list.items.map((i) => ({ n: i.n, text: i.text, translation: i.translation ?? null, state: i.state, source: i.source ?? null, reason: i.reason ?? null })) : null)
+      // In-app capture (the window's own pixels via capturePage — never the desktop or other apps), PNG base64.
+      if (url === '/capture') {
+        const w = q.win === 'settings' ? settingsWin : q.win === 'preview' ? previewWin : panelWin
+        if (!w || w.isDestroyed()) return json(res, { ok: false })
+        const img = await w.webContents.capturePage()
+        return json(res, { ok: true, png: img.toPNG().toString('base64'), size: img.getSize() })
+      }
       if (url === '/settings/set') return (settings = { ...settings, ...q }), saveSettingsFile(settings), pushState(), layoutPanel(), json(res, { ok: true })
       res.writeHead(404).end()
     })

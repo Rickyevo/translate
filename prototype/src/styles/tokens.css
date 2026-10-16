@@ -65,7 +65,7 @@
   --c-skel-hi: oklch(0.3 0.02 250 / 0.11);
   --sh-control: 0 1px 2px oklch(0.25 0.02 250 / 0.06);
   --sh-pop: 0 0 0 1px oklch(0.25 0.02 250 / 0.08), 0 6px 14px oklch(0.25 0.02 250 / 0.08), 0 18px 36px oklch(0.25 0.02 250 / 0.1);
-  --sh-bar: 0 0 0 1px oklch(0.25 0.02 250 / 0.11), 0 4px 10px oklch(0.25 0.02 250 / 0.07), 0 14px 32px oklch(0.25 0.02 250 / 0.14);
+  --sh-bar: 0 0 0 1px oklch(0.25 0.02 250 / 0.14); /* panel + lead preview: a border only, no drop shadow */
   --sh-window: 0 0 0 1px oklch(0.25 0.02 250 / 0.12), 0 16px 48px oklch(0.25 0.02 250 / 0.16);
   --bar-bg: oklch(0.995 0.002 250);
   --bar-fw: 500;
@@ -105,7 +105,7 @@
   --c-skel-hi: oklch(0.97 0.01 250 / 0.12);
   --sh-control: 0 1px 2px oklch(0 0 0 / 0.25);
   --sh-pop: 0 0 0 1px oklch(0.97 0.01 250 / 0.09), 0 6px 16px oklch(0 0 0 / 0.32), 0 18px 40px oklch(0 0 0 / 0.36);
-  --sh-bar: 0 0 0 1px oklch(0.97 0.01 250 / 0.14), 0 4px 10px oklch(0 0 0 / 0.32), 0 14px 34px oklch(0 0 0 / 0.45);
+  --sh-bar: 0 0 0 1px oklch(0.97 0.01 250 / 0.16); /* panel + lead preview: a border only, no drop shadow */
   --sh-window: 0 0 0 1px oklch(0.97 0.01 250 / 0.1), 0 18px 52px oklch(0 0 0 / 0.5);
   --bar-bg: oklch(0.25 0.007 250);
   --bar-fw: 450;

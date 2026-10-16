@@ -62,6 +62,11 @@ def main() -> None:
     src = Path(sys.argv[1]).resolve()
     rel = ROOT / "release"
     folder = rel / NAME
+    # Never delete a release someone is running: Windows lets most of its files be removed underneath it.
+    import psutil
+    busy = [p.info["pid"] for p in psutil.process_iter(["pid", "exe"]) if p.info["exe"] and str(folder).lower() in p.info["exe"].lower()]
+    if busy:
+        sys.exit(f"{folder} is in use by running processes {busy}; quit Translate first (nothing was changed)")
     shutil.rmtree(folder, ignore_errors=True)
     rel.mkdir(exist_ok=True)
     shutil.copytree(src, folder)
