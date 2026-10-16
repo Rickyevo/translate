@@ -125,7 +125,7 @@ Translate 是一个安静运行在 Windows 后台的微信输入法（WeType）�
 - 使用微信输入法内部消息，版本更新可能导致失效；请在 [Issues](https://github.com/Rickywu05/wetype-translate/issues) 提供版本信息。
 - Frida 会附加到输入法服务端进程，部分安全软件可能告警。
 - 尚未代码签名，首次启动可能出现 SmartScreen 提示。
-- 目前主要在一台 Windows 11、单屏、100% 缩放环境验证；多屏、其他缩放和 Windows ARM 未充分测试。
+- 面板位置跟随微信输入法候选栏的实际绘制位置（不受布局、缩放比例和屏幕边缘影响）；缩放比例不同的多屏组合和 Windows ARM 尚未测试。
 - 当前为便携版，没有安装器或开始菜单入口。移动目录后重新运行一次 EXE，让自启路径更新。
 - 本地词典只覆盖中文到英文。
 
@@ -137,7 +137,7 @@ Translate 是一个安静运行在 Windows 后台的微信输入法（WeType）�
 程序尚未签名，SmartScreen 可能不认识它。确认下载来源后，可选择“更多信息 → 仍要运行”。发布页附有 `SHA256SUMS.txt`，可核对文件：
 
 ```powershell
-Get-FileHash .\Translate-0.1.0-win-x64.zip -Algorithm SHA256
+Get-FileHash .\Translate-0.1.1-win-x64.zip -Algorithm SHA256
 ```
 
 </details>

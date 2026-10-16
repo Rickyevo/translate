@@ -118,7 +118,7 @@ Translate는 Windows의 **WeChat 입력기(微信输入法, WeType)** 를 위한
 - WeType 내부 메시지를 사용하므로 업데이트 후 작동하지 않을 수 있습니다. [Issues](https://github.com/Rickywu05/wetype-translate/issues)에 버전을 함께 알려 주세요.
 - Frida가 입력기 프로세스에 연결하므로 일부 보안 프로그램에서 경고할 수 있습니다.
 - 코드 서명이 없어 첫 실행 시 SmartScreen 경고가 나타날 수 있습니다.
-- 주로 Windows 11, 단일 모니터, 100% 배율인 한 PC에서 검증했습니다. 다중 모니터, 다른 배율, Windows ARM은 미검증입니다.
+- 패널 위치는 WeType 후보 바가 실제로 그려진 위치를 따릅니다(레이아웃, 배율, 화면 가장자리와 무관). 배율이 서로 다른 다중 모니터와 Windows ARM은 미검증입니다.
 - 포터블 버전이며 설치 프로그램이나 시작 메뉴 항목이 없습니다. 폴더 이동 후 EXE를 한 번 실행하면 자동 시작 경로가 갱신됩니다.
 - 내장 사전은 중국어에서 영어로의 번역만 지원합니다.
 
@@ -130,7 +130,7 @@ Translate는 Windows의 **WeChat 입력기(微信输入法, WeType)** 를 위한
 코드 서명이 없어 경고가 나타날 수 있습니다. 다운로드 출처를 확인한 뒤 추가 정보 → 실행을 선택할 수 있습니다. 배포 페이지의 `SHA256SUMS.txt`와 비교할 수 있습니다.
 
 ```powershell
-Get-FileHash .\Translate-0.1.0-win-x64.zip -Algorithm SHA256
+Get-FileHash .\Translate-0.1.1-win-x64.zip -Algorithm SHA256
 ```
 
 </details>
