@@ -102,6 +102,9 @@ function loadSettings(): Settings {
     const raw = JSON.parse(readFileSync(configPath(), 'utf8'))
     if (typeof raw.apiKey === 'string' && raw.apiKey) legacyKey = { provider: raw.provider ?? 'openai', key: raw.apiKey }
     delete raw.endpoint, delete raw.model // stage ≤ 4 fields, replaced by provider/services
+    // ≤ 0.1.0 defaulted to 97 % (and allowed 70 %): other apps' text showed through the panel. Opaque by default now,
+    // at least 90 % when chosen.
+    if (typeof raw.opacity === 'number') raw.opacity = raw.opacity === 0.97 ? 1 : Math.min(1, Math.max(0.9, raw.opacity))
     return { ...DEFAULT_SETTINGS, ...raw, apiKey: '', services: { ...(raw.services ?? {}) }, shortcuts: { ...DEFAULT_SETTINGS.shortcuts, ...(raw.shortcuts ?? {}) } }
   } catch {
     return { ...DEFAULT_SETTINGS } // missing or corrupt → defaults (the file is rewritten on next save)
@@ -488,12 +491,21 @@ function openSettings(page?: string, inactive = false) {
     settingsWin.focus()
     return
   }
+  // 860 × 620 DIP where it fits; on small or high-scaling screens (e.g. 1366 × 768 at 125 %: ~1093 × 580 DIP of
+  // work area) it shrinks to the screen it opens on, and can be resized — the pages scroll.
+  const work = screen.getDisplayNearestPoint(screen.getCursorScreenPoint()).workArea
+  const width = Math.min(860, work.width - 24)
+  const height = Math.min(620, work.height - 24)
   const w = new BrowserWindow({
-    width: 860,
-    height: 620,
+    width,
+    height,
+    x: Math.round(work.x + (work.width - width) / 2),
+    y: Math.round(work.y + (work.height - height) / 2),
+    minWidth: Math.min(720, width),
+    minHeight: Math.min(440, height),
     show: false,
     frame: false,
-    resizable: false,
+    resizable: true,
     maximizable: false,
     fullscreenable: false,
     title: 'Translate',

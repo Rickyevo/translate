@@ -95,7 +95,7 @@ export const DEFAULT_SETTINGS: Settings = {
   theme: 'system',
   textSize: 13,
   density: 'comfortable',
-  opacity: 0.97,
+  opacity: 1,
   offsetX: 0,
   offsetY: 4,
   showOriginal: 'always',

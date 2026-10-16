@@ -281,6 +281,7 @@ class WeTypeSource:
         """Event-driven (WinEvent hooks): wakes only when focus/foreground changes or the candidate window
         shows, hides or moves. Posts metadata only when it actually changed."""
         previous = [None]
+        retries = [0]
 
         def sample():
             try:
@@ -291,6 +292,13 @@ class WeTypeSource:
                 if key != previous[0]:
                     self._post({"kind": "window", "rect": rect, "foreground": fg})
                     previous[0] = key
+                # The bar wasn't found in the window's pixels yet (WeType draws a frame after showing): look again
+                # shortly, a few times, so the panel moves to the real bar instead of staying at the fallback.
+                if rect and not rect.get("measured", True) and retries[0] < 3:
+                    retries[0] += 1
+                    threading.Timer(0.06 * retries[0], sample).start()
+                elif rect is None or rect.get("measured", True):
+                    retries[0] = 0
             except Exception:
                 self._post({"kind": "window", "rect": None, "foreground": {}})
                 previous[0] = None

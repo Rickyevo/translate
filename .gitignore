@@ -46,3 +46,7 @@ translate-cache*.json
 docs/research/*
 !docs/research/*-notes.md
 *.tsbuildinfo
+
+# Spike build output
+spike/tauri-panel/target/
+spike/out/

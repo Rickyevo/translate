@@ -8,7 +8,9 @@ There is no account, no telemetry, no analytics and no update check.
 - **WeChat Input Method's candidate list and pinyin**, while you compose. Translate attaches to WeType's
   `wetype_server.exe` process with [Frida](https://frida.re) and observes the messages WeType sends to its own
   candidate window. It does not change WeType or what WeType does with your input.
-- **The candidate window's position**, to place the panel under it.
+- **The candidate window's position, and where WeType draws its bar inside it**, to place the panel under it.
+  Translate renders WeType's candidate window alone into memory (never the screen or other windows), takes the box
+  of drawn pixels, and discards the image; only that box's four numbers are used. Nothing is saved or logged.
 - **The foreground app's program name, and whether the focused field is a password field.** Translate does nothing
   in password fields or in apps on the excluded list (Settings › Privacy; by default KeePassXC, Remote Desktop and
   1Password).

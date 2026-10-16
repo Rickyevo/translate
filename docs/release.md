@@ -1,6 +1,6 @@
-# Release build (0.1.0)
+# Release build (0.1.1)
 
-Portable Windows x64 release: `release/Translate-0.1.0-win-x64.zip` (198 MB; 474 MB unpacked, 100 files) and
+Portable Windows x64 release: `release/Translate-0.1.1-win-x64.zip` (198 MB; 474 MB unpacked, 100 files) and
 `release/SHA256SUMS.txt`. Unzip anywhere and run `Translate.exe` — no installer, no admin rights, no Python, Node or
 other development tools. Not code-signed (SmartScreen warns on first launch). User notes: `README-FIRST.txt` in the zip.
 
@@ -39,6 +39,21 @@ python -X utf8 scripts/make_release.py release-build/Translate-win32-x64
 | Backend unit tests | 59 / 59 |
 | Real service accuracy and speed (development build 0.5.2) | 15 / 15, p50 1.65 s |
 | Zip contents | no settings, caches, logs, keys or personal paths; `SHA256SUMS.txt` checks with `sha256sum -c` |
+
+## 0.1.1
+
+Compatibility fixes after testing on a second PC (overlap and see-through text in the panel):
+
+- **Bar detection**: the engine finds WeType's bar where it is drawn (its candidate window rendered alone into memory,
+  box of drawn pixels; DESIGN §9 "Finding the bar") instead of fixed 109/70 px offsets measured on one layout at 96 dpi.
+  On this PC the bar is actually at 136/43 in WeType 3.0.0.34; the old offsets only matched its bottom edge.
+  `test_bar_detection.py` (both layouts, flipped bars, dark skin, 100–200 % scaling, fallbacks) and
+  `placement_test.py` 35 / 35 (middle, edges, flips, clickable mode).
+- **Opacity**: opaque by default, 90–100 %; saved 97 % migrates to 100 %, lower values to 90 %. Verified in the
+  packaged Settings for 0.97 / 0.7 / 0.95 / unset.
+- **Settings window**: fits the screen it opens on (≤ 860 × 620 DIP), resizable, minimum 720 × 440.
+- Regression on the 0.1.1 build: backend 64 / 64, replay 40 / 40, service 19 / 19, Start with Windows 8 / 8, setup
+  checklist 6 / 6, settings UI 11 / 11, release in a clean environment 9 / 9.
 
 ## 0.1.0
 

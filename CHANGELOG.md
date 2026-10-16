@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.1.1 — 2026-10-16
+
+- **Panel placement works on other PCs.** The panel was positioned from fixed offsets measured on one WeType layout
+  at 100 % scaling, so with another WeType version or layout (for example pinyin shown inline), other display
+  scaling, or WeType's bar drawn elsewhere near a screen edge, it was anchored to the wrong place and could cover
+  other text. Translate now finds the bar where WeType actually draws it.
+- **The panel is opaque by default.** It was 97 % opaque (adjustable down to 70 %), and other apps' text showed
+  through it. The default is now 100 % and the minimum 90 %; a saved 97 % becomes 100 %.
+- **Settings fits small screens.** It opened at a fixed 860 × 620 and couldn't be resized, so on a 1366 × 768
+  screen at 125 % scaling its bottom, including Save, was off-screen. It now fits the screen it opens on and can be
+  resized.
+
 ## 0.1.0 — 2026-10-16
 
 First public release.

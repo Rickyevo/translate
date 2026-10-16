@@ -435,7 +435,7 @@ export function AppearancePage() {
               />
             }
           />
-          <Row label={t('settings.appearance.opacity')} control={<Slider label={t('settings.appearance.opacity')} value={d.opacity} min={0.7} max={1} step={0.01} onValueChange={(v) => set('opacity', v)} format={(v) => `${Math.round(v * 100)}%`} />} />
+          <Row label={t('settings.appearance.opacity')} control={<Slider label={t('settings.appearance.opacity')} value={d.opacity} min={0.9} max={1} step={0.01} onValueChange={(v) => set('opacity', v)} format={(v) => `${Math.round(v * 100)}%`} />} />
           <Row
             label={t('settings.appearance.offset')}
             desc={t('settings.appearance.offsetDesc')}

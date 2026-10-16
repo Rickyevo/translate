@@ -149,8 +149,8 @@ Full details: [docs/privacy.md](docs/privacy.md).
   [open an issue](https://github.com/Rickywu05/wetype-translate/issues) with your WeType version.
 - **Security software** may flag Translate, because it attaches to WeType's process (with Frida) to read candidates.
 - **Not code-signed** yet, so SmartScreen warns on first launch.
-- **Tested on one PC** so far: Windows 11, one monitor, 100 % scaling. Multiple monitors, other display scaling and
-  Windows on ARM are untested.
+- **Placement** follows WeType's bar wherever it is drawn (any layout, display scaling or screen edge). Mixed
+  scaling across several monitors and Windows on ARM are untested.
 - **Portable only:** no installer or Start menu entry. If you move the folder, run `Translate.exe` once from the new
   place so Start with Windows follows it.
 - The built-in dictionary covers Chinese → English only.
@@ -166,7 +166,7 @@ Translate isn't code-signed yet, so SmartScreen doesn't recognise it. Choose **M
 the download against `SHA256SUMS.txt` from the same release:
 
 ```powershell
-Get-FileHash .\Translate-0.1.0-win-x64.zip -Algorithm SHA256
+Get-FileHash .\Translate-0.1.1-win-x64.zip -Algorithm SHA256
 ```
 
 </details>

@@ -98,12 +98,116 @@ def window_rect(hwnd: int) -> dict | None:
     return {"x": r.left, "y": r.top, "w": r.right - r.left, "h": r.bottom - r.top}
 
 
-def wetype_candidate_rect(hwnd: int | None = None) -> dict | None:
-    """WeType candidate *row*, not its large transparent Flutter canvas.
+# --- WeType candidate bar --------------------------------------------------------------------
+# WeType draws its bar somewhere inside a large transparent Flutter canvas (628×314 at 96 dpi). Where depends on the
+# WeType version, its layout settings (pinyin above the candidates or inline), the DPI and whether the canvas had to
+# flip near a screen edge; the IME's messages don't say. So the bar is found where it is actually drawn: the canvas
+# window alone is rendered into memory (PrintWindow, PW_RENDERFULLCONTENT — only WeType's own pixels, never the
+# screen or other windows) and the box of drawn pixels is taken. Transparent parts render black. Nothing is kept:
+# only the four numbers of the box. ~8 ms; cached for 50 ms per window.
+gdi32 = ctypes.WinDLL("gdi32", use_last_error=True)
+user32.GetDC.restype = wt.HDC
+user32.GetDC.argtypes = [wt.HWND]
+user32.ReleaseDC.argtypes = [wt.HWND, wt.HDC]
+user32.PrintWindow.argtypes = [wt.HWND, wt.HDC, wt.UINT]
+gdi32.CreateCompatibleDC.restype = wt.HDC
+gdi32.CreateCompatibleDC.argtypes = [wt.HDC]
+gdi32.CreateDIBSection.restype = wt.HBITMAP
+gdi32.CreateDIBSection.argtypes = [wt.HDC, ctypes.c_void_p, wt.UINT, ctypes.POINTER(ctypes.c_void_p), wt.HANDLE, wt.DWORD]
+gdi32.SelectObject.restype = wt.HGDIOBJ
+gdi32.SelectObject.argtypes = [wt.HDC, wt.HGDIOBJ]
+gdi32.DeleteObject.argtypes = [wt.HGDIOBJ]
+gdi32.DeleteDC.argtypes = [wt.HDC]
 
-    The protocol exposes no row bounds. 109/70 (top offset / height of the drawn bar: pinyin line plus
-    candidate row) were measured on the live screen for WeType 2.1.4.6 at 96 dpi (stage-4 live test, check
-    "candidate-row offsets"), scaled per window. One DPI measured so far; other scalings are unverified.
+
+class _BIH(ctypes.Structure):
+    _fields_ = [("biSize", wt.DWORD), ("biWidth", wt.LONG), ("biHeight", wt.LONG), ("biPlanes", wt.WORD), ("biBitCount", wt.WORD),
+                ("biCompression", wt.DWORD), ("biSizeImage", wt.DWORD), ("biXPelsPerMeter", wt.LONG), ("biYPelsPerMeter", wt.LONG),
+                ("biClrUsed", wt.DWORD), ("biClrImportant", wt.DWORD)]
+
+
+PW_RENDERFULLCONTENT = 2
+_INK = bytes(1 if i > 24 else 0 for i in range(256))  # "drawn": any colour channel above near-black
+BAR_TTL_S = 0.05
+_bar_cache: dict[int, tuple[float, tuple[int, int], tuple[int, int, int, int] | None]] = {}
+_bar_last: dict[tuple[int, int, int], tuple[int, int, int, int]] = {}  # (w, h, dpi) → last good box
+
+
+def _render(hwnd: int, w: int, h: int) -> bytes | None:
+    sdc = user32.GetDC(None)
+    mdc = gdi32.CreateCompatibleDC(sdc)
+    bits = ctypes.c_void_p()
+    bmp = gdi32.CreateDIBSection(mdc, ctypes.byref(_BIH(ctypes.sizeof(_BIH), w, -h, 1, 32, 0, 0, 0, 0, 0, 0)), 0, ctypes.byref(bits), None, 0)
+    try:
+        if not bmp or not bits.value:
+            return None
+        old = gdi32.SelectObject(mdc, bmp)
+        ok = user32.PrintWindow(hwnd, mdc, PW_RENDERFULLCONTENT)
+        data = ctypes.string_at(bits.value, w * h * 4) if ok else None
+        gdi32.SelectObject(mdc, old)
+        return data
+    finally:
+        if bmp:
+            gdi32.DeleteObject(bmp)
+        gdi32.DeleteDC(mdc)
+        user32.ReleaseDC(None, sdc)
+
+
+def ink_bbox(buf: bytes, w: int, h: int) -> tuple[int, int, int, int] | None:
+    """(x, y, w, h) of the pixels that are not (near) black in a 32-bit BGRA buffer, or None."""
+    planes = [bytes(buf[i::4]).translate(_INK) for i in (0, 1, 2)]
+    top = bottom = left = right = None
+    for y in range(h):
+        s, e = y * w, (y + 1) * w
+        firsts = [i for i in (p.find(b"", s, e) for p in planes) if i >= 0]
+        if not firsts:
+            continue
+        r = max(p.rfind(b"", s, e) for p in planes)
+        top = y if top is None else top
+        bottom = y
+        left = min(firsts) - s if left is None else min(left, min(firsts) - s)
+        right = r - s if right is None else max(right, r - s)
+    return None if top is None else (left, top, right - left + 1, bottom - top + 1)
+
+
+def plausible_bar(box, w: int, h: int, scale: float) -> bool:
+    if not box:
+        return False
+    _, _, bw, bh = box
+    return bw >= 80 * scale and 16 * scale <= bh <= h * 0.8 and not (bw >= w - 2 and bh >= h - 2)
+
+
+def wetype_bar(hwnd: int, rect: dict, scale: float) -> tuple[tuple[int, int, int, int], bool]:
+    """The drawn bar inside the canvas, relative to it: ((x, y, w, h), measured)."""
+    import time
+    size = (rect["w"], rect["h"])
+    now = time.monotonic()
+    hit = _bar_cache.get(hwnd)
+    if hit and hit[1] == size and now - hit[0] < BAR_TTL_S and hit[2]:
+        return hit[2], True
+    box = None
+    try:
+        buf = _render(hwnd, *size)
+        box = ink_bbox(buf, *size) if buf else None
+    except Exception:  # noqa: BLE001 — fall back below
+        box = None
+    key = (size[0], size[1], round(scale * 96))
+    if plausible_bar(box, size[0], size[1], scale):
+        _bar_cache[hwnd] = (now, size, box)
+        _bar_last[key] = box
+        return box, True
+    _bar_cache.pop(hwnd, None)
+    if key in _bar_last:
+        return _bar_last[key], False
+    # Never measured at this size: the full-width band WeType 2.1/3.0 use in their default layout.
+    return (0, round(109 * scale), size[0], min(round(70 * scale), size[1] - round(109 * scale))), False
+
+
+def wetype_candidate_rect(hwnd: int | None = None) -> dict | None:
+    """WeType's candidate *bar* (where it is drawn), plus "canvas": its whole transparent window.
+
+    "measured" is False when the bar couldn't be found in the window's pixels (e.g. not drawn yet) and the last
+    known or default position was used; callers sample again shortly after.
     """
     hwnd = hwnd if hwnd is not None else user32.FindWindowW(None, "wetype_candidate")
     if not hwnd or not user32.IsWindowVisible(hwnd):
@@ -112,12 +216,12 @@ def wetype_candidate_rect(hwnd: int | None = None) -> dict | None:
     if not rect or rect["w"] <= 0 or rect["h"] <= 0:
         return None
     scale = (user32.GetDpiForWindow(hwnd) or 96) / 96
-    offset = round(109 * scale)
-    if offset >= rect["h"]:
+    (bx, by, bw, bh), measured = wetype_bar(hwnd, rect, scale)
+    if bh <= 0:
         return None
     # "canvas": the whole IME window. It runs with UIAccess (z-band above every normal window) and takes all
     # mouse input over its area, transparent parts included; the host can place the panel clear of it.
-    return {**rect, "y": rect["y"] + offset, "h": min(round(70 * scale), rect["h"] - offset), "canvas": rect}
+    return {"x": rect["x"] + bx, "y": rect["y"] + by, "w": bw, "h": bh, "canvas": rect, "measured": measured}
 
 
 def wetype_candidate_hwnd() -> int:
