@@ -677,7 +677,6 @@ export function AboutPage({ onQuit }: { onQuit: () => void }) {
   const { t } = useTranslation()
   const [copied, setCopied] = useState(false)
   const version = useReview((r) => r.version)
-  const ime = useImeStatus()
   const pad = 'px-4 py-3'
   const rows: [string, React.ReactNode][] = [
     [t('settings.about.version'), version],
@@ -690,10 +689,7 @@ export function AboutPage({ onQuit }: { onQuit: () => void }) {
     ],
     [
       t('settings.about.ime'),
-      <span className="inline-flex items-center gap-1.5">
-        <span className={cx('size-1.5 rounded-full', ime.ok ? 'bg-success' : 'bg-fg-4')} />
-        {ime.name} — {ime.ok ? t('settings.about.connected') : t('settings.about.notRunning')}
-      </span>,
+      <InputMethodConnections />,
     ],
     // Required attribution (CC BY-SA 4.0) for the local dictionary.
     [t('settings.about.dict'), 'CC-CEDICT · CC BY-SA 4.0'],
@@ -740,20 +736,27 @@ export function AboutPage({ onQuit }: { onQuit: () => void }) {
 }
 
 
-/** Which input method Translate is following and whether it's connected (from the engine; the design lab shows WeType). */
-function useImeStatus(): { name: string; ok: boolean } {
+/** Independent adapter readiness; this does not claim which input method Windows has selected. */
+function InputMethodConnections() {
   const { t } = useTranslation()
-  const [st, setSt] = useState<{ ime: string; imeName?: string }>({ ime: 'connected', imeName: 'wetype' })
+  const [st, setSt] = useState<{ imeStates?: Record<string, string> }>({})
   useEffect(() => {
     if (!bridge) return
     let alive = true
-    const read = () => bridge!.status().then((s) => alive && setSt(s)).catch(() => {})
+    const read = () => bridge!.status().then((s) => alive && setSt(s)).catch(() => alive && setSt({}))
     read()
     const id = window.setInterval(read, 2000)
     return () => ((alive = false), window.clearInterval(id))
   }, [])
-  const name = st.imeName === 'mspinyin' ? t('settings.about.imeMsPinyin') : t('settings.about.imeVal')
-  return { name, ok: st.ime === 'connected' }
+  return <span className="flex flex-col gap-1 text-12 text-fg-3" data-ime-connections>
+    {(['wetype', 'mspinyin'] as const).map((id) => {
+      const connected = st.imeStates?.[id] === 'connected'
+      return <span key={id} data-ime={id} data-connected={connected} className="inline-flex items-center gap-1.5">
+        <span className={cx('size-1.5 shrink-0 rounded-full', connected ? 'bg-success' : 'bg-fg-4')} />
+        {t(id === 'wetype' ? 'settings.about.imeVal' : 'settings.about.imeMsPinyin')} · {t(connected ? 'settings.about.connected' : 'settings.about.disconnected')}
+      </span>
+    })}
+  </span>
 }
 
 /* =========================================================== Overview (direction B) */
@@ -763,7 +766,6 @@ export function OverviewPage({ go }: { go: (p: 'general' | 'translation') => voi
   const [d, set] = useDraft()
   const paused = useReview((r) => r.paused)
   const setp = useReview((r) => r.setp)
-  const ime = useImeStatus()
   const lang = TARGETS.find((x) => x.id === d.target)!.native
   const [keys, setKeys] = useState<Partial<Record<ProviderId, boolean>>>({})
   useEffect(() => {
@@ -781,9 +783,7 @@ export function OverviewPage({ go }: { go: (p: 'general' | 'translation') => voi
             </span>
             <div className="flex-1">
               <div className="text-14 font-semibold text-fg">{paused ? t('settings.overview.statusPaused') : t('settings.overview.statusOk', { lang })}</div>
-              <div className="text-12 text-fg-3">
-                {ime.name} · {ime.ok ? t('settings.about.connected') : t('settings.about.notRunning')}
-              </div>
+              <InputMethodConnections />
             </div>
             <label className="flex items-center gap-2.5 text-13 text-fg-2">
               {t('settings.overview.active')}

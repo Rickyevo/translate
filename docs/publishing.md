@@ -19,18 +19,18 @@ git push -u origin main
 
 The vendored Frida runtime is not included; `docs/development.md` explains how to restore it.
 
-## Publish version 0.2.1
+## Publish version 0.2.2
 
 Releases › Draft a new release:
 
-- **Tag:** `v0.2.1` on `main`. **Title:** `Translate 0.2.1`.
-- **Notes:** the contents of `docs/release-notes/0.2.1.md`.
-- **Assets:** `release/Translate-0.2.1-win-x64.zip` and `release/SHA256SUMS.txt`.
+- **Tag:** `v0.2.2` on `main`. **Title:** `Translate 0.2.2`.
+- **Notes:** the contents of `docs/release-notes/0.2.2.md`.
+- **Assets:** `release/Translate-0.2.2-win-x64.zip` and `release/SHA256SUMS.txt`.
 
 Or with the GitHub CLI:
 
 ```
-gh release create v0.2.1 release/Translate-0.2.1-win-x64.zip release/SHA256SUMS.txt --title "Translate 0.2.1" --notes-file docs/release-notes/0.2.1.md
+gh release create v0.2.2 release/Translate-0.2.2-win-x64.zip release/SHA256SUMS.txt --title "Translate 0.2.2" --notes-file docs/release-notes/0.2.2.md
 ```
 
 ## Checked before publishing

@@ -272,7 +272,8 @@
       "license": "사전 데이터: CC-CEDICT, CC BY-SA 4.0",
       "dict": "로컬 사전",
       "imeMsPinyin": "Microsoft 병음",
-      "notRunning": "실행 중 아님"
+      "notRunning": "실행 중 아님",
+      "disconnected": "연결되지 않음"
     },
     "overview": {
       "title": "개요",

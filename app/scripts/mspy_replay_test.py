@@ -4,7 +4,7 @@ method attached, nothing typed on the desktop).
 Checks: candidates show in the panel under Microsoft Pinyin's bar and clear of the typing line; a new list is a new
 generation without hiding the panel; Alt+N-style insertion cancels with Esc then types; closing ends the composition;
 Automatic switches from WeType to Microsoft Pinyin; Settings › General has the choice and Overview names the input
-method in use.
+methods' independent connection states, including disconnect/reconnect transitions.
 Run from app/:  python -X utf8 scripts/mspy_replay_test.py
 """
 from __future__ import annotations
@@ -91,7 +91,21 @@ def main() -> int:
         app.call("/settings/open", {"page": "overview", "inactive": True})
         time.sleep(1.8)
         txt = cdp.evaluate(CDP, "document.body.innerText", "settings.html") or ""
-        check("Overview names Microsoft Pinyin", "Microsoft Pinyin" in txt, "")
+        connection_js = "Object.fromEntries(Array.from(document.querySelectorAll('[data-ime]'), e => [e.dataset.ime,e.dataset.connected]))"
+        connections = lambda: cdp.evaluate(CDP, connection_js, "settings.html")
+        check("Overview shows both connected input methods", connections() == {"wetype": "true", "mspinyin": "true"})
+        mspy("connection", state="failed")
+        time.sleep(2.3)
+        check("Microsoft Pinyin failure updates only its own row", connections() == {"wetype": "true", "mspinyin": "false"})
+        mspy("connection", state="connected")
+        app.call("/wetype", {"t": "connection", "f": {"state": "waiting"}})
+        time.sleep(2.3)
+        check("WeChat disconnect and Microsoft reconnect refresh independently", connections() == {"wetype": "false", "mspinyin": "true"})
+        app.call("/settings/close")
+        time.sleep(0.6)
+        app.call("/settings/open", {"page": "about", "inactive": True})
+        time.sleep(1.5)
+        check("About shows both independent connection states", connections() == {"wetype": "false", "mspinyin": "true"})
         app.call("/settings/close")
         time.sleep(0.6)
         app.call("/settings/save", {"ime": "wetype"})

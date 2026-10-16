@@ -1,7 +1,7 @@
 {
   "name": "translate",
   "productName": "Translate",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "private": true,
   "description": "Live translations of WeChat Input Method candidates on Windows",
   "author": "Rickywu05",

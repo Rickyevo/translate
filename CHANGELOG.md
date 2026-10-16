@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.2 — 2026-10-16
+
+- Overview and About now show WeChat Input Method and Microsoft Pinyin separately, each with its own connection
+  status, instead of showing only the last active adapter. Status updates while Settings is open.
+
 ## 0.2.1 — 2026-10-16
 
 - Fix Microsoft Pinyin silently failing to start when the shipped UI Automation wrappers were generated against a

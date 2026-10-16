@@ -109,6 +109,14 @@ class MsPinyinTests(Harness):
 
 
 class SelectionTests(Harness):
+    def test_each_connection_and_mode_change_is_reported(self):
+        self.dbg("debug.mspy.connection", state="failed")
+        self.assertEqual(self.msgs("status")[-1]["ime"]["all"], {"wetype": "connected", "mspinyin": "failed"})
+        self.dbg("debug.mspy.connection", state="connected")
+        self.assertEqual(self.msgs("status")[-1]["ime"]["all"]["mspinyin"], "connected")
+        self.b.handle({"type": "config.set", "config": {"target": "en", "count": 5, "denylist": [], "ime": "wetype"}})
+        self.assertEqual(self.msgs("status")[-1]["ime"]["all"], {"wetype": "connected"})
+
     def test_auto_follows_the_composing_input_method(self):
         # WeType composes first…
         self.dbg("debug.wetype.window", rect={"x": 100, "y": 200, "w": 600, "h": 46}, foreground=FG)

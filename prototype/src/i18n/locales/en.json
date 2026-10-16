@@ -272,7 +272,8 @@
       "license": "Dictionary data: CC-CEDICT, CC BY-SA 4.0",
       "dict": "Local dictionary",
       "imeMsPinyin": "Microsoft Pinyin",
-      "notRunning": "Not running"
+      "notRunning": "Not running",
+      "disconnected": "Not connected"
     },
     "overview": {
       "title": "Overview",

@@ -76,6 +76,7 @@ class ImeSources:
         self._ensure(MODES[self.mode])
         for s in self.sources.values():
             s.configure(config)
+        self._report()
 
     def accept(self, event):
         name = event.get("ime", "wetype")

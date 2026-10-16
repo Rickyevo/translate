@@ -272,7 +272,8 @@
       "license": "词典数据：CC-CEDICT，CC BY-SA 4.0",
       "dict": "本地词典",
       "imeMsPinyin": "微软拼音",
-      "notRunning": "未运行"
+      "notRunning": "未运行",
+      "disconnected": "未连接"
     },
     "overview": {
       "title": "概览",

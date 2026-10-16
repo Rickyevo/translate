@@ -175,7 +175,7 @@ Translate isn't code-signed yet, so SmartScreen doesn't recognise it. Choose **M
 the download against `SHA256SUMS.txt` from the same release:
 
 ```powershell
-Get-FileHash .\Translate-0.2.1-win-x64.zip -Algorithm SHA256
+Get-FileHash .\Translate-0.2.2-win-x64.zip -Algorithm SHA256
 ```
 
 </details>

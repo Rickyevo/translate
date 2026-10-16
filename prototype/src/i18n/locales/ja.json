@@ -272,7 +272,8 @@
       "license": "辞書データ：CC-CEDICT、CC BY-SA 4.0",
       "dict": "ローカル辞書",
       "imeMsPinyin": "Microsoft Pinyin",
-      "notRunning": "未起動"
+      "notRunning": "未起動",
+      "disconnected": "未接続"
     },
     "overview": {
       "title": "概要",

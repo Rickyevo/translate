@@ -15,7 +15,7 @@ export interface SettingsBridge {
   clearCache(): Promise<{ count: number; bytes: number }>
   openLogs(): void
   /** Engine status: the input method's state and which one (wetype | mspinyin) Translate is following. */
-  status(): Promise<{ ime: string; service: string; imeName?: string }>
+  status(): Promise<{ ime: string; service: string; imeName?: string; imeStates?: Record<string, string> }>
 }
 
 export let bridge: SettingsBridge | null = null

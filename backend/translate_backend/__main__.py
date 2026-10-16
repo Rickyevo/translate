@@ -33,7 +33,7 @@ from .wetype.source import WeTypeSource
 from .ime import ImeSources
 from .mspinyin.source import MsPinyinSource
 
-VERSION = "0.2.1"
+VERSION = "0.2.2"
 COMPOSITION_CANCEL_TIMEOUT = 0.5  # s to wait for the IME to confirm Esc cancelled the composition
 SETTLE_AFTER_CANCEL = 0.015       # s between the confirmed cancel and typing (lets the IME's text service settle)
 

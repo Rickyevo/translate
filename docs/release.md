@@ -1,5 +1,16 @@
 # Release build
 
+## 0.2.2 connection display
+
+Release: `release/Translate-0.2.2-win-x64.zip` (about 61.2 MB; 157.2 MB unpacked).
+Overview and About both list WeChat Input Method and Microsoft Pinyin with independent connection indicators.
+The host now retains the backend's full adapter-state map and clears it on backend exit. Settings refreshes the
+connection indicators every two seconds, and mode changes report removed adapters as no longer connected.
+Connected means the adapter is ready; it does not mean Windows currently has that input method selected.
+
+Verified: TypeScript typecheck; backend 76/76; packaged Microsoft Pinyin replay 15/15 (including independent
+disconnect/reconnect transitions on Overview and About); Overview card 4/4; clean-environment checks 10/10.
+
 ## 0.2.1 hotfix
 
 Release: `release/Translate-0.2.1-win-x64.zip` with `release/SHA256SUMS.txt`.

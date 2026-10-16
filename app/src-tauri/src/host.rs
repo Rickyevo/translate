@@ -104,6 +104,7 @@ pub struct Host {
     translation_mode: String,
     ime_state: String,
     ime_name: String,
+    ime_states: Value,
     service_state: String,
     last_insert: Value,
     panel_created: u64,
@@ -177,6 +178,7 @@ impl Host {
             translation_mode: "fixture".into(),
             ime_state: "starting".into(),
             ime_name: String::new(),
+            ime_states: json!({}),
             service_state: String::new(),
             last_insert: Value::Null,
             panel_created: 0,
@@ -296,6 +298,7 @@ impl Host {
                 if epoch != self.backend.epoch {
                     return;
                 }
+                self.ime_states = json!({});
                 log::info(format!("backend exited code={code:?}"));
                 let pend: Vec<u64> = self.pending.keys().copied().collect();
                 for id in pend {
@@ -360,6 +363,7 @@ impl Host {
             "status" => {
                 if let Some(st) = m.get("ime").and_then(|i| i.get("state")).and_then(Value::as_str) {
                     self.ime_state = st.into();
+                    self.ime_states = m["ime"]["all"].as_object().map(|s| json!(s)).unwrap_or(json!({}));
                     if let Some(n) = m["ime"].get("name").and_then(Value::as_str) {
                         if n != self.ime_name {
                             log::info(format!("input method {n}"));
@@ -1167,7 +1171,7 @@ impl Host {
             "svc:keys" => self.request("secret.status", json!({}), 3000, Box::new(move |_, m| Self::reply_with(reply, m.get("keys").cloned().unwrap_or(json!({}))))),
             "cache:stats" => self.request("cache.stats", json!({}), 3000, Box::new(move |_, m| Self::reply_with(reply, m))),
             "cache:clear" => self.request("cache.clear", json!({}), 3000, Box::new(move |_, m| Self::reply_with(reply, m))),
-            "status:get" => Self::reply_with(reply, json!({ "ime": self.ime_state, "service": self.service_state, "imeName": self.ime_name })),
+            "status:get" => Self::reply_with(reply, json!({ "ime": self.ime_state, "service": self.service_state, "imeName": self.ime_name, "imeStates": self.ime_states })),
             "logs:open" => {
                 win::open_path(&self.o.user_data.join("logs").to_string_lossy());
                 Self::reply_with(reply, Value::Null)
@@ -1250,6 +1254,7 @@ impl Host {
             "scale": k,
             "imeState": self.ime_state,
             "imeName": self.ime_name,
+            "imeStates": self.ime_states,
             "translationMode": self.translation_mode,
             "lastInsert": self.last_insert,
             "serviceState": self.service_state,
