@@ -52,6 +52,7 @@ user32.FindWindowW.restype = wt.HWND
 user32.IsWindowVisible.argtypes = [wt.HWND]
 user32.GetWindowLongW.argtypes = [wt.HWND, ctypes.c_int]
 user32.GetDpiForWindow.argtypes = [wt.HWND]
+user32.GetClassNameW.argtypes = [wt.HWND, wt.LPWSTR, ctypes.c_int]
 user32.GetDpiForWindow.restype = wt.UINT
 kernel32.QueryFullProcessImageNameW.argtypes = [wt.HANDLE, wt.DWORD, wt.LPWSTR, ctypes.POINTER(wt.DWORD)]
 
@@ -67,14 +68,14 @@ def foreground() -> dict:
     gti = GUITHREADINFO(cbSize=ctypes.sizeof(GUITHREADINFO))
     if tid and user32.GetGUIThreadInfo(tid, ctypes.byref(gti)):
         info["focus"] = int(gti.hwndFocus or 0)
-        info["password"] = bool(gti.hwndFocus and user32.GetWindowLongW(gti.hwndFocus, -16) & 0x20)
+        info["password"] = bool(gti.hwndFocus and is_password_edit(int(gti.hwndFocus)))
         if gti.hwndCaret:
             tl = wt.POINT(gti.rcCaret.left, gti.rcCaret.top)
             br = wt.POINT(gti.rcCaret.right, gti.rcCaret.bottom)
             user32.ClientToScreen(gti.hwndCaret, ctypes.byref(tl))
             user32.ClientToScreen(gti.hwndCaret, ctypes.byref(br))
             info["caret"] = {"x": tl.x, "y": tl.y, "w": max(1, br.x - tl.x), "h": br.y - tl.y}
-        if "caret" not in info and gti.hwndFocus:
+        if "caret" not in info and gti.hwndFocus and not os.environ.get("TRANSLATE_NO_A11Y_CARET"):
             caret = accessible_caret(int(gti.hwndFocus))  # apps without a system caret (Chromium, Electron, Firefox…)
             if caret:
                 info["caret"] = caret
@@ -132,6 +133,16 @@ def accessible_caret(hwnd: int) -> dict | None:
         return {"x": x.value, "y": y.value, "w": max(1, w.value), "h": h.value}
     except Exception:  # noqa: BLE001 — an app without (or with a broken) caret object: no caret
         return None
+
+
+def is_password_edit(hwnd: int) -> bool:
+    """A standard (or rich) edit control with ES_PASSWORD. The 0x20 style bit means something else on other classes."""
+    buf = ctypes.create_unicode_buffer(64)
+    user32.GetClassNameW(hwnd, buf, 64)
+    cls = buf.value.lower()
+    if not (cls == "edit" or cls.startswith("richedit") or cls.endswith(".edit") or ".edit." in cls):
+        return False
+    return bool(user32.GetWindowLongW(hwnd, -16) & 0x20)
 
 
 def process_exe(pid: int) -> str:

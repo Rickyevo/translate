@@ -35,6 +35,7 @@ Translate uses it.
 | Visual parity with 0.1.1 (`parity_shots.py`) | 28 / 28 captures pixel-identical: panel, lead preview, Overview, General, Translation, Appearance, Privacy — light and dark |
 | Placement geometry (`cargo test`) | 9 screens (1366×768 … 3840×2160, 100–200 %, negative-origin monitors) × 5 bar layouts × 13 heights × 3 horizontal positions × caret above/below, reported or not × default/clickable: never over the bar or typing line, always inside the work area; the reported bottom-edge case; mutation check (no line clearance) fails both tests |
 | Placement in the app (`placement_test.py`) | 35 / 35 |
+| LIVE, real WeType + real typing (`live_edge_test.py`) | Win32 text box (system caret): middle, top edge, bottom edge, bottom-right corner, very bottom — 20 / 20, incl. WeType's bar flipped above the caret; Edge text area (accessibility caret): 22 / 22 after the window-blink fix (before: candidates missing in 2–4 of 5 cases), with the caret lookup off as well (line-height fallback) — candidates every time, typing line clear. `measurements/stage6/live-edge-*.json` |
 | Stage-4 replay suite | 40 / 40 (incl. lead preview via `window.open`, idle release and recreation, engine restart) |
 | Translation pipeline vs local mock | 19 / 19 |
 | Start with Windows + footer | 8 / 8 |

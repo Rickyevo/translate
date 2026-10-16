@@ -1,0 +1,47 @@
+[
+ {
+  "name": "app starts and attaches to WeType",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "Edge (accessibility caret) \u00b7 middle: test window in front",
+  "ok": false,
+  "detail": "another window is in front; nothing typed"
+ },
+ {
+  "name": "Edge (accessibility caret) \u00b7 middle: test window under the click point",
+  "ok": false,
+  "detail": "another window covers it; nothing clicked or typed"
+ },
+ {
+  "name": "Edge (accessibility caret) \u00b7 middle: test window under the click point",
+  "ok": false,
+  "detail": "another window covers it; nothing clicked or typed"
+ },
+ {
+  "name": "Edge (accessibility caret) \u00b7 middle: test window under the click point",
+  "ok": false,
+  "detail": "another window covers it; nothing clicked or typed"
+ },
+ {
+  "name": "Edge (accessibility caret) \u00b7 middle: test window under the click point",
+  "ok": false,
+  "detail": "another window covers it; nothing clicked or typed"
+ },
+ {
+  "name": "Edge (accessibility caret) \u00b7 middle: test window under the click point",
+  "ok": false,
+  "detail": "another window covers it; nothing clicked or typed"
+ },
+ {
+  "name": "Edge (accessibility caret) \u00b7 very bottom (bar flipped): test window under the click point",
+  "ok": false,
+  "detail": "another window covers it; nothing clicked or typed"
+ },
+ {
+  "name": "candidate data flowed from WeType",
+  "ok": true,
+  "detail": ""
+ }
+]

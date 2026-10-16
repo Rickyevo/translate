@@ -1,0 +1,112 @@
+[
+ {
+  "name": "app starts and attaches to WeType",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "Edge (accessibility caret) \u00b7 middle: candidates arrive and the panel shows",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "Edge (accessibility caret) \u00b7 middle: panel clear of WeType's bar",
+  "ok": true,
+  "detail": "bar y=510.0..553.0 line y=480.0..501.0 panel y=557..733 dir=below caret=reported measured=True"
+ },
+ {
+  "name": "Edge (accessibility caret) \u00b7 middle: panel clear of the typing line",
+  "ok": true,
+  "detail": "bar y=510.0..553.0 line y=480.0..501.0 panel y=557..733 dir=below caret=reported measured=True"
+ },
+ {
+  "name": "Edge (accessibility caret) \u00b7 middle: panel inside the work area",
+  "ok": true,
+  "detail": "panel {'x': 699, 'y': 557, 'w': 226, 'h': 176} work {'x': 0, 'y': 0, 'w': 1920, 'h': 1032}"
+ },
+ {
+  "name": "Edge (accessibility caret) \u00b7 middle: Chromium reports its caret (accessibility)",
+  "ok": true,
+  "detail": "reported"
+ },
+ {
+  "name": "Edge (accessibility caret) \u00b7 middle: candidates arrive and the panel shows",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "Edge (accessibility caret) \u00b7 middle: panel clear of WeType's bar",
+  "ok": true,
+  "detail": "bar y=510.0..553.0 line y=480.0..501.0 panel y=557..733 dir=below caret=reported measured=True"
+ },
+ {
+  "name": "Edge (accessibility caret) \u00b7 middle: panel clear of the typing line",
+  "ok": true,
+  "detail": "bar y=510.0..553.0 line y=480.0..501.0 panel y=557..733 dir=below caret=reported measured=True"
+ },
+ {
+  "name": "Edge (accessibility caret) \u00b7 middle: panel inside the work area",
+  "ok": true,
+  "detail": "panel {'x': 699, 'y': 557, 'w': 226, 'h': 176} work {'x': 0, 'y': 0, 'w': 1920, 'h': 1032}"
+ },
+ {
+  "name": "Edge (accessibility caret) \u00b7 middle: Chromium reports its caret (accessibility)",
+  "ok": true,
+  "detail": "reported"
+ },
+ {
+  "name": "Edge (accessibility caret) \u00b7 middle: candidates arrive and the panel shows",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "Edge (accessibility caret) \u00b7 middle: panel clear of WeType's bar",
+  "ok": true,
+  "detail": "bar y=510.0..553.0 line y=480.0..501.0 panel y=557..733 dir=below caret=reported measured=True"
+ },
+ {
+  "name": "Edge (accessibility caret) \u00b7 middle: panel clear of the typing line",
+  "ok": true,
+  "detail": "bar y=510.0..553.0 line y=480.0..501.0 panel y=557..733 dir=below caret=reported measured=True"
+ },
+ {
+  "name": "Edge (accessibility caret) \u00b7 middle: panel inside the work area",
+  "ok": true,
+  "detail": "panel {'x': 699, 'y': 557, 'w': 226, 'h': 176} work {'x': 0, 'y': 0, 'w': 1920, 'h': 1032}"
+ },
+ {
+  "name": "Edge (accessibility caret) \u00b7 middle: Chromium reports its caret (accessibility)",
+  "ok": true,
+  "detail": "reported"
+ },
+ {
+  "name": "Edge (accessibility caret) \u00b7 very bottom (bar flipped): candidates arrive and the panel shows",
+  "ok": true,
+  "detail": ""
+ },
+ {
+  "name": "Edge (accessibility caret) \u00b7 very bottom (bar flipped): panel clear of WeType's bar",
+  "ok": true,
+  "detail": "bar y=920.0..963.0 line y=975.0..996.0 panel y=740..916 dir=above caret=reported (WeType flipped its bar above the caret) measured=True"
+ },
+ {
+  "name": "Edge (accessibility caret) \u00b7 very bottom (bar flipped): panel clear of the typing line",
+  "ok": true,
+  "detail": "bar y=920.0..963.0 line y=975.0..996.0 panel y=740..916 dir=above caret=reported (WeType flipped its bar above the caret) measured=True"
+ },
+ {
+  "name": "Edge (accessibility caret) \u00b7 very bottom (bar flipped): panel inside the work area",
+  "ok": true,
+  "detail": "panel {'x': 699, 'y': 740, 'w': 226, 'h': 176} work {'x': 0, 'y': 0, 'w': 1920, 'h': 1032}"
+ },
+ {
+  "name": "Edge (accessibility caret) \u00b7 very bottom (bar flipped): Chromium reports its caret (accessibility)",
+  "ok": true,
+  "detail": "reported"
+ },
+ {
+  "name": "candidate data flowed from WeType",
+  "ok": true,
+  "detail": ""
+ }
+]

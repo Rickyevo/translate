@@ -21,11 +21,13 @@ pub enum SysEvent {
 
 const WM_APP_OPEN: u32 = WM_APP + 1;
 const WM_APP_HOTKEYS: u32 = WM_APP + 2;
+const RETRY_TIMER: usize = 7;
 
 struct Shared {
     tx: Box<dyn Fn(SysEvent) + Send>,
     wanted: Vec<String>,
     registered: HashMap<i32, String>,
+    retries: u32,
 }
 static SHARED: OnceLock<Mutex<Shared>> = OnceLock::new();
 static HWND_CELL: OnceLock<isize> = OnceLock::new();
@@ -108,9 +110,18 @@ unsafe extern "system" fn wndproc(h: HWND, msg: u32, wp: WPARAM, lp: LPARAM) -> 
             }
             0
         }
+        WM_TIMER if wp == RETRY_TIMER => {
+            KillTimer(h, RETRY_TIMER);
+            PostMessageW(h, WM_APP_HOTKEYS, 1, 0);
+            0
+        }
         WM_APP_HOTKEYS => {
+            let mut failed = false;
             if let Some(s) = SHARED.get() {
                 let mut g = s.lock().unwrap();
+                if wp == 0 {
+                    g.retries = 0; // a new request, not a retry
+                }
                 let want = g.wanted.clone();
                 let keep: Vec<i32> = g.registered.iter().filter(|(_, n)| want.contains(n)).map(|(id, _)| *id).collect();
                 let drop: Vec<i32> = g.registered.keys().filter(|id| !keep.contains(id)).copied().collect();
@@ -127,9 +138,20 @@ unsafe extern "system" fn wndproc(h: HWND, msg: u32, wp: WPARAM, lp: LPARAM) -> 
                         if RegisterHotKey(h, id, mods, vk) != 0 {
                             g.registered.insert(id, name);
                         } else {
-                            crate::log::warn(format!("shortcut unavailable: {name}"));
+                            // Another app holds it — often a Translate that is still exiting. Try again for a minute.
+                            failed = true;
+                            if g.retries == 0 {
+                                crate::log::warn(format!("shortcut unavailable: {name} (retrying)"));
+                            }
                         }
                     }
+                }
+                if failed && g.retries < 30 {
+                    g.retries += 1;
+                    SetTimer(h, RETRY_TIMER, 2000, None);
+                } else if !failed && g.retries > 0 {
+                    crate::log::info("shortcuts registered after retrying");
+                    g.retries = 0;
                 }
             }
             0
@@ -152,7 +174,7 @@ unsafe extern "system" fn wndproc(h: HWND, msg: u32, wp: WPARAM, lp: LPARAM) -> 
 }
 
 pub fn start(profile: &str, tx: impl Fn(SysEvent) + Send + 'static) {
-    let _ = SHARED.set(Mutex::new(Shared { tx: Box::new(tx), wanted: vec![], registered: HashMap::new() }));
+    let _ = SHARED.set(Mutex::new(Shared { tx: Box::new(tx), wanted: vec![], registered: HashMap::new(), retries: 0 }));
     let cls = class_name(profile);
     let (ready_tx, ready_rx) = std::sync::mpsc::channel::<()>();
     std::thread::spawn(move || unsafe {

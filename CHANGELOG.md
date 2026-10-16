@@ -13,6 +13,12 @@
 - **Settings › Overview**: the three-step checklist is replaced by a single *Connect a translation service* card,
   shown only while no service is set up. (Its first step was always done, and its last was just using the app.)
   `progress.json` is no longer written.
+- **Candidates no longer go missing in browsers and Chromium apps.** WeType briefly hides and re-shows its candidate
+  window mid-composition there; Translate took that as the end of the composition, so the panel vanished and the rest
+  of the composition was ignored. A hide now has to last 150 ms to end it.
+- The WeType observer re-checks pipe handles it had rejected, so a window opened a moment ago can't inherit a stale
+  verdict; password fields are recognised only on real edit controls (the style bit means other things elsewhere).
+- Global shortcuts held by another app at startup (e.g. a Translate that is still exiting) are retried for a minute.
 - The test-control DevTools port is accepted only together with `--test-control`.
 
 ## 0.1.1 — 2026-10-16

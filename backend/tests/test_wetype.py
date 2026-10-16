@@ -127,8 +127,22 @@ class SourceTests(unittest.TestCase):
         self.assertIsNone(self.source.current)
         self.compose()
         self.window(None)
+        # Hidden for the grace period (the timer's check, delivered directly here): the composition is over.
+        self.source.accept({"kind": "hidecheck", "token": self.source._hide_token})
         self.assertIsNone(self.source.current)
         self.assertEqual(self.source._framers, {})
+
+    def test_hide_blink_keeps_the_composition(self):
+        # WeType briefly hides and re-shows its window mid-composition in some apps: not the end.
+        self.compose()
+        gen = self.source.current.gen
+        self.window(None)
+        stale = self.source._hide_token
+        self.window(self.rect)
+        self.source.accept({"kind": "hidecheck", "token": stale})  # the timer from the blink fires late
+        self.assertIsNotNone(self.source.current)
+        self.assertEqual(self.source.current.gen, gen)
+        self.assertNotIn(("end", gen), self.output)
 
     def test_focus_switch_drops_pending_content(self):
         self.compose()

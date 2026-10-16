@@ -71,6 +71,7 @@ python -X utf8 scripts/placement_test.py                                  # pane
 python -X utf8 scripts/overview_card_test.py                              # Overview's service card (packaged)
 python -X utf8 scripts/parity_shots.py <reference exe> <candidate exe>    # pixel parity of two host builds
 python -X utf8 scripts/live_placement_probe.py <Translate.exe> [seconds]   # LIVE, read-only: you type; checks placement
+python -X utf8 scripts/live_edge_test.py [Translate.exe] [--edge-only]     # LIVE: types into its own Tk/Edge windows at screen edges
 python -X utf8 scripts/autostart_test.py                                   # Start with Windows + panel footer (packaged)
 python -X utf8 scripts/settings_ui_probe.py                               # settings dropdowns and scrollbars
 python -X utf8 scripts/release_verify.py <release folder>                 # release in an environment without dev tools
@@ -81,6 +82,9 @@ python -I ../backend/tools/build_cedict.py <cedict_1_0_ts_utf-8_mdbg.zip> # rebu
 
 Test runs use an isolated profile in `.cache/test-userdata`, never your `%APPDATA%\Translate`. Screenshots are taken
 from the pages themselves (DevTools, enabled only together with `--test-control`), never of the desktop.
+
+`TRANSLATE_DIAG=1` makes the engine log counts (never content) of what the WeType adapter receives and drops, once a
+second; `TRANSLATE_NO_A11Y_CARET=1` turns off the accessibility-caret lookup.
 
 Electron-era measurement scripts (`measure.py`, `measure_report.py`, `measure_stage4.py`, `focus_test.py`) are kept for
 the stage-3/4 reports; they assume Electron's process layout.

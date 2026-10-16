@@ -11,7 +11,8 @@ import tkinter as tk
 ctypes.windll.user32.SetProcessDpiAwarenessContext(ctypes.c_void_p(-4))
 root = tk.Tk()
 root.title("Translate focus target (Tk)")
-root.geometry("640x260+120+120")
+import os
+root.geometry(os.environ.get("TARGET_GEOMETRY", "640x260+120+120"))  # physical px (per-monitor DPI aware)
 root.attributes("-topmost", True)
 txt = tk.Text(root, font=("Segoe UI", 12), wrap="word")
 txt.pack(fill="both", expand=True, padx=8, pady=8)

@@ -34,15 +34,23 @@ function isTarget(h) {
   const key = h.toString();
   const now = Date.now();
   const c = cache.get(key);
-  if (c && now - c.t < CACHE_MS) return c.ok;
+  // A positive verdict is trusted for CACHE_MS. A negative one only for non-pipe handles: when an app window closes
+  // and another opens, Windows can hand the new session pipe the handle number of a pipe or file we rejected a moment
+  // ago, and trusting that verdict hid the new window's candidates for seconds (typing right after opening a window).
+  if (c && now - c.t < CACHE_MS && (c.ok || !c.pipe)) return c.ok;
   let ok = false;
   let name = '';
-  if (getFileType(h) === FILE_TYPE_PIPE && getInfo(h, FileNameInfo, nameBuf, 2048)) {
+  const pipe = getFileType(h) === FILE_TYPE_PIPE;
+  if (c && !c.ok && c.pipe && !pipe) {
+    cache.set(key, { ok: false, pipe: false, t: now });
+    return false;
+  }
+  if (pipe && getInfo(h, FileNameInfo, nameBuf, 2048)) {
     const bytes = Math.min(nameBuf.readU32(), 2044);
     name = nameBuf.add(4).readUtf16String(bytes / 2) || '';
     ok = name.indexOf(TARGET) >= 0 || name.indexOf('server_for_renderer') >= 0;
   }
-  cache.set(key, { ok: ok, t: now });
+  cache.set(key, { ok: ok, pipe: pipe, t: now });
   if (cache.size > 512) cache.delete(cache.keys().next().value);
   return ok;
 }

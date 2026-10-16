@@ -3,10 +3,14 @@ from __future__ import annotations
 
 from pathlib import Path
 import sys
+import os
 import threading
 
 from .. import win32
 from ..log import log
+
+_DIAG = os.environ.get("TRANSLATE_DIAG") == "1"
+HIDE_GRACE_S = 0.15  # how long the candidate window must stay hidden to end a composition
 from ..sim import Candidate, CandidateList
 from .protocol import Framer, decode, ListEvent, CompositionEvent, CommitEvent
 
@@ -49,6 +53,9 @@ class WeTypeSource:
         self._pinyin = ""
         self._words = []
         self._framers = {}
+        self._hide_token = 0
+        self._diag_counts: dict[str, int] = {}
+        self._diag_t = 0.0
         self._window = None
         self._epoch = 0
         self._connected = False
@@ -187,19 +194,37 @@ class WeTypeSource:
             return
         if kind == "window":
             fg, rect = event["foreground"], event["rect"]
+            self._diag("win:" + ("none" if rect is None else "rect") + (":err" if event.get("error") else ""))
             switched = (fg.get("hwnd"), fg.get("pid")) != (self.foreground.get("hwnd"), self.foreground.get("pid"))
             old_rect = self._window
             self.foreground, self._window = fg, rect
             if switched or not self._input_allowed():
                 self._reset()
             elif rect is None:
-                if self._shown is not None:  # the candidate window closed: the composition is over
-                    self._reset()
+                if self._shown is not None:
+                    # The candidate window closed: the composition is over — unless it reappears at once. WeType
+                    # briefly hides and re-shows it mid-composition in some apps (seen in Chromium); ending on that
+                    # blink dropped the panel and every later list of the composition.
+                    self._hide_token += 1
+                    tok = self._hide_token
+                    tm = threading.Timer(HIDE_GRACE_S, self._post, args=({"kind": "hidecheck", "token": tok},))
+                    tm.daemon = True
+                    tm.start()
+            elif self._hide_token and old_rect is None and self._shown is not None and self.current and self._shown == self.current.gen:
+                self._hide_token += 1  # it came back: not the end of the composition
+                self._diag("hide:blink")
+                self.current.anchor = rect
+                self._on_list(self.current)
             elif self.current and self._shown != self.current.gen:
                 self._publish(self.current)  # list arrived before its window became visible
             elif rect != old_rect and self.current:
                 self.current.anchor = rect
                 self._on_list(self.current)  # same gen: a reposition, not a new list
+            return
+        if kind == "hidecheck":
+            if event["token"] == self._hide_token and self._window is None and self._shown is not None:
+                self._diag("hide:end")
+                self._reset()
             return
         if kind == "probe":
             if self.current and self._shown != self.current.gen and self._window is None:
@@ -220,8 +245,10 @@ class WeTypeSource:
                 self._reset()
             self.foreground = fg
         if not self._input_allowed():
+            self._diag("dropped_not_allowed:" + ("paused" if self.paused else "pid0" if not self.foreground.get("pid") else "password" if self.foreground.get("password") else "denylist"))
             self._framers.clear()
             return
+        self._diag("bytes")
         handle = event["handle"]
         if handle not in self._framers and len(self._framers) >= 16:
             self._framers.clear()
@@ -229,7 +256,22 @@ class WeTypeSource:
         for message in framer.feed(event["data"]):
             self._decoded(decode(message))
 
+    def _diag(self, key: str):
+        """TRANSLATE_DIAG=1: counts (never content) of what the adapter receives and drops, logged once a second."""
+        if not _DIAG:
+            return
+        import time as _t
+        self._diag_counts[key] = self._diag_counts.get(key, 0) + 1
+        now = _t.monotonic()
+        if now - self._diag_t >= 1.0:
+            log.info("diag %s fg_pid=%s", " ".join(f"{k}={v}" for k, v in sorted(self._diag_counts.items())), self.foreground.get("pid"))
+            self._diag_counts.clear()
+            self._diag_t = now
+
     def _decoded(self, event):
+        self._diag("ev:" + type(event).__name__ if event is not None else "ev:None")
+        if isinstance(event, ListEvent) and self._needs_composition:
+            self._diag("list_dropped_no_composition")
         if isinstance(event, CompositionEvent):
             if not event.pinyin:
                 self.end()
@@ -271,8 +313,10 @@ class WeTypeSource:
                                [Candidate(i + 1, text) for i, text in enumerate(words)], dict(self._window or {}))
             self.current = cl
             if self._window is not None:
+                self._diag("publish")
                 self._publish(cl)
             else:
+                self._diag("pending")
                 cl._pending = True  # shown when the candidate window appears
                 self._probe_later()
 
@@ -282,11 +326,18 @@ class WeTypeSource:
         shows, hides or moves. Posts metadata only when it actually changed."""
         previous = [None]
         retries = [0]
+        slowest = [0.0]
 
         def sample():
             try:
                 rect = win32.wetype_candidate_rect(watcher.target_hwnd or None)
+                import time as _t
+                t0 = _t.perf_counter()
                 fg = win32.foreground()
+                ms = (_t.perf_counter() - t0) * 1000
+                if _DIAG and ms > slowest[0]:
+                    slowest[0] = ms
+                    log.info("diag slowest foreground() %.0f ms caret=%s", ms, "yes" if fg.get("caret") else "no")
                 # The line being typed on (when the app reports a caret): the panel must not cover it either.
                 if rect and fg.get("caret"):
                     rect = {**rect, "caret": fg["caret"]}
@@ -302,8 +353,10 @@ class WeTypeSource:
                     threading.Timer(0.06 * retries[0], sample).start()
                 elif rect is None or rect.get("measured", True):
                     retries[0] = 0
-            except Exception:
-                self._post({"kind": "window", "rect": None, "foreground": {}})
+            except Exception as e:  # noqa: BLE001
+                if _DIAG:
+                    log.info("diag watcher error %s", type(e).__name__)
+                self._post({"kind": "window", "rect": None, "foreground": {}, "error": True})
                 previous[0] = None
 
         watcher = win32.WindowEvents(win32.wetype_candidate_hwnd, sample)
