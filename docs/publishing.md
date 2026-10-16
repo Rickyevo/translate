@@ -14,13 +14,13 @@ specific than "translate" is easier to find, for example `wetype-translate`.
 
 ## 2. Fill in the repository name
 
-`docs/release-notes/0.1.0.md` links to the README and changelog with the placeholder `OWNER/REPO`. Replace it with the
+`docs/release-notes/0.1.0.md` links to the README and changelog with the placeholder `Rickywu05/wetype-translate`. Replace it with the
 real `owner/name`.
 
 ## 3. Push
 
 ```
-git remote add origin https://github.com/OWNER/REPO.git
+git remote add origin https://github.com/Rickywu05/wetype-translate.git
 git push -u origin main
 ```
 

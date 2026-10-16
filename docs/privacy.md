@@ -13,13 +13,16 @@ There is no account, no telemetry, no analytics and no update check.
   in password fields or in apps on the excluded list (Settings › Privacy; by default KeePassXC, Remote Desktop and
   1Password).
 
+Password detection uses the standard Windows password-control flag. Custom-rendered password fields and terminal
+password prompts may not expose that flag; use Local only mode or exclude the application for sensitive input.
+
 ## What leaves your PC
 
-- Only when a translation isn't already in the cache or the local dictionary: **the candidate texts on screen and the
-  target language**, sent to **the translation service you chose**, with your key. Nothing is sent to the authors of
-  Translate or to anyone else.
-- Nothing at all in **Local only** mode or when no service is set up — then only the built-in dictionary is used
-  (Chinese → English words).
+- With a service configured, uncached **candidate texts and the target language** are sent to **the translation
+  service you chose**, with your key. Dictionary results can be displayed immediately and then refined by that
+  service, so a dictionary hit can still be sent. Nothing is sent to the authors of Translate.
+- No translation requests are sent in **Local only** mode or when no service is set up; available cached results
+  and the built-in dictionary (Chinese to English) are used instead.
 - What the service does with the text is governed by that provider's terms and privacy policy.
 
 ## What is stored on your PC
@@ -28,9 +31,9 @@ There is no account, no telemetry, no analytics and no update check.
 |---|---|---|
 | Settings | `%APPDATA%\Translate\config.json` | No key and no typed text |
 | Setup progress | `%APPDATA%\Translate\progress.json` | One flag: whether Translate has shown you a translation yet (for Settings › Overview). No text, times or counts |
-| API keys | Windows Credential Manager, `Translate:service:<provider>` | Read only by Translate; never written to files or logs, never shown back in Settings |
+| API keys | Windows Credential Manager, `Translate:service:<provider>` | Stored for your Windows account, separately per provider; never written to config files or logs, never shown back in Settings |
 | Translation cache (memory) | — | Every translation of this session; gone when Translate quits |
-| Translation cache (disk) | `%APPDATA%\Translate` | Only words of 1–4 Chinese characters that are general dictionary vocabulary, with their translation. Sentences, names, numbers, Latin letters and anything not in the dictionary never reach disk. Encrypted with Windows DPAPI for your Windows account. Clear it in Settings › Privacy |
+| Translation cache (disk) | `%APPDATA%\Translate` | Only dictionary headwords of 1–4 Chinese characters, with short translations. Longer text, digits, Latin letters and non-headwords stay in memory. Dictionary membership is a heuristic, not a guarantee that a word is non-sensitive. Encrypted with Windows DPAPI for your Windows account. Clear it in Settings › Privacy |
 | Start with Windows | `HKCU\Software\Microsoft\Windows\CurrentVersion\Run`, value `Translate` | The path to `Translate.exe`; removed when you turn the setting off |
 | Diagnostic log | `%APPDATA%\Translate\logs` | States, counts and timings only — never candidate text or translations. Capped at 2 MB. Open it from Settings › Privacy |
 

@@ -17,7 +17,7 @@ instead of the Chinese. Long candidates get a full-text preview.
 - **Your choice of service:** OpenAI, Claude, Gemini, Grok, DeepSeek, OpenCode Go, or any OpenAI-, Claude- or
   Gemini-compatible endpoint, with your own key.
 - **Stays out of the way:** never takes focus from the app you're typing in, no window or tray icon, skips password
-  fields, and goes away when you stop typing.
+  fields it can detect, and goes away when you stop typing.
 - **Private by design:** keys stay in Windows Credential Manager; nothing is sent anywhere except to the service you
   pick; logs never contain what you type. See [Privacy](docs/privacy.md).
 - Interface in English, 简体中文, 日本語 and 한국어; light and dark themes.
@@ -35,7 +35,7 @@ instead of the Chinese. Long candidates get a full-text preview.
 
 ## Install
 
-1. Download `Translate-<version>-win-x64.zip` from [Releases](../../releases/latest).
+1. Download `Translate-<version>-win-x64.zip` from [Releases](https://github.com/Rickywu05/wetype-translate/releases/latest).
 2. Unzip it anywhere, for example `%LOCALAPPDATA%\Programs\Translate`.
 3. Run `Translate.exe`. No installer, admin rights, Python or other tools are needed.
 
