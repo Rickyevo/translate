@@ -110,7 +110,8 @@ Translate는 Windows의 **WeChat 입력기(微信输入法, WeType)** 를 위한
 |---|---|
 | Windows | 10 또는 11, x64 |
 | 입력기 | [WeChat 입력기](https://z.weixin.qq.com/)(검증 버전 **3.0.0.34**) 또는 **Microsoft 병음**(Windows 11, 빌드 26200에서 검증) |
-| 입력기 선택 | 설정 → 일반 → 입력기: *자동*(지금 입력에 쓰는 입력기를 따름), *WeChat 입력기*, *Microsoft 병음* |
+| 입력기 선택 | 설정 → 개요 → 입력기: WeChat 입력기와 Microsoft 병음의 준비 상태와 켜기/끄기. 둘 다 켜면 지금 입력에 쓰는 입력기를 따름 |
+| 바로 가기 변경 | 설정 → 일반 → 바로 가기: 일시 중지, 설정 열기, 패널 표시/숨기기(다른 앱과 겹치는지 확인) |
 | 번역 서비스 | 선택 사항. 구문, 문장, 영어 외 대상 언어에는 본인의 API 키 필요 |
 | 공간 | 다운로드 약 61 MB, 압축 해제 후 약 156 MB |
 | WebView2 | Windows 11과 최신 Windows 10에 기본 포함된 Microsoft Edge WebView2 런타임(없으면 Translate가 안내합니다) |
@@ -132,7 +133,7 @@ Translate는 Windows의 **WeChat 입력기(微信输入法, WeType)** 를 위한
 코드 서명이 없어 경고가 나타날 수 있습니다. 다운로드 출처를 확인한 뒤 추가 정보 → 실행을 선택할 수 있습니다. 배포 페이지의 `SHA256SUMS.txt`와 비교할 수 있습니다.
 
 ```powershell
-Get-FileHash .\Translate-0.2.2-win-x64.zip -Algorithm SHA256
+Get-FileHash .\Translate-0.2.3-win-x64.zip -Algorithm SHA256
 ```
 
 </details>

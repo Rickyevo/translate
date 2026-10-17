@@ -1,11 +1,12 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ArrowRight, Check, Copy, Eye, EyeOff, FolderOpen, Pause, Monitor, Moon, Plus, Power, Sun, Trash2, X, Database, Cloud, BookOpen } from 'lucide-react'
+import { AppWindow, ArrowRight, Check, Eye, EyeOff, ExternalLink, FolderOpen, Pause, Monitor, Moon, Plus, Power, RotateCcw, Sun, Trash2, X } from 'lucide-react'
 import { UI_LANGS, UI_LANG_NATIVE, systemLang, type UiLangPref } from '../i18n'
 import { TARGETS, buildList, type Target } from '../data/scenarios'
-import { effectiveSettings, useReview, useSettings, type Density, type LeadMode, type OrigMode, type Settings, type ThemePref } from '../store'
+import { effectiveSettings, useReview, useSettings, type Density, type LeadMode, type OrigMode, type ThemePref } from '../store'
 import { PROVIDERS, PROVIDER_IDS, serviceOf, type AuthKind, type ImePref, type Protocol, type ProviderId, type ServiceCfg } from '../model'
-import { bridge } from './bridge'
+import { bridge, useEngine } from './bridge'
+import { DEFAULT_SHORTCUTS, SHORTCUT_IDS, capture, problem, type ShortcutId } from './shortcuts'
 import { Button, IconButton, Kbd, Message, Segmented, Select, Shortcut, Slider, Switch, TextInput, cx } from '../ui/primitives'
 import { Scope } from '../ui/scope'
 import { Panel } from '../bars/Panel'
@@ -30,43 +31,12 @@ export function GeneralPage() {
   ]
   return (
     <>
-      <PageHeader title={t('settings.general.title')} desc={t('settings.general.desc')} />
+      <PageHeader title={t('settings.general.title')} />
       <div className="flex flex-col gap-7">
-        <Section title={t('settings.general.language')}>
-          <Row
-            label={t('settings.general.ime')}
-            desc={t('settings.general.imeDesc')}
-            control={
-              <Select<ImePref>
-                label={t('settings.general.ime')}
-                className="w-[184px]"
-                value={d.ime}
-                onValueChange={(v) => set('ime', v)}
-                options={[
-                  { value: 'auto', label: t('settings.general.imeAuto') },
-                  { value: 'wetype', label: t('settings.about.imeVal') },
-                  { value: 'mspinyin', label: t('settings.about.imeMsPinyin') },
-                ]}
-              />
-            }
-          />
+        <Section>
           <Row
             label={t('settings.general.uiLang')}
-            desc={t('settings.general.uiLangDesc')}
             control={<Select label={t('settings.general.uiLang')} className="w-[184px]" value={d.uiLang} onValueChange={(v) => set('uiLang', v)} options={langOptions} />}
-          />
-          <Row
-            label={t('settings.general.target')}
-            desc={t('settings.general.targetDesc')}
-            control={
-              <Select<Target>
-                label={t('settings.general.target')}
-                className="w-[184px]"
-                value={d.target}
-                onValueChange={(v) => set('target', v)}
-                options={TARGETS.map((x) => ({ value: x.id, label: x.native, lang: x.id }))}
-              />
-            }
           />
           <Row
             label={t('settings.general.count')}
@@ -81,95 +51,177 @@ export function GeneralPage() {
               />
             }
           />
-        </Section>
-
-        <Section title={t('settings.general.startup')}>
           <Row label={t('settings.general.autostart')} desc={t('settings.general.autostartDesc')} control={<Switch label={t('settings.general.autostart')} checked={d.autostart} onCheckedChange={(v) => set('autostart', v)} />} />
         </Section>
 
         <Section title={t('settings.general.shortcuts')} desc={t('settings.general.shortcutsDesc')}>
-          <Row
-            label={t('settings.general.sc.insert')}
-            control={
-              <span className="inline-flex items-center gap-0.5">
-                <Kbd>Alt</Kbd>
-                <Kbd>1</Kbd>
-                <span className="px-0.5 text-12 text-fg-4">–</span>
-                <Kbd>9</Kbd>
-              </span>
-            }
-          />
-          <Row
-            label={t('settings.general.sc.copy')}
-            control={
-              <span className="inline-flex items-center gap-0.5">
-                <Kbd>Alt</Kbd>
-                <Kbd>Shift</Kbd>
-                <Kbd>1</Kbd>
-                <span className="px-0.5 text-12 text-fg-4">–</span>
-                <Kbd>9</Kbd>
-              </span>
-            }
-          />
-          <FixedKeys label={t('settings.general.sc.preview')} keys={['Alt', '`']} />
-          <FixedKeys label={t('settings.general.sc.step')} keys={['Alt', '↑', '↓']} />
-          <FixedKeys label={t('settings.general.sc.scroll')} keys={['Alt', 'PgUp', 'PgDn']} />
-          <ShortcutRow k="toggleBar" />
-          <ShortcutRow k="pause" />
-          <ShortcutRow k="settings" />
+          {SHORTCUT_IDS.map((k) => (
+            <ShortcutRow key={k} k={k} />
+          ))}
+        </Section>
+
+        <Section title={t('settings.general.panelKeys')}>
+          <KeyRow label={t('settings.general.sc.insert')} keys={<KeyRange mods={['Alt']} />} />
+          <KeyRow label={t('settings.general.sc.copy')} keys={<KeyRange mods={['Alt', 'Shift']} />} />
+          <KeyRow label={t('settings.general.sc.preview')} keys={<Keys keys={['Alt', '`']} />} />
+          <KeyRow label={t('settings.general.sc.step')} keys={<Keys keys={['Alt', '↑', '↓']} />} />
+          <KeyRow label={t('settings.general.sc.scroll')} keys={<Keys keys={['Alt', 'PgUp', 'PgDn']} />} />
         </Section>
       </div>
     </>
   )
 }
 
-function FixedKeys({ label, keys }: { label: string; keys: string[] }) {
+function Keys({ keys }: { keys: string[] }) {
   return (
-    <Row
-      label={label}
-      control={
-        <span className="inline-flex items-center gap-0.5">
-          {keys.map((k) => (
-            <Kbd key={k}>{k}</Kbd>
-          ))}
-        </span>
-      }
-    />
+    <span className="inline-flex items-center gap-0.5">
+      {keys.map((k) => (
+        <Kbd key={k}>{k}</Kbd>
+      ))}
+    </span>
   )
 }
 
-function ShortcutRow({ k }: { k: keyof Settings['shortcuts'] }) {
+/** Alt+1 – 9 style ranges. */
+function KeyRange({ mods }: { mods: string[] }) {
+  return (
+    <span className="inline-flex items-center gap-0.5">
+      {mods.map((m) => (
+        <Kbd key={m}>{m}</Kbd>
+      ))}
+      <Kbd>1</Kbd>
+      <span className="px-0.5 text-12 text-fg-4">–</span>
+      <Kbd>9</Kbd>
+    </span>
+  )
+}
+
+/** A compact read-only row: a label and its keys. */
+function KeyRow({ label, keys }: { label: React.ReactNode; keys: React.ReactNode }) {
+  return (
+    <div className="flex min-h-10 items-center gap-3 px-4 py-2 text-13 text-fg-2">
+      <span className="flex-1">{label}</span>
+      {keys}
+    </div>
+  )
+}
+
+/** The keys of a customizable shortcut, or "Off". */
+function ShortcutKeys({ accel }: { accel: string }) {
+  const { t } = useTranslation()
+  return accel ? <Shortcut keys={accel.replace('PageUp', 'PgUp').replace('PageDown', 'PgDn')} /> : <span className="text-12 text-fg-3">{t('settings.general.off')}</span>
+}
+
+/** Whether a saved shortcut is one Windows wouldn't give Translate (another app holds it). */
+function useUnavailable(k: ShortcutId) {
+  const saved = useSettings((s) => s.saved.shortcuts[k])
+  const names = useEngine((e) => e.hotkeysUnavailable)
+  return !!saved && !!names?.some((n) => n.toLowerCase() === saved.toLowerCase())
+}
+
+type ShortcutError = { key: string; keys?: string; other?: string }
+
+/** One recorder at a time: starting another stops the current one. The host keeps Translate's shortcuts released
+ *  from the first start to the last stop (a second row starting before the first one's cleanup must not bring them
+ *  back early). */
+let stopCurrent: (() => void) | null = null
+let recorders = 0
+const holdShortcuts = (on: boolean) => {
+  recorders += on ? 1 : -1
+  if (on ? recorders === 1 : recorders === 0) void bridge?.recordShortcut(on)
+}
+
+/**
+ * Click the keys to record a new shortcut. Translate's own global shortcuts are released meanwhile (so the keys reach
+ * this window); the combination is checked — its form, Windows and panel keys, the other shortcuts, then whether
+ * another app holds it — and goes into the draft; Save registers it. Esc cancels, Backspace turns the shortcut off.
+ */
+function ShortcutRow({ k }: { k: ShortcutId }) {
   const { t } = useTranslation()
   const [d, set] = useDraft()
+  const savedValue = useSettings((s) => s.saved.shortcuts[k])
+  const unavailable = useUnavailable(k) && d.shortcuts[k] === savedValue
   const [rec, setRec] = useState(false)
+  const [err, setErr] = useState<ShortcutError | null>(null)
+  const value = d.shortcuts[k]
+  const label = t(`settings.general.sc.${k}`)
+
   useEffect(() => {
     if (!rec) return
-    const on = (e: KeyboardEvent) => {
+    let alive = true
+    const stop = () => setRec(false)
+    stopCurrent?.()
+    stopCurrent = stop
+    holdShortcuts(true)
+    const plain = (e: KeyboardEvent) => !e.ctrlKey && !e.altKey && !e.shiftKey
+    const on = async (e: KeyboardEvent) => {
       e.preventDefault()
-      if (['Control', 'Alt', 'Shift', 'Meta'].includes(e.key)) return
-      if (e.key === 'Escape') return setRec(false)
-      const parts = [e.ctrlKey && 'Ctrl', e.altKey && 'Alt', e.shiftKey && 'Shift', e.key.length === 1 ? e.key.toUpperCase() : e.key].filter(Boolean)
-      if (parts.length >= 2) {
-        set('shortcuts', { ...d.shortcuts, [k]: parts.join('+') })
-        setRec(false)
+      e.stopPropagation()
+      if (e.repeat) return
+      if (e.code === 'Escape' && plain(e)) return stop()
+      const all = useSettings.getState().draft.shortcuts
+      if ((e.code === 'Backspace' || e.code === 'Delete') && plain(e)) {
+        set('shortcuts', { ...all, [k]: '' })
+        setErr(null)
+        return stop()
       }
+      const c = capture(e)
+      if ('pending' in c) return
+      if ('invalid' in c) return setErr({ key: 'key' })
+      const p = problem(c.accel, k, all)
+      if (p) return setErr({ key: p.kind, keys: c.accel, other: p.kind === 'duplicate' ? t(`settings.general.sc.${p.other}`) : undefined })
+      const free = bridge ? await bridge.shortcutAvailable(c.accel) : true
+      if (!alive) return
+      if (!free) return setErr({ key: 'taken', keys: c.accel })
+      set('shortcuts', { ...useSettings.getState().draft.shortcuts, [k]: c.accel })
+      setErr(null)
+      stop()
     }
     window.addEventListener('keydown', on, true)
-    return () => window.removeEventListener('keydown', on, true)
-  }, [rec, d.shortcuts, k, set])
+    window.addEventListener('blur', stop)
+    return () => {
+      alive = false
+      window.removeEventListener('keydown', on, true)
+      window.removeEventListener('blur', stop)
+      if (stopCurrent === stop) stopCurrent = null
+      holdShortcuts(false)
+    }
+  }, [rec, k, set, t])
+
+  const desc = err ? (
+    <span className="text-danger-text" role="alert">
+      {t(`settings.general.err.${err.key}`, { keys: err.keys?.split('+').join(' + '), other: err.other })}
+    </span>
+  ) : rec ? (
+    t('settings.general.recordHint')
+  ) : unavailable ? (
+    <span className="text-warning-text">{t('settings.general.unavailable')}</span>
+  ) : undefined
   return (
     <Row
-      label={t(`settings.general.sc.${k}`)}
+      label={label}
+      desc={desc}
       control={
         <>
-          {rec ? (
-            <span className="rounded-xs px-1.5 text-12 text-accent-text shadow-[inset_0_0_0_1px_var(--c-accent)]">{t('settings.general.recording')}</span>
-          ) : (
-            <Shortcut keys={d.shortcuts[k]} />
+          {value !== DEFAULT_SHORTCUTS[k] && !rec && (
+            <IconButton size="sm" label={t('settings.general.reset')} onClick={() => (set('shortcuts', { ...d.shortcuts, [k]: DEFAULT_SHORTCUTS[k] }), setErr(null))}>
+              <RotateCcw className="size-3.5" />
+            </IconButton>
           )}
-          <Button size="sm" variant="ghost" onClick={() => setRec((r) => !r)}>
-            {t('settings.general.change')}
-          </Button>
+          <button
+            type="button"
+            aria-label={t('settings.general.change', { name: label })}
+            data-shortcut={k}
+            onClick={() => (setErr(null), setRec((r) => !r))}
+            className={cx(
+              'focus-ring inline-flex h-[var(--ctl-h)] min-w-[136px] items-center justify-center gap-1 rounded-md px-2.5 transition-[box-shadow,background-color] duration-[var(--dur-1)]',
+              rec
+                ? 'bg-accent-soft text-12 font-medium text-accent-text shadow-[inset_0_0_0_1px_var(--c-accent)]'
+                : cx('bg-raised hover:bg-hover', unavailable ? 'shadow-[inset_0_0_0_1px_var(--c-warning)]' : 'shadow-[var(--sh-control),inset_0_0_0_1px_var(--c-line)]'),
+            )}
+          >
+            {rec ? t('settings.general.recording') : <ShortcutKeys accel={value} />}
+          </button>
         </>
       }
     />
@@ -235,29 +287,12 @@ export function TranslationPage() {
     else setTest({ s: 'err', key: r.error ?? 'http', status: r.status, detail: r.detail })
   }
 
-  const step = (icon: React.ReactNode, label: string) => (
-    <span className="inline-flex h-6 items-center gap-1.5 rounded-sm bg-sunken px-2 text-12 text-fg-2 shadow-[inset_0_0_0_1px_var(--c-line-soft)]">
-      {icon}
-      {label}
-    </span>
-  )
   const off = d.localOnly
 
   return (
     <>
-      <PageHeader title={t('settings.translation.title')} desc={t('settings.translation.desc')} />
+      <PageHeader title={t('settings.translation.title')} />
       <div className="flex flex-col gap-7">
-        <Section title={t('settings.translation.order')} desc={t('settings.translation.orderDesc')}>
-          <div className={cx('flex flex-wrap items-center gap-1.5', 'px-4 py-3.5')}>
-            {step(<Database className="size-3 text-fg-3" />, t('bar.source.cache'))}
-            <ArrowRight className="size-3 text-fg-4" />
-            {step(<BookOpen className="size-3 text-fg-3" />, t('bar.source.dict'))}
-            <ArrowRight className="size-3 text-fg-4" />
-            {step(<Cloud className="size-3 text-fg-3" />, t('bar.source.ai'))}
-          </div>
-          <Row label={t('settings.translation.localDict')} desc={t('settings.translation.localDictDesc')} control={<Switch label={t('settings.translation.localDict')} checked={d.localDict} onCheckedChange={(v) => set('localDict', v)} />} />
-        </Section>
-
         <Section title={t('settings.translation.service')} desc={t('settings.translation.serviceDesc')}>
           {off && (
             <div className={'px-4 py-3'}>
@@ -368,7 +403,7 @@ export function TranslationPage() {
               )}
             </div>
             <label className="flex flex-col gap-2">
-              <span className={'flex h-6 items-end text-13 font-medium text-fg'}>{t('settings.translation.timeout')}</span>
+              <span className="flex h-6 items-center text-13 font-medium text-fg">{t('settings.translation.timeout')}</span>
               <TextInput
                 className="tnum"
                 inputMode="numeric"
@@ -378,7 +413,8 @@ export function TranslationPage() {
               />
             </label>
           </div>
-          {svc.protocol === 'openai' && (
+          {/* Presets know whether their service takes JSON output; only a custom service needs the choice. */}
+          {pid === 'custom' && svc.protocol === 'openai' && (
             <Row label={t('settings.translation.jsonMode')} desc={t('settings.translation.jsonModeDesc')} disabled={off} control={<Switch label={t('settings.translation.jsonMode')} checked={d.jsonMode} onCheckedChange={(v) => set('jsonMode', v)} />} />
           )}
           <div className={cx('flex flex-col gap-2.5', 'px-4 py-3.5')}>
@@ -407,6 +443,10 @@ export function TranslationPage() {
             )}
           </div>
         </Section>
+
+        <Section>
+          <Row label={t('settings.translation.localDict')} desc={t('settings.translation.localDictDesc')} control={<Switch label={t('settings.translation.localDict')} checked={d.localDict} onCheckedChange={(v) => set('localDict', v)} />} />
+        </Section>
       </div>
     </>
   )
@@ -420,7 +460,7 @@ export function AppearancePage() {
   const orig = d.showOriginal
   return (
     <>
-      <PageHeader title={t('settings.appearance.title')} desc={t('settings.appearance.desc')} />
+      <PageHeader title={t('settings.appearance.title')} />
       <div className="flex flex-col gap-7">
         <BarPreview />
         <Section>
@@ -596,7 +636,7 @@ export function PrivacyPage() {
   const pad = 'px-4 py-3'
   return (
     <>
-      <PageHeader title={t('settings.privacy.title')} desc={t('settings.privacy.desc')} />
+      <PageHeader title={t('settings.privacy.title')} />
       <div className="flex flex-col gap-7">
         <Section>
           <Row label={t('settings.privacy.localOnly')} desc={t('settings.privacy.localOnlyDesc')} control={<Switch label={t('settings.privacy.localOnly')} checked={d.localOnly} onCheckedChange={(v) => set('localOnly', v)} />} />
@@ -605,7 +645,7 @@ export function PrivacyPage() {
         <Section title={t('settings.privacy.denylist')} desc={t('settings.privacy.denylistDesc')}>
           {d.denylist.map((app) => (
             <div key={app} className={cx('group flex items-center gap-2.5', 'h-11 px-4')}>
-              <span className="inline-flex size-5 items-center justify-center rounded-xs bg-sunken text-11 font-semibold text-fg-3 shadow-[inset_0_0_0_1px_var(--c-line-soft)]">{app[0]}</span>
+              <AppWindow className="size-4 shrink-0 text-fg-3" strokeWidth={1.75} />
               <span className="flex-1 text-13 text-fg">{app}</span>
               <IconButton size="sm" label={t('settings.privacy.remove')} className="opacity-0 focus-visible:opacity-100 group-hover:opacity-100" onClick={() => set('denylist', d.denylist.filter((x) => x !== app))}>
                 <X className="size-3.5" />
@@ -629,23 +669,8 @@ export function PrivacyPage() {
           </form>
         </Section>
 
-        <Section title={t('settings.privacy.password')}>
-          <p className={cx('text-13 leading-[20px] text-fg-2', pad)}>{t('settings.privacy.passwordDesc')}</p>
-        </Section>
-
         <Section title={t('settings.privacy.storage')}>
-          {(
-            [
-              ['storeKey', 'storeKeyVal'],
-              ['storeText', 'storeTextVal'],
-              ['storeLogs', 'storeLogsVal'],
-            ] as const
-          ).map(([k, v]) => (
-            <div key={k} className={cx('flex items-center justify-between gap-6 text-13', pad)}>
-              <span className="text-fg-2">{t(`settings.privacy.${k}`)}</span>
-              <span className="text-right text-fg">{t(`settings.privacy.${v}`)}</span>
-            </div>
-          ))}
+          <Row label={t('settings.privacy.storeKey')} desc={t('settings.privacy.storeKeyVal')} />
           <Row
             label={t('settings.privacy.cache')}
             desc={cleared ? t('settings.privacy.cleared') : cache ? t('settings.privacy.cacheInfo', { count: cache.count, size: size(cache.bytes) }) : '…'}
@@ -658,6 +683,7 @@ export function PrivacyPage() {
           />
           <Row
             label={t('settings.privacy.logs')}
+            desc={t('settings.privacy.logsDesc')}
             control={
               <Button onClick={() => bridge?.openLogs()}>
                 <FolderOpen className="size-3.5" />
@@ -675,47 +701,27 @@ export function PrivacyPage() {
 
 export function AboutPage({ onQuit }: { onQuit: () => void }) {
   const { t } = useTranslation()
-  const [copied, setCopied] = useState(false)
   const version = useReview((r) => r.version)
-  const pad = 'px-4 py-3'
-  const rows: [string, React.ReactNode][] = [
-    [t('settings.about.version'), version],
-    [
-      t('settings.about.engine'),
-      <span className="inline-flex items-center gap-1.5">
-        <span className="size-1.5 rounded-full bg-success" />
-        {t('settings.about.running')}
-      </span>,
-    ],
-    [
-      t('settings.about.ime'),
-      <InputMethodConnections />,
-    ],
-    // Required attribution (CC BY-SA 4.0) for the local dictionary.
-    [t('settings.about.dict'), 'CC-CEDICT · CC BY-SA 4.0'],
-  ]
   return (
     <>
       <div className="mb-6 flex items-center gap-3.5">
         <AppMark size={48} />
         <div>
-          <h2 className={cx('font-semibold tracking-[-0.01em] text-fg', 'text-22')}>{t('app.name')}</h2>
-          <p className="text-13 text-fg-3">{t('settings.about.license')}</p>
+          <h2 className="text-22 font-semibold tracking-[-0.01em] text-fg">{t('app.name')}</h2>
+          <p className="text-13 text-fg-3 tnum" data-version>
+            {t('settings.about.version', { v: version })}
+          </p>
         </div>
       </div>
       <div className="flex flex-col gap-7">
         <Section>
-          {rows.map(([k, v]) => (
-            <div key={k} className={cx('flex items-center justify-between gap-6 text-13', pad)}>
-              <span className="text-fg-2">{k}</span>
-              <span className="text-fg tnum">{v}</span>
-            </div>
-          ))}
-          <div className={pad}>
-            <Button onClick={() => setCopied(true)}>
-              {copied ? <Check className="size-3.5" /> : <Copy className="size-3.5" />}
-              {copied ? t('settings.about.copied') : t('settings.about.copyDiag')}
-            </Button>
+          <LinkRow label={t('settings.about.updates')} onClick={() => bridge?.openLink('releases')} />
+          <LinkRow label={t('settings.about.report')} onClick={() => bridge?.openLink('issues')} />
+          <LinkRow label={t('settings.about.notices')} onClick={() => bridge?.openLink('notices')} />
+          {/* Required attribution (CC BY-SA 4.0) for the local dictionary. */}
+          <div className="flex min-h-11 items-center justify-between gap-6 px-4 py-2.5 text-13">
+            <span className="text-fg-2">{t('settings.about.dict')}</span>
+            <span className="text-fg">CC-CEDICT · CC BY-SA 4.0</span>
           </div>
         </Section>
         <Section>
@@ -735,61 +741,89 @@ export function AboutPage({ onQuit }: { onQuit: () => void }) {
   )
 }
 
-
-/** Independent adapter readiness; this does not claim which input method Windows has selected. */
-function InputMethodConnections() {
-  const { t } = useTranslation()
-  const [st, setSt] = useState<{ imeStates?: Record<string, string> }>({})
-  useEffect(() => {
-    if (!bridge) return
-    let alive = true
-    const read = () => bridge!.status().then((s) => alive && setSt(s)).catch(() => alive && setSt({}))
-    read()
-    const id = window.setInterval(read, 2000)
-    return () => ((alive = false), window.clearInterval(id))
-  }, [])
-  return <span className="flex flex-col gap-1 text-12 text-fg-3" data-ime-connections>
-    {(['wetype', 'mspinyin'] as const).map((id) => {
-      const connected = st.imeStates?.[id] === 'connected'
-      return <span key={id} data-ime={id} data-connected={connected} className="inline-flex items-center gap-1.5">
-        <span className={cx('size-1.5 shrink-0 rounded-full', connected ? 'bg-success' : 'bg-fg-4')} />
-        {t(id === 'wetype' ? 'settings.about.imeVal' : 'settings.about.imeMsPinyin')} · {t(connected ? 'settings.about.connected' : 'settings.about.disconnected')}
-      </span>
-    })}
-  </span>
+/** A row that opens a page or file outside Settings. */
+function LinkRow({ label, onClick }: { label: string; onClick: () => void }) {
+  return (
+    <button type="button" onClick={onClick} className="focus-ring group flex min-h-11 w-full items-center gap-3 px-4 py-2.5 text-left text-13 text-fg-2 hover:bg-hover hover:text-fg">
+      <span className="flex-1">{label}</span>
+      <ExternalLink className="size-3.5 text-fg-4 group-hover:text-fg-3" />
+    </button>
+  )
 }
 
-/* =========================================================== Overview (direction B) */
+/* =========================================================== Overview */
+
+type ImeId = 'wetype' | 'mspinyin'
+const IMES: ImeId[] = ['wetype', 'mspinyin']
+const imeOn = (pref: ImePref, id: ImeId) => pref === 'auto' || pref === id
+
+/**
+ * What an input method's row says. The engine's state is per adapter ("connected" means Translate is attached and
+ * ready, not that Windows currently has that input method selected); a draft change shows until it's saved.
+ */
+function imeStatus(id: ImeId, draft: ImePref, saved: ImePref, state: string | undefined): { key: string; tone: 'ok' | 'muted' | 'warn' } {
+  if (!imeOn(draft, id)) return { key: 'off', tone: 'muted' }
+  if (!imeOn(saved, id)) return { key: 'afterSave', tone: 'muted' }
+  if (state === 'connected') return { key: 'ready', tone: 'ok' }
+  if (state === 'failed') return { key: 'failed', tone: 'warn' }
+  if (state === 'waiting') return { key: id === 'wetype' ? 'notRunning' : 'starting', tone: 'muted' }
+  return { key: 'starting', tone: 'muted' }
+}
 
 export function OverviewPage({ go }: { go: (p: 'general' | 'translation') => void }) {
   const { t } = useTranslation()
   const [d, set] = useDraft()
+  const savedIme = useSettings((s) => s.saved.ime)
+  const saved = useSettings((s) => s.saved)
   const paused = useReview((r) => r.paused)
   const setp = useReview((r) => r.setp)
-  const lang = TARGETS.find((x) => x.id === d.target)!.native
-  const [keys, setKeys] = useState<Partial<Record<ProviderId, boolean>>>({})
+  const states = useEngine((e) => e.imeStates) ?? {}
+  const unavailable = useEngine((e) => e.hotkeysUnavailable) ?? []
+  const [keys, setKeys] = useState<Partial<Record<ProviderId, boolean>>>(bridge ? {} : { openai: true })
   useEffect(() => {
     bridge?.keys().then(setKeys)
-  }, [])
-  const serviceReady = d.localOnly || !!keys[d.provider] || !!d.apiKey || serviceOf(d).auth === 'none'
+  }, [saved])
+  // The service line describes what is saved (what translates right now).
+  const svc = serviceOf(saved)
+  const serviceReady = !!keys[saved.provider] || svc.auth === 'none'
+  const serviceName = saved.provider === 'custom' ? t('settings.translation.custom') : PROVIDERS[saved.provider].label
+  const toggleIme = (id: ImeId, on: boolean) => {
+    const next = IMES.filter((x) => (x === id ? on : imeOn(d.ime, x)))
+    if (next.length) set('ime', next.length === 2 ? 'auto' : next[0])
+  }
+  const sc = saved.shortcuts
+  const taken = (a: string) => !!a && unavailable.some((n) => n.toLowerCase() === a.toLowerCase())
+
   return (
     <>
-      <PageHeader title={t('settings.overview.title')} desc={t('settings.overview.desc')} />
-      <div className="flex flex-col gap-5">
+      {/* The status card is this page's headline (the sidebar names the page). */}
+      <h2 className="sr-only">{t('settings.overview.title')}</h2>
+      <div className="flex flex-col gap-5 pt-2">
         <Section>
           <div className="flex items-center gap-3 px-4 py-3.5">
-            <span className={cx('relative inline-flex size-8 items-center justify-center rounded-lg', paused ? 'bg-sunken text-fg-3' : 'bg-accent-soft text-accent-text')}>
+            <span className={cx('inline-flex size-9 shrink-0 items-center justify-center rounded-lg', paused ? 'bg-sunken text-fg-3' : 'bg-accent-soft text-accent-text')}>
               {paused ? <Pause className="size-4" /> : <Check className="size-4" strokeWidth={2.25} />}
             </span>
-            <div className="flex-1">
-              <div className="text-14 font-semibold text-fg">{paused ? t('settings.overview.statusPaused') : t('settings.overview.statusOk', { lang })}</div>
-              <InputMethodConnections />
+            <div className="min-w-0 flex-1">
+              <div className="text-14 font-semibold text-fg">{paused ? t('settings.overview.paused') : t('settings.overview.on')}</div>
+              <div className="flex flex-wrap items-center gap-x-2 text-12 text-fg-3" data-service-line>
+                {saved.localOnly ? (
+                  t('settings.overview.localOnly')
+                ) : serviceReady ? (
+                  <span className="truncate">{t('settings.overview.via', { service: serviceName, model: svc.model })}</span>
+                ) : (
+                  <>
+                    {t('settings.overview.dictOnly')}
+                    <button type="button" className="focus-ring inline-flex items-center gap-0.5 rounded-xs font-medium text-accent-text hover:underline" onClick={() => go('translation')}>
+                      {t('settings.overview.setUp')}
+                      <ArrowRight className="size-3" />
+                    </button>
+                  </>
+                )}
+              </div>
             </div>
-            <label className="flex items-center gap-2.5 text-13 text-fg-2">
-              {t('settings.overview.active')}
-              {/* On (lit) while translating, off (dimmed) when paused — the switch states what is happening. */}
-              <Switch label={t('settings.overview.active')} checked={!paused} onCheckedChange={(v) => setp({ paused: !v })} />
-            </label>
+            {/* On while translating, off when paused: the switch states what is happening. */}
+            <Switch label={t('settings.overview.toggle')} checked={!paused} onCheckedChange={(v) => setp({ paused: !v })} />
           </div>
           <Row
             label={t('settings.general.target')}
@@ -805,42 +839,53 @@ export function OverviewPage({ go }: { go: (p: 'general' | 'translation') => voi
           />
         </Section>
 
-        {/* The only real setup: a translation service (optional). Shown until one is connected or Local only is on. */}
-        {!serviceReady && (
-          <Section>
-            <div className="flex items-center gap-3 px-4 py-3.5">
-              <span className="inline-flex size-8 shrink-0 items-center justify-center rounded-lg bg-sunken text-fg-3">
-                <Cloud className="size-4" />
-              </span>
-              <div className="flex-1">
-                <div className="text-14 font-semibold text-fg">{t('settings.overview.serviceTitle')}</div>
-                <div className="text-12 text-fg-3">{t('settings.overview.serviceDesc')}</div>
-              </div>
-              <Button onClick={() => go('translation')}>
-                {t('settings.overview.serviceSetup')}
-                <ArrowRight className="size-3.5" />
-              </Button>
-            </div>
-          </Section>
-        )}
+        <Section title={t('settings.overview.imes')}>
+          {IMES.map((id) => {
+            const st = imeStatus(id, d.ime, savedIme, states[id])
+            const on = imeOn(d.ime, id)
+            const name = t(id === 'wetype' ? 'settings.about.imeVal' : 'settings.about.imeMsPinyin')
+            return (
+              <Row
+                key={id}
+                label={name}
+                control={
+                  <>
+                    <span data-ime={id} data-state={st.key} className={cx('text-12', st.tone === 'ok' ? 'text-success-text' : st.tone === 'warn' ? 'text-warning-text' : 'text-fg-3')}>
+                      {t(`settings.overview.ime.${st.key}`)}
+                    </span>
+                    {/* At least one stays on: the last one's switch can't be turned off (pause is the way to stop). */}
+                    <Switch label={name} checked={on} disabled={on && !IMES.some((x) => x !== id && imeOn(d.ime, x))} onCheckedChange={(v) => toggleIme(id, v)} />
+                  </>
+                }
+              />
+            )
+          })}
+        </Section>
 
-        <Section title={t('settings.overview.reach')} desc={t('settings.overview.reachDesc')}>
-          <ReachRow icon={<Kbd>.exe</Kbd>} label={t('settings.overview.reachRelaunch')} />
-          <ReachRow icon={<Shortcut keys={d.shortcuts.settings} />} label={t('settings.general.sc.settings')} />
-          <ReachRow icon={<Shortcut keys={d.shortcuts.pause} />} label={t('settings.general.sc.pause')} />
-          <ReachRow icon={<Shortcut keys={d.shortcuts.toggleBar} />} label={t('settings.general.sc.toggleBar')} />
-          <ReachRow icon={<Power className="size-3.5 text-fg-3" />} label={t('settings.overview.reachQuit')} />
+        <Section
+          title={t('settings.general.shortcuts')}
+          desc={t('settings.overview.keysDesc')}
+          aside={
+            <Button size="sm" variant="ghost" onClick={() => go('general')}>
+              {t('settings.overview.customize')}
+            </Button>
+          }
+        >
+          <KeyRow label={t('settings.general.sc.insert')} keys={<KeyRange mods={['Alt']} />} />
+          {(['pause', 'settings'] as const).map((k) => (
+            <KeyRow
+              key={k}
+              label={
+                <span className="flex flex-col">
+                  {t(`settings.general.sc.${k}`)}
+                  {taken(sc[k]) && <span className="text-12 text-warning-text">{t('settings.overview.keyTaken')}</span>}
+                </span>
+              }
+              keys={<ShortcutKeys accel={sc[k]} />}
+            />
+          ))}
         </Section>
       </div>
     </>
-  )
-}
-
-function ReachRow({ icon, label }: { icon: React.ReactNode; label: string }) {
-  return (
-    <div className="flex items-center gap-3 px-4 py-2.5 text-13 text-fg-2">
-      <span className="flex-1">{label}</span>
-      {icon}
-    </div>
   )
 }

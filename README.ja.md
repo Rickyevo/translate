@@ -110,7 +110,8 @@ Translate は Windows の **WeChat Input Method（微信输入法・WeType）** 
 |---|---|
 | Windows | 10 または 11、x64 |
 | 入力メソッド | [WeChat Input Method](https://z.weixin.qq.com/)（検証済み **3.0.0.34**）または **Microsoft Pinyin**（Windows 11、ビルド 26200 で検証） |
-| 入力方式の選択 | 設定 → 全般 → 入力方式：*自動*（入力に使っている方式に合わせる）、*WeChat Input Method*、*Microsoft Pinyin* |
+| 入力方式の選択 | 設定 → 概要 → 入力方式：WeChat Input Method と Microsoft Pinyin それぞれの状態とオン/オフ。両方オンなら入力に使っている方式に合わせます |
+| ショートカットの変更 | 設定 → 一般 → ショートカット：一時停止、設定を開く、パネルの表示/非表示（他のアプリと重複しないか確認します） |
 | 翻訳サービス | 任意。フレーズ、文章、英語以外の翻訳先には自分の API キーが必要 |
 | 容量 | ダウンロード約 61 MB、展開後約 156 MB |
 | WebView2 | Windows 11 と最新の Windows 10 に組み込まれている Microsoft Edge WebView2 ランタイム（ない場合は Translate が案内します） |
@@ -132,7 +133,7 @@ Translate は Windows の **WeChat Input Method（微信输入法・WeType）** 
 コード署名がないため警告される場合があります。配布元を確認したうえで「詳細情報 → 実行」を選べます。配布ページの `SHA256SUMS.txt` と比較できます。
 
 ```powershell
-Get-FileHash .\Translate-0.2.2-win-x64.zip -Algorithm SHA256
+Get-FileHash .\Translate-0.2.3-win-x64.zip -Algorithm SHA256
 ```
 
 </details>

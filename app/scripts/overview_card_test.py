@@ -1,6 +1,7 @@
-"""Settings › Overview: the "Connect a translation service" card (packaged host, no network, no keyboard/mouse input).
+"""Settings › Overview: the status card's service line (packaged host, no network, no keyboard/mouse input).
 
-Shown while no service is set up; hidden with Local only, and once a key is saved. Keys go to an in-memory store for
+No service: "Dictionary only" with a "Set up a service" link; Local only says so; a saved key names the service and
+model. Keys go to an in-memory store for
 this test (TRANSLATE_SECRETS=memory) — never to Windows Credential Manager.
 Run from app/:  python -X utf8 scripts/overview_card_test.py
 """
@@ -18,7 +19,7 @@ from app import ROOT, App  # noqa: E402
 
 USERDATA = ROOT / ".cache" / "test-userdata"
 PORT = 9581
-TITLE = "Connect a translation service"
+SETUP = "Set up a service"
 results = []
 
 
@@ -34,7 +35,7 @@ def overview_text(app: App) -> str:
     while time.time() < end:
         try:
             txt = cdp.evaluate(PORT, "document.body.innerText", "settings.html") or ""
-            if "Overview" in txt:
+            if "Translation is" in txt:
                 break
         except Exception:  # noqa: BLE001 — still loading
             pass
@@ -53,12 +54,14 @@ def main() -> int:
     app = App(port=47451, packaged=True, extra_args=["--test-source=wetype-replay", f"--remote-debugging-port={PORT}"], env={"TRANSLATE_SECRETS": "memory"})
     try:
         t = overview_text(app)
-        check("no service: the card is shown", TITLE in t)
-        check("the old checklist is gone", "Finish setting up" not in t and "of 3 done" not in t)
+        check("no service: dictionary only, with a link to set one up", "Dictionary only" in t and SETUP in t)
+        check("the old checklist and card are gone", "of 3 done" not in t and "Connect a translation service" not in t)
         app.call("/settings/save", {"localOnly": True})
-        check("Local only: no card", TITLE not in overview_text(app))
+        t = overview_text(app)
+        check("Local only: says so, no setup link", "Local only" in t and SETUP not in t)
         app.call("/settings/save", {"localOnly": False, "apiKey": "test-key-for-overview-card"})
-        check("key saved: no card", TITLE not in overview_text(app))
+        t = overview_text(app)
+        check("key saved: names the service and model", "OpenAI · gpt-6-luna" in t and SETUP not in t, t[:200])
     finally:
         app.quit()
     print(json.dumps({"passed": sum(results), "total": len(results)}))

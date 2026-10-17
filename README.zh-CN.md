@@ -117,7 +117,8 @@ Translate 是一个安静运行在 Windows 后台的微信输入法（WeType）�
 |---|---|
 | Windows | 10 或 11，x64 |
 | 输入法 | [微信输入法](https://z.weixin.qq.com/)（已测试 **3.0.0.34**）和/或 **微软拼音**（Windows 11，已在 26200 版本测试） |
-| 选择输入法 | 设置 → 通用 → 输入法：*自动*（跟随你正在使用的输入法）、*微信输入法* 或 *微软拼音* |
+| 选择输入法 | 设置 → 概览 → 输入法：分别显示微信输入法和微软拼音是否就绪，可用开关关闭其一；都开启时跟随你正在使用的输入法 |
+| 更改快捷键 | 设置 → 通用 → 快捷键：暂停、打开设置、显示或隐藏面板（会检查是否被其他应用占用） |
 | 翻译服务 | 可选；短语、句子和非英文目标需要自己的 API Key |
 | 空间 | 下载约 61 MB，解压约 156 MB |
 | WebView2 | Windows 11 及较新的 Windows 10 已内置 Microsoft Edge WebView2 运行时（缺失时 Translate 会提示） |
@@ -139,7 +140,7 @@ Translate 是一个安静运行在 Windows 后台的微信输入法（WeType）�
 程序尚未签名，SmartScreen 可能不认识它。确认下载来源后，可选择“更多信息 → 仍要运行”。发布页附有 `SHA256SUMS.txt`，可核对文件：
 
 ```powershell
-Get-FileHash .\Translate-0.2.2-win-x64.zip -Algorithm SHA256
+Get-FileHash .\Translate-0.2.3-win-x64.zip -Algorithm SHA256
 ```
 
 </details>

@@ -1,9 +1,19 @@
-/* Settings ↔ app bridge. The Electron settings window installs real implementations (main process → backend);
+/* Settings ↔ app bridge. The app's settings window installs real implementations (host → engine);
  * the design prototype leaves it null and the pages fall back to their simulated behaviour. */
+import { create } from 'zustand'
 import type { ProviderId, serviceOf } from '../model'
 
 export type ServiceDraft = ReturnType<typeof serviceOf> & { jsonMode?: boolean }
 export type TestResult = { ok: true; ms: number } | { ok: false; error: string; status?: number; detail?: string }
+/** Destinations the host opens; the page never passes a URL or path. */
+export type LinkId = 'home' | 'releases' | 'issues' | 'notices' | 'license'
+
+/** What the host pushes to Settings when it changes: each input method's adapter state (connected · waiting ·
+ *  starting · failed; absent = not running in the saved mode) and the global shortcuts Windows wouldn't give us. */
+export interface EngineStatus {
+  imeStates?: Record<string, string>
+  hotkeysUnavailable?: string[]
+}
 
 export interface SettingsBridge {
   /** Real request with the draft settings; `key` is a key typed in the draft (else the stored one is used). */
@@ -14,11 +24,17 @@ export interface SettingsBridge {
   cacheStats(): Promise<{ count: number; bytes: number }>
   clearCache(): Promise<{ count: number; bytes: number }>
   openLogs(): void
-  /** Engine status: the input method's state and which one (wetype | mspinyin) Translate is following. */
-  status(): Promise<{ ime: string; service: string; imeName?: string; imeStates?: Record<string, string> }>
+  /** While true, Translate's global shortcuts are released so a new one can be typed here. */
+  recordShortcut(on: boolean): Promise<void>
+  /** Whether Windows would give Translate this shortcut (free, or already Translate's). */
+  shortcutAvailable(accel: string): Promise<boolean>
+  openLink(id: LinkId): void
 }
 
 export let bridge: SettingsBridge | null = null
 export function setBridge(b: SettingsBridge) {
   bridge = b
 }
+
+/** Live engine status (the design lab shows both input methods ready). */
+export const useEngine = create<EngineStatus>(() => ({ imeStates: { wetype: 'connected', mspinyin: 'connected' }, hotkeysUnavailable: [] }))

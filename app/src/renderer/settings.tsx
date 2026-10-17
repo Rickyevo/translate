@@ -7,7 +7,7 @@ import i18n, { resolveLang } from '../../../prototype/src/i18n'
 import { SettingsWindow } from '../../../prototype/src/settings/SettingsWindow'
 import { effectiveSettings, useReview, useSettings, type Page } from '../../../prototype/src/store'
 import { Scope } from '../../../prototype/src/ui/scope'
-import { setBridge, type TestResult } from '../../../prototype/src/settings/bridge'
+import { setBridge, useEngine, type TestResult } from '../../../prototype/src/settings/bridge'
 import type { ThemeName, TranslateApi } from '../shared/types'
 import './app.css'
 
@@ -25,8 +25,13 @@ setBridge({
   cacheStats: () => api.cacheStats(),
   clearCache: () => api.cacheClear(),
   openLogs: () => api.openLogs(),
-  status: () => api.statusGet(),
+  recordShortcut: (on) => api.recordShortcut(on),
+  shortcutAvailable: (accel) => api.shortcutAvailable(accel),
+  openLink: (id) => api.openLink(id),
 })
+// Status is pushed by the host when it changes (nothing polls).
+useEngine.setState({ imeStates: {}, hotkeysUnavailable: [] })
+api.onStatus((s) => useEngine.setState(s))
 
 function SettingsApp() {
   const [ready, setReady] = useState(false)
@@ -35,16 +40,23 @@ function SettingsApp() {
   const eff = effectiveSettings(st)
 
   useEffect(() => {
-    api.getSettings().then(({ saved, theme, paused, version }) => {
+    api.getSettings().then(({ saved, theme, paused, version, status }) => {
       useSettings.setState({ saved, draft: saved })
+      useEngine.setState(status)
       useReview.setState({ paused, version, page: page ?? 'overview' })
       setOsTheme(theme)
       setReady(true)
     })
     api.onTheme(setOsTheme)
-    // Keep the pause switch and sidebar in step when pausing happens outside this window. Setting the same value
-    // back is a no-op, so this can't loop through the subscription below.
-    api.onPaused((p) => useReview.getState().paused !== p && useReview.setState({ paused: p }))
+    // Keep the pause switch in step when pausing happens outside this window. That change came from the host, so it
+    // isn't sent back (an echo could undo a newer change made by a shortcut meanwhile).
+    let fromHost = false
+    api.onPaused((p) => {
+      if (useReview.getState().paused === p) return
+      fromHost = true
+      useReview.setState({ paused: p })
+      fromHost = false
+    })
     // Store → main: save, live draft, pause.
     const unSettings = useSettings.subscribe((s, prev) => {
       if (s.saved !== prev.saved)
@@ -54,7 +66,7 @@ function SettingsApp() {
         })
       else if (s.draft !== prev.draft) api.draftSettings(s.draft)
     })
-    const unReview = useReview.subscribe((r, prev) => r.paused !== prev.paused && api.setPaused(r.paused))
+    const unReview = useReview.subscribe((r, prev) => r.paused !== prev.paused && !fromHost && api.setPaused(r.paused))
     return () => (unSettings(), unReview())
   }, [])
 

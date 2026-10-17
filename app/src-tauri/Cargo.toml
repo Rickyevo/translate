@@ -1,6 +1,6 @@
 [package]
 name = "translate"
-version = "0.2.2"
+version = "0.2.3"
 edition = "2021"
 description = "Live translations of WeChat Input Method candidates on Windows"
 license = "MIT"

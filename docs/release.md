@@ -1,5 +1,21 @@
 # Release build
 
+## 0.2.3 Settings refresh and custom shortcuts
+
+Release: `release/Translate-0.2.3-win-x64.zip` (61.2 MB; 157.2 MB unpacked).
+Pause, Open Settings and Hide or show the panel are recordable in General. While a shortcut is being recorded the host
+releases all of Translate's global shortcuts (`shortcuts:record`), and a candidate combination is test-registered
+(`shortcut:check`) before it goes into the draft. The host reports shortcuts Windows refused (another app holds them)
+and pushes them, with the input-method states, to Settings on change (`status` event); Settings no longer polls.
+Overview combines status, service, target language, per-input-method state and switches, and the everyday shortcuts;
+About links to updates, issues and third-party licenses through fixed host destinations (`link:open`).
+`TRANSLATE_NO_HOTKEYS` (test control only) keeps screenshot runs from registering shortcuts.
+
+Verified: TypeScript typecheck; cargo 8/8; backend 76/76; shortcuts 25/25 (refusals, another app holding a key,
+save and the action it runs, off, reset, single recorder, live warning and its clearing); Microsoft Pinyin replay 15/15;
+Overview 4/4; replay 40/40; service 19/19; autostart 8/8; placement 35/35; Settings UI 11/11; clean-environment
+release check 10/10.
+
 ## 0.2.2 connection display
 
 Release: `release/Translate-0.2.2-win-x64.zip` (about 61.2 MB; 157.2 MB unpacked).

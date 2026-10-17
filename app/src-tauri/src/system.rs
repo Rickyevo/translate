@@ -15,6 +15,8 @@ use windows_sys::Win32::UI::WindowsAndMessaging::*;
 
 pub enum SysEvent {
     Hotkey(String),
+    /// The shortcuts that could not be registered (another app holds them), whenever that set changes.
+    HotkeysUnavailable(Vec<String>),
     OpenSettings,
     ThemeChanged,
 }
@@ -28,6 +30,7 @@ struct Shared {
     wanted: Vec<String>,
     registered: HashMap<i32, String>,
     retries: u32,
+    unavailable: Vec<String>,
 }
 static SHARED: OnceLock<Mutex<Shared>> = OnceLock::new();
 static HWND_CELL: OnceLock<isize> = OnceLock::new();
@@ -117,6 +120,7 @@ unsafe extern "system" fn wndproc(h: HWND, msg: u32, wp: WPARAM, lp: LPARAM) -> 
         }
         WM_APP_HOTKEYS => {
             let mut failed = false;
+            let mut missing: Vec<String> = vec![];
             if let Some(s) = SHARED.get() {
                 let mut g = s.lock().unwrap();
                 if wp == 0 {
@@ -140,6 +144,7 @@ unsafe extern "system" fn wndproc(h: HWND, msg: u32, wp: WPARAM, lp: LPARAM) -> 
                         } else {
                             // Another app holds it — often a Translate that is still exiting. Try again for a minute.
                             failed = true;
+                            missing.push(name.clone());
                             if g.retries == 0 {
                                 crate::log::warn(format!("shortcut unavailable: {name} (retrying)"));
                             }
@@ -152,6 +157,10 @@ unsafe extern "system" fn wndproc(h: HWND, msg: u32, wp: WPARAM, lp: LPARAM) -> 
                 } else if !failed && g.retries > 0 {
                     crate::log::info("shortcuts registered after retrying");
                     g.retries = 0;
+                }
+                if missing != g.unavailable {
+                    g.unavailable = missing.clone();
+                    (g.tx)(SysEvent::HotkeysUnavailable(missing));
                 }
             }
             0
@@ -174,7 +183,7 @@ unsafe extern "system" fn wndproc(h: HWND, msg: u32, wp: WPARAM, lp: LPARAM) -> 
 }
 
 pub fn start(profile: &str, tx: impl Fn(SysEvent) + Send + 'static) {
-    let _ = SHARED.set(Mutex::new(Shared { tx: Box::new(tx), wanted: vec![], registered: HashMap::new(), retries: 0 }));
+    let _ = SHARED.set(Mutex::new(Shared { tx: Box::new(tx), wanted: vec![], registered: HashMap::new(), retries: 0, unavailable: vec![] }));
     let cls = class_name(profile);
     let (ready_tx, ready_rx) = std::sync::mpsc::channel::<()>();
     std::thread::spawn(move || unsafe {
@@ -205,6 +214,24 @@ pub fn set_hotkeys(names: Vec<String>) {
     }
 }
 
+/// Whether Windows would give us this shortcut now: true when it is free or already ours. Registers it for a moment
+/// on the calling thread (no window), then lets it go.
+pub fn hotkey_available(name: &str) -> bool {
+    let Some((mods, vk)) = parse_accel(name) else { return false };
+    if let Some(s) = SHARED.get() {
+        if s.lock().unwrap().registered.values().any(|n| n.eq_ignore_ascii_case(name)) {
+            return true;
+        }
+    }
+    unsafe {
+        if RegisterHotKey(std::ptr::null_mut(), 0xBFF0, mods, vk) == 0 {
+            return false;
+        }
+        UnregisterHotKey(std::ptr::null_mut(), 0xBFF0);
+    }
+    true
+}
+
 #[cfg(test)]
 mod tests {
     use super::parse_accel;
@@ -216,5 +243,11 @@ mod tests {
         assert_eq!(parse_accel("Alt+`"), Some((0x4001, 0xC0)));
         assert_eq!(parse_accel("Alt+PageDown"), Some((0x4001, 0x22)));
         assert_eq!(parse_accel("Alt+Bogus"), None);
+    }
+    #[test]
+    fn availability_probe_leaves_shortcut_free() {
+        for _ in 0..3 {
+            assert!(super::hotkey_available("Ctrl+Alt+Shift+F9"), "err {}", unsafe { windows_sys::Win32::Foundation::GetLastError() });
+        }
     }
 }

@@ -45,7 +45,11 @@
     cacheStats: () => invoke('cache:stats'),
     cacheClear: () => invoke('cache:clear'),
     statusGet: () => invoke('status:get'),
+    onStatus: on('status'),
     openLogs: () => send('logs:open'),
+    recordShortcut: (on) => invoke('shortcuts:record', [on]),
+    shortcutAvailable: (name) => invoke('shortcut:check', [name]),
+    openLink: (id) => send('link:open', id),
   }
   Object.defineProperty(window, 'translate', { value: Object.freeze(api) })
 

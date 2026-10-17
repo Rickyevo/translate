@@ -1,5 +1,27 @@
 # Changelog
 
+## 0.2.3 — 2026-10-17
+
+- Shortcuts can be changed in Settings › General: Pause, Open Settings and Hide or show the panel. Click the keys and
+  press new ones. Translate refuses keys it can't use (no Alt or Ctrl+Shift, a panel key, a Windows key, another
+  shortcut's keys) and keys another app already holds, says why, and registers the new keys on Save. Backspace turns
+  one off; Reset restores the default. A saved shortcut another app takes is flagged on General and Overview, and the
+  flag clears by itself once the other app lets go.
+- Hide or show the panel now uses its configured shortcut (it was always Alt+0).
+- Overview: one status card (on or paused, and what translates: the service and model, dictionary only with a link to
+  set one up, or local only), the target language, an Input methods card with each input method's state (Ready, Not
+  running, Starting, Can't connect, Off) and a switch to turn it off, and the everyday shortcuts. It replaces the
+  separate service card, the "Reaching Translate" list and the Input method menu in General.
+- About: version and license, links to updates, problem reports and third-party licenses, the dictionary attribution
+  and Quit. Removed the Copy diagnostics button (it did nothing), the always-"Running" engine row and the duplicate
+  input-method states.
+- Simpler pages: no page subtitles; Translation drops the lookup-order diagram and shows JSON output only for custom
+  services; Privacy folds the password-field note into "Never translate in" and lists what is stored in three rows.
+  The sidebar's Pause button is gone (pause from Overview or the shortcut).
+- Input-method and shortcut status is pushed to Settings when it changes instead of being polled every two seconds.
+- WeChat Input Method shows "Not running" until it starts, instead of "Not connected".
+- Fix: pausing with a shortcut while Settings was open could be undone by Settings echoing an older pause state.
+
 ## 0.2.2 — 2026-10-16
 
 - Overview and About now show WeChat Input Method and Microsoft Pinyin separately, each with its own connection

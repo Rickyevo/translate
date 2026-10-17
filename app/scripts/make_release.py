@@ -31,7 +31,7 @@ START
 
 FIRST SETUP
   Run Translate.exe again (or press Ctrl+Alt+O) to open Settings.
-  Settings > General > Input method: Automatic, WeChat Input Method, or Microsoft Pinyin (tested on Windows 11).
+  Settings > Overview lists WeChat Input Method and Microsoft Pinyin (tested on Windows 11); turn either off there.
   Settings > Translation: choose your translation service, paste its API key, press "Test connection", then Save.
   Without a service, common words are still translated by the built-in dictionary (Chinese to English).
   Tip: if you click the panel with the mouse, turn on Settings > Appearance > "Keep the panel clickable".
@@ -39,7 +39,7 @@ FIRST SETUP
 USE
   Alt+1...9 insert a translation, Alt+Shift+1...9 copy it, Alt+0 hides the panel, Alt+` shows the full text.
   Ctrl+Alt+P pauses or resumes. Right-click a row to insert, copy or retry. Quit from Settings > About.
-  If another app occupies a shortcut, open Settings by running Translate.exe again and pause from Overview.
+  If another app already uses a shortcut, Settings says so: change it in Settings > General > Shortcuts.
 
 PRIVACY
   Candidates you type are translated only by the service you choose (or not at all in Local-only mode).

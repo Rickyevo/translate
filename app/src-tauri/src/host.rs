@@ -19,6 +19,7 @@ use tauri::{AppHandle, Manager, WebviewUrl, WebviewWindow, WebviewWindowBuilder}
 pub const BRIDGE: &str = include_str!("bridge.js");
 const M: f64 = 16.0; // transparent margin (CSS px) around panel/preview content
 const STALE_MS: u64 = 600;
+const REPO_URL: &str = "https://github.com/Rickywu05/translate";
 const INSERT_NOTICE: &[(&str, &str)] = &[("unavailable", "unavailable"), ("ime", "notice.imeBusy"), ("modifiers", "notice.releaseKeys"), ("denied", "notice.denied")];
 
 pub enum Ev {
@@ -105,6 +106,10 @@ pub struct Host {
     ime_state: String,
     ime_name: String,
     ime_states: Value,
+    /// Global shortcuts Windows wouldn't give us (another app holds them).
+    hotkeys_unavailable: Vec<String>,
+    /// Settings is recording a shortcut: ours are released so the keys reach the page.
+    recording_shortcut: bool,
     service_state: String,
     last_insert: Value,
     panel_created: u64,
@@ -179,6 +184,8 @@ impl Host {
             ime_state: "starting".into(),
             ime_name: String::new(),
             ime_states: json!({}),
+            hotkeys_unavailable: vec![],
+            recording_shortcut: false,
             service_state: String::new(),
             last_insert: Value::Null,
             panel_created: 0,
@@ -299,6 +306,7 @@ impl Host {
                     return;
                 }
                 self.ime_states = json!({});
+                self.push_settings_status();
                 log::info(format!("backend exited code={code:?}"));
                 let pend: Vec<u64> = self.pending.keys().copied().collect();
                 for id in pend {
@@ -364,6 +372,7 @@ impl Host {
                 if let Some(st) = m.get("ime").and_then(|i| i.get("state")).and_then(Value::as_str) {
                     self.ime_state = st.into();
                     self.ime_states = m["ime"]["all"].as_object().map(|s| json!(s)).unwrap_or(json!({}));
+                    self.push_settings_status();
                     if let Some(n) = m["ime"].get("name").and_then(Value::as_str) {
                         if n != self.ime_name {
                             log::info(format!("input method {n}"));
@@ -923,23 +932,54 @@ impl Host {
 
     // ------------------------------------------------------------------------------------------- shortcuts
 
-    fn global_names(&self) -> Vec<String> {
+    /// The customizable shortcuts: pause, settings (always registered) and toggleBar (while the panel is up).
+    /// An empty value turns that shortcut off.
+    fn custom_shortcut(&self, k: &str) -> String {
         let sc = self.settings.get("shortcuts").cloned().unwrap_or(json!({}));
-        vec![sc["pause"].as_str().unwrap_or("Ctrl+Alt+P").to_string(), sc["settings"].as_str().unwrap_or("Ctrl+Alt+O").to_string()]
+        let default = match k {
+            "pause" => "Ctrl+Alt+P",
+            "settings" => "Ctrl+Alt+O",
+            _ => "Alt+0",
+        };
+        sc[k].as_str().unwrap_or(default).to_string()
     }
 
     fn update_hotkeys(&self) {
-        let mut names = self.global_names();
+        // Screenshot runs (test control only): register nothing, so other apps on the build PC can't show up as
+        // shortcut conflicts in the pictures.
+        if self.o.test_port != 0 && std::env::var_os("TRANSLATE_NO_HOTKEYS").is_some() {
+            return;
+        }
+        if self.recording_shortcut {
+            return system::set_hotkeys(vec![]);
+        }
+        let mut names: Vec<String> = ["pause", "settings"].iter().map(|k| self.custom_shortcut(k)).filter(|n| !n.is_empty()).collect();
         if self.shortcuts_on {
             for k in 1..=9 {
                 names.push(format!("Alt+{k}"));
                 names.push(format!("Alt+Shift+{k}"));
             }
-            for n in ["Alt+0", "Alt+`", "Alt+Down", "Alt+Up", "Alt+PageDown", "Alt+PageUp"] {
+            for n in ["Alt+`", "Alt+Down", "Alt+Up", "Alt+PageDown", "Alt+PageUp"] {
                 names.push(n.into());
             }
+            let t = self.custom_shortcut("toggleBar");
+            if !t.is_empty() {
+                names.push(t);
+            }
         }
+        names.dedup();
         system::set_hotkeys(names);
+    }
+
+    /// Engine and shortcut status for an open Settings window (pushed on change; Settings doesn't poll).
+    fn settings_status(&self) -> Value {
+        json!({ "imeStates": self.ime_states, "hotkeysUnavailable": self.hotkeys_unavailable })
+    }
+
+    fn push_settings_status(&self) {
+        if let Some(w) = &self.settings_win {
+            emit(w, "status", &self.settings_status());
+        }
     }
 
     fn set_shortcuts(&mut self, on: bool) {
@@ -951,12 +991,14 @@ impl Host {
     }
 
     fn on_hotkey(&mut self, name: &str) {
-        let g = self.global_names();
-        if name == g[0] {
+        if name == self.custom_shortcut("pause") {
             return self.set_paused(!self.paused);
         }
-        if name == g[1] {
+        if name == self.custom_shortcut("settings") {
             return self.open_settings(None, false);
+        }
+        if name == self.custom_shortcut("toggleBar") {
+            return self.toggle_hidden();
         }
         let gen = self.list.as_ref().and_then(|l| l["gen"].as_i64());
         if let Some(d) = name.strip_prefix("Alt+Shift+") {
@@ -967,7 +1009,6 @@ impl Host {
         }
         let key = |a: Value| a;
         match name {
-            "Alt+0" => self.toggle_hidden(),
             "Alt+`" => self.panel_key(key(json!({ "action": "togglePreview" }))),
             "Alt+Down" => self.panel_key(json!({ "action": "step", "d": 1 })),
             "Alt+Up" => self.panel_key(json!({ "action": "step", "d": -1 })),
@@ -1034,6 +1075,10 @@ impl Host {
             Ev::Ipc { label, ch, args, reply } => self.on_ipc(&label, &ch, args, reply),
             Ev::Sys(SysEvent::Hotkey(n)) => self.on_hotkey(&n),
             Ev::Sys(SysEvent::OpenSettings) => self.open_settings(None, false),
+            Ev::Sys(SysEvent::HotkeysUnavailable(names)) => {
+                self.hotkeys_unavailable = names;
+                self.push_settings_status();
+            }
             Ev::Sys(SysEvent::ThemeChanged) => {
                 self.push_state();
                 if let Some(w) = &self.settings_win {
@@ -1057,6 +1102,10 @@ impl Host {
                     self.preview_hwnd = 0;
                 } else if label == "settings" {
                     self.settings_win = None;
+                    if self.recording_shortcut {
+                        self.recording_shortcut = false;
+                        self.update_hotkeys();
+                    }
                     // Closing without saving = Cancel: live-previewed values revert on the panel.
                     if self.draft.take().is_some() {
                         self.push_state();
@@ -1152,7 +1201,7 @@ impl Host {
             "settings:get" => {
                 let mut saved = self.settings.clone();
                 saved.insert("apiKey".into(), json!(""));
-                Self::reply_with(reply, json!({ "saved": saved, "theme": self.theme(), "paused": self.paused, "version": env!("CARGO_PKG_VERSION") }))
+                Self::reply_with(reply, json!({ "saved": saved, "theme": self.theme(), "paused": self.paused, "version": env!("CARGO_PKG_VERSION"), "status": self.settings_status() }))
             }
             "settings:save" => {
                 let s = obj(a(0));
@@ -1171,7 +1220,26 @@ impl Host {
             "svc:keys" => self.request("secret.status", json!({}), 3000, Box::new(move |_, m| Self::reply_with(reply, m.get("keys").cloned().unwrap_or(json!({}))))),
             "cache:stats" => self.request("cache.stats", json!({}), 3000, Box::new(move |_, m| Self::reply_with(reply, m))),
             "cache:clear" => self.request("cache.clear", json!({}), 3000, Box::new(move |_, m| Self::reply_with(reply, m))),
-            "status:get" => Self::reply_with(reply, json!({ "ime": self.ime_state, "service": self.service_state, "imeName": self.ime_name, "imeStates": self.ime_states })),
+            "status:get" => Self::reply_with(reply, self.settings_status()),
+            "shortcuts:record" => {
+                self.recording_shortcut = a(0).as_bool().unwrap_or(false);
+                self.update_hotkeys();
+                Self::reply_with(reply, Value::Null)
+            }
+            "shortcut:check" => Self::reply_with(reply, json!(system::hotkey_available(a(0).as_str().unwrap_or("")))),
+            "link:open" => {
+                // Fixed destinations only: the page names one, it never passes a URL or path.
+                let dir = self.o.exe.parent().map(|d| d.to_path_buf()).unwrap_or_default();
+                match a(0).as_str().unwrap_or("") {
+                    "home" => win::open_path(REPO_URL),
+                    "releases" => win::open_path(&format!("{REPO_URL}/releases")),
+                    "issues" => win::open_path(&format!("{REPO_URL}/issues")),
+                    "notices" => win::open_path(&dir.join("THIRD_PARTY_NOTICES.txt").to_string_lossy()),
+                    "license" => win::open_path(&dir.join("LICENSE.txt").to_string_lossy()),
+                    _ => {}
+                }
+                Self::reply_with(reply, Value::Null)
+            }
             "logs:open" => {
                 win::open_path(&self.o.user_data.join("logs").to_string_lossy());
                 Self::reply_with(reply, Value::Null)
@@ -1255,6 +1323,8 @@ impl Host {
             "imeState": self.ime_state,
             "imeName": self.ime_name,
             "imeStates": self.ime_states,
+            "hotkeysUnavailable": self.hotkeys_unavailable,
+            "recordingShortcut": self.recording_shortcut,
             "translationMode": self.translation_mode,
             "lastInsert": self.last_insert,
             "serviceState": self.service_state,
@@ -1322,6 +1392,12 @@ impl Host {
             "/insert" => {
                 let g = gen().or_else(|| self.list.as_ref().map(|l| l["gen"].clone())).unwrap_or(Value::Null);
                 self.request("insert", json!({ "gen": g, "n": q.get("n").cloned().unwrap_or(json!(1)) }), 3000, fwd(reply));
+            }
+            "/hotkey" => {
+                // As if Windows delivered this global shortcut (checks which action a customized shortcut runs).
+                let name = q["name"].as_str().unwrap_or("").to_string();
+                self.on_hotkey(&name);
+                let _ = reply.send(ok(json!({ "ok": true, "paused": self.paused, "hidden": self.hidden })));
             }
             "/toggle-hidden" => {
                 self.toggle_hidden();

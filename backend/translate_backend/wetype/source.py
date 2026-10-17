@@ -378,6 +378,8 @@ class WeTypeSource:
             sys.path.insert(0, str(vendor))
         # Frida's runtime costs ~47 MB once imported: wait until WeType is actually running (Automatic mode with only
         # Microsoft Pinyin in use never loads it).
+        if not win32.process_running("wetype_server.exe"):
+            self._post({"kind": "connection", "state": "waiting", "epoch": 0, "code": "not_running"})
         while not self._stop.is_set() and not win32.process_running("wetype_server.exe"):
             self._stop.wait(3)
         if self._stop.is_set():

@@ -123,8 +123,9 @@ plan-based subscriptions (OpenCode Go, for example) are intended for coding tool
 Right-click a row to insert, copy or retry it. To use the mouse, turn on **Settings › Appearance › Keep the panel
 clickable** — WeType's candidate window takes all clicks right under the candidates, so this moves the panel clear of it.
 
-Which input method Translate follows is in **Settings › General › Input method**: *Automatic* (whichever one you type
-with), *WeChat Input Method* or *Microsoft Pinyin*.
+Pause, Open Settings and Hide or show the panel can be changed in **Settings › General** (Translate checks that no other
+app holds the new keys). **Settings › Overview** lists WeChat Input Method and Microsoft Pinyin, whether each is ready,
+and a switch to turn either off; with both on, Translate follows whichever one you type with.
 
 ## Privacy
 
@@ -175,7 +176,7 @@ Translate isn't code-signed yet, so SmartScreen doesn't recognise it. Choose **M
 the download against `SHA256SUMS.txt` from the same release:
 
 ```powershell
-Get-FileHash .\Translate-0.2.2-win-x64.zip -Algorithm SHA256
+Get-FileHash .\Translate-0.2.3-win-x64.zip -Algorithm SHA256
 ```
 
 </details>

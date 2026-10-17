@@ -1,6 +1,6 @@
 import { useEffect, useState, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Gauge, Info, Languages, Minus, Palette, Settings2, ShieldCheck, X, Pause, Play } from 'lucide-react'
+import { Gauge, Info, Languages, Minus, Palette, Settings2, ShieldCheck, X } from 'lucide-react'
 import { useReview, useSettings, type Page } from '../store'
 import { Button, cx } from '../ui/primitives'
 import { AppMark } from '../icons/AppMark'
@@ -15,8 +15,8 @@ const NAV: { id: Page; icon: typeof Gauge }[] = [
   { id: 'about', icon: Info },
 ]
 
-/** Frameless window chrome with Windows caption buttons. */
-/** In the Electron app the OS window is the frame: fill it, make the title bar draggable. */
+/** Frameless window chrome with Windows caption buttons. In the app the OS window is the frame: fill it, make the
+ *  title bar draggable. */
 const host = typeof window !== 'undefined' ? (window as unknown as { translate?: { windowAction(a: 'close' | 'minimize'): void } }).translate : undefined
 
 function WindowFrame({ title, children, onClose, width, height }: { title: string; children: ReactNode; onClose: () => void; width: number; height: number }) {
@@ -120,14 +120,6 @@ export function SettingsWindow({ onClose, onQuit }: { onClose: () => void; onQui
             </li>
           ))}
         </ul>
-        <button
-          type="button"
-          onClick={() => setp({ paused: !paused })}
-          className="focus-ring mt-auto flex h-8 items-center gap-2.5 rounded-md px-2.5 text-13 font-medium text-fg-2 hover:bg-hover hover:text-fg"
-        >
-          {paused ? <Play className="size-4 text-fg-3" strokeWidth={1.75} /> : <Pause className="size-4 text-fg-3" strokeWidth={1.75} />}
-          {paused ? t('bar.menu.resume') : t('bar.menu.pause')}
-        </button>
       </nav>
 
       <div className="flex min-w-0 flex-1 flex-col">

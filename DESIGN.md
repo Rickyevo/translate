@@ -173,11 +173,28 @@ always win. (An unlayered `button{color:inherit}` in stage 1 silently overrode t
 
 ## 10. Settings model
 
-Pages: **Overview** (status + pause + target language; a *Connect a translation service* card only while no service
-is set up — the one real setup step; how to reach the app without a tray) · **General** (languages, startup, shortcuts incl. copy) · **Translation** (lookup order, local
-dictionary, service: provider — OpenAI, Claude, Gemini, Grok, OpenCode Go, DeepSeek, Custom — endpoint,
-authentication, key, model with *Load models*, timeout, JSON output, *Test connection*) · **Appearance** (live preview first; theme, text size, density, opacity,
-offset, originals) · **Privacy** · **About**.
+Pages: **Overview** (no page title: the status card is the headline — on/paused with its switch, and what translates:
+service · model, *Dictionary only* with a *Set up a service* link, or *Local only*; target language; **Input methods**:
+one row per input method with its state — Ready, Not running, Starting…, Can't connect, Off, Turns on when you save —
+and a switch; the last one on can't be switched off, pause stops translation; the everyday shortcuts with
+*Customize*) · **General** (interface language, candidate count, start with Windows; **Shortcuts**: Pause, Open
+Settings, Hide or show the panel — recordable; **While the panel is showing**: the fixed panel keys) · **Translation**
+(service: provider — OpenAI, Claude, Gemini, Grok, OpenCode Go, DeepSeek, Custom — endpoint, authentication, key,
+model with *Load models*, timeout, JSON output for custom services, *Test connection*; local dictionary) ·
+**Appearance** (live preview first; theme, text size, density, opacity, offset, originals) · **Privacy** (local-only,
+never-translate apps incl. the password-field note, what is stored) · **About** (version and license, updates, report a
+problem, third-party licenses, dictionary attribution, Quit).
+
+Input-method states and unavailable shortcuts are pushed by the host when they change; Settings never polls. An input
+method's *Ready* means Translate's adapter is attached, not that Windows has that input method selected.
+
+**Shortcut recording.** Clicking a shortcut's keys records the next combination; meanwhile the host releases all of
+Translate's global shortcuts so the keys reach the page. Read by physical key (layout-independent). Refused, with the
+reason under the row: no Alt and not Ctrl+Shift (would take a common key from every app); a panel key (Alt+1…9,
+Alt+Shift+1…9, Alt+`, Alt+↑/↓, Alt+PgUp/PgDn); a Windows key (Alt+F4, Alt+Space…); another shortcut's keys; keys
+another app holds (the host test-registers them). Esc cancels, Backspace turns the shortcut off, Reset restores the
+default. Accepted keys go into the draft; Save registers them. A saved shortcut Windows won't give Translate is
+retried for a minute and flagged on General and Overview until it registers.
 
 Keys: typed into the draft, handed to Windows Credential Manager on **Save**, then cleared from the window;
 the field then shows a saved-key placeholder. One key per provider. config.json never holds a key.
@@ -191,10 +208,10 @@ the saved values, including previewed ones. Settings opens on **Overview**.
 
 | Need | How |
 |---|---|
-| Open settings | Run Translate again (single-instance hand-off) · **Ctrl+Alt+O** · notification button |
-| Pause / resume | **Ctrl+Alt+P** · Overview switch · settings sidebar |
-| Change target language | Overview · General |
-| Hide panel | **Alt+0** |
+| Open settings | Run Translate again (single-instance hand-off) · **Ctrl+Alt+O** (customizable) |
+| Pause / resume | **Ctrl+Alt+P** (customizable) · Overview switch |
+| Change target language | Overview |
+| Hide panel | **Alt+0** (customizable) |
 | Read a long translation | Automatic lead preview · **Alt+`** · Alt+↑/↓ |
 | Quit | About → Quit |
 | Attention | Panel footer status (always) + one notification per blocking incident |

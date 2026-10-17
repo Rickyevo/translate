@@ -3,8 +3,8 @@ method attached, nothing typed on the desktop).
 
 Checks: candidates show in the panel under Microsoft Pinyin's bar and clear of the typing line; a new list is a new
 generation without hiding the panel; Alt+N-style insertion cancels with Esc then types; closing ends the composition;
-Automatic switches from WeType to Microsoft Pinyin; Settings › General has the choice and Overview names the input
-methods' independent connection states, including disconnect/reconnect transitions.
+Automatic switches from WeType to Microsoft Pinyin; Settings › Overview lists both input methods with independent
+states (pushed on change: failure, not running, reconnect) and a switch each, the last one locked on.
 Run from app/:  python -X utf8 scripts/mspy_replay_test.py
 """
 from __future__ import annotations
@@ -81,31 +81,26 @@ def main() -> int:
         s = app.wait(lambda s: s["list"] and s["list"]["gen"] == gm and s.get("imeName") == "mspinyin", 5)
         check("Automatic: Microsoft Pinyin takes over from WeType (newer list shown)", s is not None and gm > gw, f"wetype gen {gw} → mspinyin gen {gm}")
         mspy("close")
-        # Settings › General: the choice; Overview names the input method in use.
-        app.call("/settings/open", {"page": "general", "inactive": True})
-        time.sleep(1.8)
-        txt = cdp.evaluate(CDP, "document.body.innerText", "settings.html") or ""
-        check("Settings › General has the Input method choice", "Input method" in txt and "Automatic" in txt, "")
-        app.call("/settings/close")
-        time.sleep(0.6)
+        # Settings › Overview: one row per input method, its own state and an on/off switch (the choice).
         app.call("/settings/open", {"page": "overview", "inactive": True})
         time.sleep(1.8)
-        txt = cdp.evaluate(CDP, "document.body.innerText", "settings.html") or ""
-        connection_js = "Object.fromEntries(Array.from(document.querySelectorAll('[data-ime]'), e => [e.dataset.ime,e.dataset.connected]))"
-        connections = lambda: cdp.evaluate(CDP, connection_js, "settings.html")
-        check("Overview shows both connected input methods", connections() == {"wetype": "true", "mspinyin": "true"})
+        state_js = "Object.fromEntries(Array.from(document.querySelectorAll('[data-ime]'), e => [e.dataset.ime, e.dataset.state]))"
+        states = lambda: cdp.evaluate(CDP, state_js, "settings.html")  # noqa: E731
+        check("Overview shows both input methods ready", states() == {"wetype": "ready", "mspinyin": "ready"}, states())
         mspy("connection", state="failed")
-        time.sleep(2.3)
-        check("Microsoft Pinyin failure updates only its own row", connections() == {"wetype": "true", "mspinyin": "false"})
+        time.sleep(0.5)
+        check("Microsoft Pinyin failure updates only its own row (pushed, no polling)", states() == {"wetype": "ready", "mspinyin": "failed"}, states())
         mspy("connection", state="connected")
         app.call("/wetype", {"t": "connection", "f": {"state": "waiting"}})
-        time.sleep(2.3)
-        check("WeChat disconnect and Microsoft reconnect refresh independently", connections() == {"wetype": "false", "mspinyin": "true"})
-        app.call("/settings/close")
-        time.sleep(0.6)
-        app.call("/settings/open", {"page": "about", "inactive": True})
-        time.sleep(1.5)
-        check("About shows both independent connection states", connections() == {"wetype": "false", "mspinyin": "true"})
+        time.sleep(0.5)
+        check("WeChat not running and Microsoft reconnected refresh independently", states() == {"wetype": "notRunning", "mspinyin": "ready"}, states())
+        txt = cdp.evaluate(CDP, "document.body.innerText", "settings.html") or ""
+        check("rows read Ready / Not running", "Ready" in txt and "Not running" in txt)
+        # Turning Microsoft Pinyin off in the draft: its row says Off, and WeChat's switch is the last one (locked on).
+        cdp.evaluate(CDP, "document.querySelector('[data-ime=mspinyin]').closest('[data-row]').querySelector('[role=switch]').click()", "settings.html")
+        time.sleep(0.3)
+        locked = cdp.evaluate(CDP, "document.querySelector('[data-ime=wetype]').closest('[data-row]').querySelector('[role=switch]').disabled", "settings.html")
+        check("a switch turns an input method off (draft); the last one stays on", states()["mspinyin"] == "off" and locked is True, states())
         app.call("/settings/close")
         time.sleep(0.6)
         app.call("/settings/save", {"ime": "wetype"})

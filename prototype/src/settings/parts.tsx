@@ -37,7 +37,7 @@ export function Row({
   disabled?: boolean
 }) {
   return (
-    <div className={cx('flex min-h-[var(--row-h)] gap-x-6 px-4 py-3', stack ? 'flex-col gap-y-2' : 'items-center justify-between', disabled && 'opacity-50')}>
+    <div data-row className={cx('flex min-h-[var(--row-h)] gap-x-6 px-4 py-3', stack ? 'flex-col gap-y-2' : 'items-center justify-between', disabled && 'opacity-50')}>
       <div className="min-w-0 flex-1">
         <label htmlFor={htmlFor} className="block text-13 font-medium text-fg">
           {label}

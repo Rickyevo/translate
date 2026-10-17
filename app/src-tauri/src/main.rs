@@ -21,7 +21,7 @@ struct CoreTx(Mutex<Sender<Ev>>);
 /// fire-and-forget.
 #[tauri::command]
 async fn ipc(ch: String, args: Vec<Value>, webview: tauri::Webview, core: tauri::State<'_, CoreTx>) -> Result<Value, String> {
-    const ANSWERS: &[&str] = &["settings:get", "settings:save", "svc:test", "svc:models", "svc:keys", "cache:stats", "cache:clear", "status:get"];
+    const ANSWERS: &[&str] = &["settings:get", "settings:save", "svc:test", "svc:models", "svc:keys", "cache:stats", "cache:clear", "status:get", "shortcuts:record", "shortcut:check"];
     let label = webview.label().to_string();
     let tx = core.0.lock().unwrap().clone();
     if !ANSWERS.contains(&ch.as_str()) {

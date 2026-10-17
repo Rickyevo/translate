@@ -3,6 +3,8 @@ import type { Settings } from '../../../prototype/src/model'
 import type { CandidateList, Target } from '../../../prototype/src/data/scenarios'
 
 export type ThemeName = 'light' | 'dark'
+export type { EngineStatus, LinkId } from '../../../prototype/src/settings/bridge'
+import type { EngineStatus, LinkId } from '../../../prototype/src/settings/bridge'
 
 /** Everything the panel renderer needs; pushed by main on every change. */
 export interface PanelState {
@@ -39,7 +41,7 @@ export interface TranslateApi {
   retry(gen: number, n: number): void
   previewNeed(need: { wanted: boolean; requested: boolean; w: number; h: number }): void
   // settings
-  getSettings(): Promise<{ saved: Settings; theme: ThemeName; paused: boolean; version: string }>
+  getSettings(): Promise<{ saved: Settings; theme: ThemeName; paused: boolean; version: string; status: EngineStatus }>
   saveSettings(s: Settings): Promise<void>
   draftSettings(s: Settings): void
   setPaused(p: boolean): void
@@ -54,6 +56,13 @@ export interface TranslateApi {
   svcKeys(): Promise<Record<string, boolean>>
   cacheStats(): Promise<{ count: number; bytes: number }>
   cacheClear(): Promise<{ count: number; bytes: number }>
-  statusGet(): Promise<{ ime: string; service: string; imeName?: string; imeStates?: Record<string, string> }>
+  statusGet(): Promise<EngineStatus>
+  /** Pushed when an input method's connection or a shortcut's availability changes. */
+  onStatus(cb: (s: EngineStatus) => void): void
   openLogs(): void
+  /** While true, Translate's global shortcuts are released so a new one can be typed in Settings. */
+  recordShortcut(on: boolean): Promise<void>
+  /** Whether Windows would give Translate this shortcut (free, or already Translate's). */
+  shortcutAvailable(accel: string): Promise<boolean>
+  openLink(id: LinkId): void
 }

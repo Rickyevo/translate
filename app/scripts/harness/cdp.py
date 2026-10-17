@@ -61,3 +61,22 @@ def evaluate(port: int, expr: str, url_part: str = "", await_promise: bool = Fal
                 return msg["result"]["result"].get("value")
     finally:
         s.close()
+
+
+def call(port: int, calls: list[tuple[str, dict]], url_part: str = "") -> list:
+    """Run DevTools commands in order on the first page whose URL contains url_part; returns their results."""
+    targets = json.load(urllib.request.urlopen(f"http://127.0.0.1:{port}/json", timeout=5))
+    page = next(t for t in targets if t.get("type") == "page" and url_part in t.get("url", ""))
+    s = _ws_connect(page["webSocketDebuggerUrl"])
+    out = []
+    try:
+        for i, (method, params) in enumerate(calls, 1):
+            _send(s, json.dumps({"id": i, "method": method, "params": params}))
+            while True:
+                msg = json.loads(_recv(s))
+                if msg.get("id") == i:
+                    out.append(msg.get("result"))
+                    break
+    finally:
+        s.close()
+    return out

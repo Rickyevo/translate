@@ -90,10 +90,12 @@ def main() -> int:
     (USERDATA / "config.json").write_text(json.dumps(base), encoding="utf-8")
     OUT.mkdir(parents=True, exist_ok=True)
     env = {k: v for k, v in os.environ.items() if k != "TRANSLATE_SECRETS"}  # the real vault: your stored key
+    env["TRANSLATE_NO_HOTKEYS"] = "1"  # shortcuts held by this PC's other apps would show as conflicts in the pictures
     app = App(port=47431, packaged=True, extra_args=["--test-source=wetype-replay", "--translator=live", f"--remote-debugging-port={CDP}"], env=env)
     saved = []
     try:
         app.call("/wetype", {"t": "connection", "f": {"state": "connected"}})
+        app.call("/mspy", {"t": "connection", "f": {"state": "connected"}})
         app.call("/wetype", {"t": "window", "f": {"rect": RECT, "foreground": FG}})
         k = 0
         for theme in ("light", "dark"):
