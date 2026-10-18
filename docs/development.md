@@ -92,24 +92,25 @@ python -X utf8 scripts/settings_ui_probe.py                               # sett
 python -X utf8 scripts/release_verify.py <release folder>                 # release in an environment without dev tools
 python -X utf8 scripts/stage4_live_test.py [--clickable] [--edge]         # LIVE: real WeType + real keys/clicks
 python -X utf8 scripts/readme_shots.py                                    # README screenshots (DevTools captures)
-python -X utf8 scripts/native_memory_compare.py                           # paired native/Frida real-pipe backend comparison (73 s)
+python -X utf8 scripts/native_memory_compare.py --baseline <extracted-0.2.3-folder>  # paired native/Frida comparison (73 s)
 python -I ../backend/tools/build_cedict.py <cedict_1_0_ts_utf-8_mdbg.zip> # rebuild the local dictionary
 ```
 
 Test runs use an isolated profile in `.cache/test-userdata`, never your `%APPDATA%\Translate`. Screenshots are taken
 from the pages themselves (DevTools, enabled only together with `--test-control`), never of the desktop.
 
-The native memory comparison uses unique directories under `.cache/memory-endurance/`, comparing the original
-`release/Translate-0.2.3-win-x64` against `release/Translate-0.2.4-win-x64`. Build the owned pipe fixture with
+The native memory comparison uses unique directories under `.cache/memory-endurance/`, comparing a separately
+downloaded 0.2.3 release (`--baseline`) against `release/Translate-0.2.4-win-x64`. Build the owned pipe fixture with
 `cmd /c backend\native\build.cmd --tests` first. Both workers use the same synthetic pipe writes, dictionary-cache
 fixtures, full UI Automation observer and localhost mock translation service. No desktop keys or external API
 requests are sent. The measurements include the backend-side test driver and exclude the host/WebView2 and input
 method processes; they are not whole-app memory or end-to-end UI latency. The 73-second comparison is a short test,
 not a long-duration soak. Raw evidence and scope are in `measurements/native-memory-20261018.md`.
 
-Temporary memory-test packages are removed from `release/` after validation. Keep the formal versioned releases,
-their archives and `SHA256SUMS.txt`; current comparisons use 0.2.3 and 0.2.4. Historical measurement JSON retains
-the original paths as provenance, even when the temporary build it measured has been removed.
+Keep only the latest formal program folder, its ZIP and `SHA256SUMS.txt` in `release/`. Old local releases and
+temporary memory-test packages are removed after validation; historical GitHub releases can be downloaded when
+needed. Duplicate packaging output in `app/out` and `app/release-build` can be regenerated. Historical measurement
+JSON retains the original paths as provenance, even when the build it measured has been removed.
 
 `TRANSLATE_DIAG=1` makes the engine log counts (never content) of what the WeType adapter receives and drops, once a
 second; `TRANSLATE_NO_A11Y_CARET=1` turns off the accessibility-caret lookup.

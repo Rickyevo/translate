@@ -4,8 +4,9 @@ The native transport adds bounded queues, explicit gap invalidation, automatic r
 checks and safe shutdown. This record describes the 0.2.3 candidate that became 0.2.4. The user's original app
 was restored after desktop testing; temporary test processes and profiles were removed.
 The two temporary memory-test package folders were also removed from `release/` after 0.2.4 was packaged.
-The reproducible comparison now uses the formal 0.2.3 and 0.2.4 folders. Original paths in raw JSON identify
-the historical builds actually measured; those records are retained unchanged.
+Only the latest formal release is kept locally. To repeat the comparison, download 0.2.3 separately and pass its
+extracted folder with `--baseline`. Original paths in raw JSON identify the historical builds actually measured;
+those records are retained unchanged.
 
 ## Memory
 

@@ -15,8 +15,15 @@ import uuid
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--pilot', action='store_true')
+parser.add_argument('--baseline', type=Path, required=True,
+                    help='Extracted baseline release folder, downloaded separately from GitHub')
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[2]
+builds = [('baseline', args.baseline.resolve()),
+          ('optimized', root / 'release/Translate-0.2.4-win-x64')]
+for variant, directory in builds:
+    if not (directory / 'resources/python/TranslateEngine.exe').is_file():
+        parser.error(f'{variant} release is missing its bundled engine: {directory}')
 run_id = uuid.uuid4().hex[:8]
 scratch = root / '.cache' / 'memory-endurance' / run_id
 scratch.mkdir(parents=True)
@@ -66,9 +73,8 @@ def read(process, variant):
             print(json.dumps(row), flush=True)
 
 try:
-    for variant, directory in [('baseline', 'Translate-0.2.3-win-x64'),
-                               ('optimized', 'Translate-0.2.4-win-x64')]:
-        engine = root / 'release' / directory / 'resources/python/TranslateEngine.exe'
+    for variant, directory in builds:
+        engine = directory / 'resources/python/TranslateEngine.exe'
         command = [str(engine), '-B', '-u', str(root/'backend/tools/native_memory_worker.py'),
                    '--variant', variant, '--endpoint', endpoint,
                    '--transport', 'frida' if variant=='baseline' else 'native',

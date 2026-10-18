@@ -30,4 +30,5 @@ Synthetic integration: set `TRANSLATE_NATIVE_CACHE` to a workspace scratch direc
 fixture from `backend/native/tests/fixture.c` with `cmd /c backend\native\build.cmd --tests`, then run
 `python -X utf8 -B backend/tools/native_transport_check.py`. No desktop keystrokes or external service
 requests are used. The separate paired memory comparison is
-`python -X utf8 -B app/scripts/native_memory_compare.py`; it uses a localhost mock translation service.
+`python -X utf8 -B app/scripts/native_memory_compare.py --baseline <extracted-0.2.3-folder>`;
+download the baseline release separately from GitHub. It uses a localhost mock translation service.
