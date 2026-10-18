@@ -9,12 +9,12 @@
 **WeChat 입력기와 Microsoft 병음의 후보를 실시간으로 번역합니다.**<br>
 병음을 입력하면서 후보의 뜻을 확인하고 번역을 바로 입력하세요.
 
-[![최신 버전](https://img.shields.io/github/v/release/Rickywu05/translate?label=release&color=0f7b6c)](https://github.com/Rickywu05/translate/releases/latest)
-[![다운로드](https://img.shields.io/github/downloads/Rickywu05/translate/total?color=0f7b6c)](https://github.com/Rickywu05/translate/releases)
+[![최신 버전](https://img.shields.io/github/v/release/Rickyevo/translate?label=release&color=0f7b6c)](https://github.com/Rickyevo/translate/releases/latest)
+[![다운로드](https://img.shields.io/github/downloads/Rickyevo/translate/total?color=0f7b6c)](https://github.com/Rickyevo/translate/releases)
 [![Windows](https://img.shields.io/badge/platform-Windows%2010%20%7C%2011%20x64-0078d4)](#실행-환경)
 [![MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
-[**다운로드**](https://github.com/Rickywu05/translate/releases/latest) · [빠른 시작](#빠른-시작) · [기능](#기능) · [개인정보](#개인정보) · [자주 묻는 질문](#자주-묻는-질문)
+[**다운로드**](https://github.com/Rickyevo/translate/releases/latest) · [빠른 시작](#빠른-시작) · [기능](#기능) · [개인정보](#개인정보) · [자주 묻는 질문](#자주-묻는-질문)
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="screenshots/readme/hero-en-dark.png">
@@ -41,7 +41,7 @@ Translate는 Windows의 **WeChat 입력기(微信输入法, WeType)** 를 위한
 
 ## 빠른 시작
 
-1. [Releases](https://github.com/Rickywu05/translate/releases/latest)에서 `Translate-<version>-win-x64.zip`을 다운로드합니다.
+1. [Releases](https://github.com/Rickyevo/translate/releases/latest)에서 `Translate-<version>-win-x64.zip`을 다운로드합니다.
 2. `%LOCALAPPDATA%\Programs\Translate` 등 고정된 위치에 압축을 풉니다.
 3. `Translate.exe`를 실행합니다. Python, Node.js, 개발 도구나 관리자 권한이 필요하지 않습니다.
 
@@ -118,7 +118,7 @@ Translate는 Windows의 **WeChat 입력기(微信输入法, WeType)** 를 위한
 
 ## 알려진 제한
 
-- WeType 내부 메시지를 사용하므로 업데이트 후 작동하지 않을 수 있습니다. [Issues](https://github.com/Rickywu05/translate/issues)에 버전을 함께 알려 주세요.
+- WeType 내부 메시지를 사용하므로 업데이트 후 작동하지 않을 수 있습니다. [Issues](https://github.com/Rickyevo/translate/issues)에 버전을 함께 알려 주세요.
 - 네이티브 관찰 모듈이 입력기 프로세스에 연결하므로 일부 보안 프로그램에서 경고할 수 있습니다.
 - 코드 서명이 없어 첫 실행 시 SmartScreen 경고가 나타날 수 있습니다.
 - 패널 위치는 WeType 후보 바가 실제로 그려진 위치를 따릅니다(레이아웃, 배율, 화면 가장자리와 무관). 배율이 서로 다른 다중 모니터와 Windows ARM은 미검증입니다.
@@ -182,7 +182,7 @@ python -X utf8 scripts/package.py
 
 ## 피드백
 
-[Issues](https://github.com/Rickywu05/translate/issues)에 Windows와 WeType 버전을 함께 적어 주세요. 진단 로그는 설정의 Privacy에서 열 수 있으며 후보나 번역을 포함하지 않습니다.
+[Issues](https://github.com/Rickyevo/translate/issues)에 Windows와 WeType 버전을 함께 적어 주세요. 진단 로그는 설정의 Privacy에서 열 수 있으며 후보나 번역을 포함하지 않습니다.
 
 ## 라이선스
 

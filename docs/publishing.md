@@ -1,6 +1,6 @@
 # Publishing on GitHub
 
-Repository: https://github.com/Rickywu05/translate
+Repository: https://github.com/Rickyevo/translate
 
 ## Repository presentation
 

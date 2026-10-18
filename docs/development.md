@@ -107,6 +107,10 @@ requests are sent. The measurements include the backend-side test driver and exc
 method processes; they are not whole-app memory or end-to-end UI latency. The 73-second comparison is a short test,
 not a long-duration soak. Raw evidence and scope are in `measurements/native-memory-20261018.md`.
 
+Temporary memory-test packages are removed from `release/` after validation. Keep the formal versioned releases,
+their archives and `SHA256SUMS.txt`; current comparisons use 0.2.3 and 0.2.4. Historical measurement JSON retains
+the original paths as provenance, even when the temporary build it measured has been removed.
+
 `TRANSLATE_DIAG=1` makes the engine log counts (never content) of what the WeType adapter receives and drops, once a
 second; `TRANSLATE_NO_A11Y_CARET=1` turns off the accessibility-caret lookup.
 
