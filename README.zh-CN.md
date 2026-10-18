@@ -126,7 +126,7 @@ Translate 是一个安静运行在 Windows 后台的微信输入法（WeType）�
 ## 已知限制
 
 - 使用微信输入法内部消息，版本更新可能导致失效；请在 [Issues](https://github.com/Rickywu05/translate/issues) 提供版本信息。
-- Frida 会附加到输入法服务端进程，部分安全软件可能告警。
+- 原生观察模块会附加到输入法服务端进程，部分安全软件可能告警。
 - 尚未代码签名，首次启动可能出现 SmartScreen 提示。
 - 面板位置跟随微信输入法候选栏的实际绘制位置（不受布局、缩放比例和屏幕边缘影响）；缩放比例不同的多屏组合和 Windows ARM 尚未测试。
 - 当前为便携版，没有安装器或开始菜单入口。移动目录后重新运行一次 EXE，让自启路径更新。
@@ -140,7 +140,7 @@ Translate 是一个安静运行在 Windows 后台的微信输入法（WeType）�
 程序尚未签名，SmartScreen 可能不认识它。确认下载来源后，可选择“更多信息 → 仍要运行”。发布页附有 `SHA256SUMS.txt`，可核对文件：
 
 ```powershell
-Get-FileHash .\Translate-0.2.3-win-x64.zip -Algorithm SHA256
+Get-FileHash .\Translate-0.2.4-win-x64.zip -Algorithm SHA256
 ```
 
 </details>
@@ -170,7 +170,7 @@ Ctrl+Alt+P 暂停或恢复。退出在设置 → 关于 → 退出 Translate。
 
 ## 工作原理
 
-内置 Python 引擎通过 Frida 观察 `wetype_server.exe` 发给候选窗的消息，提取候选并跟踪窗口位置。译文来自缓存、本地词典和所选服务，界面由 Tauri + WebView2 展示。插入时取消拼音组合，通过 `SendInput` 输入 Unicode 译文。
+内置 Python 引擎通过原生模块和有界共享内存观察 `wetype_server.exe` 发给候选窗的消息，提取候选并跟踪窗口位置。译文来自缓存、本地词典和所选服务，界面由 Tauri + WebView2 展示。插入时取消拼音组合，通过 `SendInput` 输入 Unicode 译文。
 
 [开发说明](docs/development.md) · [设计系统](DESIGN.md) · [通信协议](docs/protocol.md) · [发布构建](docs/release.md) · [更新记录](CHANGELOG.md)
 
@@ -179,7 +179,7 @@ Ctrl+Alt+P 暂停或恢复。退出在设置 → 关于 → 退出 Translate。
 需要 Windows 10/11 x64、Node 22+、Python 3.12 和 Rust（MSVC，含 Visual Studio Build Tools）：
 
 ```powershell
-python -m pip install --target backend/vendor frida==17.23.3
+python -m pip install --target backend/vendor -r backend/requirements.txt
 cd app
 npm install
 python -X utf8 scripts/package.py
@@ -195,6 +195,6 @@ python -X utf8 scripts/package.py
 
 [MIT](LICENSE) © 2026 Rickywu05
 
-本地词典来自 [CC-CEDICT](https://www.mdbg.net/chinese/dictionary?page=cedict)，使用 CC BY-SA 4.0。Python、Frida、Tauri 等组件采用各自许可证，见 [第三方声明](app/build/THIRD_PARTY_NOTICES.txt)。
+本地词典来自 [CC-CEDICT](https://www.mdbg.net/chinese/dictionary?page=cedict)，使用 CC BY-SA 4.0。Python、MinHook、Frida（兼容模式）、Tauri 等组件采用各自许可证，见 [第三方声明](app/build/THIRD_PARTY_NOTICES.txt)。
 
 <div align="center"><sub>Translate 是独立项目，与腾讯或微信没有隶属、合作或官方背书关系。</sub></div>

@@ -4,18 +4,18 @@
   "total": 40,
   "timings_ms": {
     "show_cold_ms": [
-      390.5
+      458.2
     ],
     "show_warm_ms": [
-      2.1,
-      1.9,
-      2.9
+      16.0,
+      33.0,
+      16.4
     ],
     "insert_ms": [
-      17.2
+      16.8
     ],
     "show_after_release_ms": [
-      221.8
+      235.3
     ]
   },
   "failed": []

@@ -1,0 +1,40 @@
+{
+  "shared_mapping_bytes": 2099776,
+  "cases": [
+    {
+      "cycle": 0,
+      "normal_writes": 60,
+      "max_write_bytes": 262144,
+      "overflow_detected": true,
+      "original_pressure_writes_delivered": 100,
+      "loss_count": 36,
+      "recovered": true
+    },
+    {
+      "cycle": 1,
+      "normal_writes": 60,
+      "max_write_bytes": 262144,
+      "overflow_detected": true,
+      "original_pressure_writes_delivered": 100,
+      "loss_count": 36,
+      "recovered": true
+    },
+    {
+      "cycle": 2,
+      "normal_writes": 60,
+      "max_write_bytes": 262144,
+      "overflow_detected": true,
+      "original_pressure_writes_delivered": 100,
+      "loss_count": 36,
+      "recovered": true
+    }
+  ],
+  "process_exit_detected": true,
+  "new_process_reconnected": true,
+  "dispatch_pending_limit": 8,
+  "heartbeat_expiry_and_reattach": true,
+  "controller_crash_and_reattach": true,
+  "manager_pid_restart": true,
+  "attach_shutdown_cancelled": true,
+  "health_check_shutdown_race": true
+}

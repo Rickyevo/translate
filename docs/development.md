@@ -11,7 +11,7 @@ How the project is laid out, how to build it from a fresh clone, and how it is t
 | `app/src/renderer/` | The panel and Settings pages (React; the UI itself lives in `prototype/src`) |
 | `app/scripts/` | Build, packaging and release scripts; test suites, probes and resource measurements |
 | `app/build/THIRD_PARTY_NOTICES.txt` | License notices shipped with the release |
-| `backend/` | Python backend (stdlib + ctypes + vendored Frida and comtypes): protocol, input methods (`translate_backend/ime.py` selects; `wetype/` WeType via Frida; `mspinyin/` Microsoft Pinyin via UI Automation), Win32 input and window events, translation pipeline (`translate/`), CC-CEDICT data; `tests/` (no IME, no input); `tools/` research and capture tools (development only, not packaged) |
+| `backend/` | Python backend (stdlib + ctypes + native observer + vendored comtypes; Frida for compatibility): protocol, input methods (`translate_backend/ime.py` selects; `wetype/` WeType via native IPC; `mspinyin/` Microsoft Pinyin via UI Automation), Win32 input and window events, translation pipeline (`translate/`), CC-CEDICT data; `tests/` (no IME, no input); `tools/` research and capture tools (development only, not packaged) |
 | `prototype/` | Design lab and the shared UI source (the app imports components from `prototype/src`) |
 | `prototype/src/styles/tokens.css` | Design tokens (both themes) |
 | `prototype/src/i18n/locales/` | zh-CN, en, ja, ko catalogs |
@@ -37,15 +37,27 @@ Requirements: Windows 10/11 x64, Node 22+, Python 3.12 on PATH (or set `TRANSLAT
 with the Visual Studio Build Tools, and WeChat Input Method for anything beyond the replay tests.
 
 ```
-python -m pip install --target backend/vendor frida==17.23.3   # the WeType adapter's Frida dependency
+python -m pip install --target backend/vendor frida==17.23.3   # optional compatibility transport and baseline comparisons
 python -m pip install --target backend/vendor --no-deps comtypes==1.4.17   # Microsoft Pinyin (UI Automation)
-python -c "import sys; sys.path.insert(0, 'backend/vendor'); import comtypes.client; comtypes.client.GetModule('UIAutomationCore.dll')"   # pre-generate its wrappers
 cd app && npm install && cd ..
 cd prototype && npm install && cd ..
 ```
 
 Translation-service keys are never stored in the repository or in config files: each user enters theirs in
 Settings › Translation and it goes to Windows Credential Manager.
+
+Build the native x64 WeType observer before running the backend: `cmd /c backend\native\build.cmd`.
+Packaging builds it automatically and ships only the DLL selected by its manifest plus the short-lived injector.
+The default WeType transport uses a bounded 2 MiB shared ring and at most eight pending 32 KiB dispatch packets.
+Overflow invalidates the composition; insertion remains blocked until a fresh composition arrives. Reconnects
+resolve a fresh process identity. Stop or five seconds without a heartbeat disables capture and releases the
+lease; the small hook DLL remains resident until the input method exits naturally. DLLs run from a versioned
+per-user cache so they do not lock the installation directory. `TRANSLATE_WETYPE_TRANSPORT=frida` opts into the
+old transport for comparisons; no automatic heavyweight fallback is used.
+
+Microsoft Pinyin keeps the full UI Automation typelib wrappers by default. The smaller interface set in
+`mspinyin/uia.py` is experimental (`TRANSLATE_UIA_MINIMAL=1`): real first-input reliability has not met the release
+bar, so it is excluded from the default memory optimization.
 
 ## Build and run
 
@@ -80,11 +92,20 @@ python -X utf8 scripts/settings_ui_probe.py                               # sett
 python -X utf8 scripts/release_verify.py <release folder>                 # release in an environment without dev tools
 python -X utf8 scripts/stage4_live_test.py [--clickable] [--edge]         # LIVE: real WeType + real keys/clicks
 python -X utf8 scripts/readme_shots.py                                    # README screenshots (DevTools captures)
+python -X utf8 scripts/native_memory_compare.py                           # paired native/Frida real-pipe backend comparison (73 s)
 python -I ../backend/tools/build_cedict.py <cedict_1_0_ts_utf-8_mdbg.zip> # rebuild the local dictionary
 ```
 
 Test runs use an isolated profile in `.cache/test-userdata`, never your `%APPDATA%\Translate`. Screenshots are taken
 from the pages themselves (DevTools, enabled only together with `--test-control`), never of the desktop.
+
+The native memory comparison uses unique directories under `.cache/memory-endurance/`, comparing the original
+`release/Translate-0.2.3-win-x64` against `release/Translate-0.2.4-win-x64`. Build the owned pipe fixture with
+`cmd /c backend\native\build.cmd --tests` first. Both workers use the same synthetic pipe writes, dictionary-cache
+fixtures, full UI Automation observer and localhost mock translation service. No desktop keys or external API
+requests are sent. The measurements include the backend-side test driver and exclude the host/WebView2 and input
+method processes; they are not whole-app memory or end-to-end UI latency. The 73-second comparison is a short test,
+not a long-duration soak. Raw evidence and scope are in `measurements/native-memory-20261018.md`.
 
 `TRANSLATE_DIAG=1` makes the engine log counts (never content) of what the WeType adapter receives and drops, once a
 second; `TRANSLATE_NO_A11Y_CARET=1` turns off the accessibility-caret lookup.

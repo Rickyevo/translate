@@ -1,7 +1,8 @@
 """Make the distributable: release/Translate-<version>-win-x64.zip (+ SHA256SUMS.txt) from a packaged build.
 
 The zip holds one folder, Translate-<version>-win-x64/, with Translate.exe, the bundled Python runtime and backend,
-Translate's license (LICENSE.txt), third-party notices (THIRD_PARTY_NOTICES.txt, THIRD_PARTY_RUST.txt) and
+Translate's license (LICENSE.txt), third-party notices (THIRD_PARTY_NOTICES.txt, THIRD_PARTY_RUST.txt,
+THIRD_PARTY_MINHOOK.txt) and
 README-FIRST.txt.
 The zip is built from a staging copy in .cache/; release/<name>/ is refreshed only when no running Translate uses it. Portable: unzip anywhere and run; no installer, no admin rights, no Python or
 other tools needed. Run from app/:  python -X utf8 scripts/make_release.py <packaged folder>
@@ -52,7 +53,7 @@ START WITH WINDOWS
 
 REMOVE
   Turn off Settings > General > Start with Windows and Save, quit Translate (Settings > About), then delete this
-  folder and %APPDATA%\\Translate. API keys: Windows Credential Manager > Windows Credentials > entries starting
+  folder, %APPDATA%\\Translate and %LOCALAPPDATA%\\Translate. API keys: Windows Credential Manager > Windows Credentials > entries starting
   with "Translate:service:".
 
 Translate is an independent project, not made by, affiliated with or endorsed by Tencent or WeChat.

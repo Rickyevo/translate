@@ -10,6 +10,7 @@ MenuOpened / MenuClosed events tell when a composition's window opens and closes
 from __future__ import annotations
 
 import sys
+import os
 import threading
 from pathlib import Path
 
@@ -34,17 +35,16 @@ def _rect(r) -> dict | None:
 
 
 def _load_uia():
-    """Use the local Windows typelib; shipped wrappers may predate a Windows update.
-
-    GetModule reuses compatible wrappers and regenerates mismatched ones. Keep generated
-    modules in memory so portable/read-only installations never need writable code files.
-    """
+    """Use the shipped stable path; slim ABI remains an explicit experiment."""
     _vendor()
     import comtypes
-    import comtypes.client
 
+    if os.environ.get('TRANSLATE_UIA_MINIMAL') == '1':
+        from . import uia
+        return comtypes, uia
+    import comtypes.client
     comtypes.client.gen_dir = None
-    return comtypes, comtypes.client.GetModule("UIAutomationCore.dll")
+    return comtypes, comtypes.client.GetModule('UIAutomationCore.dll')
 
 
 class Observer:
@@ -116,7 +116,7 @@ class Observer:
             self._post({"kind": "connection", "state": "failed", "epoch": 1, "code": "uia_missing"})
             return
         try:
-            uia = comtypes.client.CreateObject(U.CUIAutomation, interface=U.IUIAutomation)
+            uia = comtypes.CoCreateInstance(U.CUIAutomation._reg_clsid_, interface=U.IUIAutomation)
             root = uia.GetRootElement()
             handler = self._make_handler(U, comtypes)
             for ev in (U.UIA_MenuOpenedEventId, U.UIA_MenuClosedEventId):

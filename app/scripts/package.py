@@ -60,6 +60,7 @@ def rust_notices() -> str:
 
 
 def main():
+    run(["cmd", "/c", str(ROOT / "backend/native/build.cmd")], cwd=ROOT)
     run(["node", "scripts/gen_defaults.mjs"])
     run(["npx", "vite", "build"])
     run(["cargo", "build", "--release"], cwd=APP / "src-tauri")
@@ -70,7 +71,11 @@ def main():
         src = ROOT / "backend" / part
         dst = STAGE / "backend" / part
         if src.is_dir():
-            shutil.copytree(src, dst, ignore=shutil.ignore_patterns("__pycache__", "*.pyc"))
+            shutil.copytree(src, dst, ignore=shutil.ignore_patterns("__pycache__", "*.pyc", "TranslateObserver*.dll"))
+            if part == "translate_backend":
+                native = src / "wetype/native"
+                observer = json.loads((native / "manifest.json").read_text(encoding="utf-8-sig"))["observer"]
+                shutil.copyfile(native / observer, dst / "wetype/native" / observer)
         else:
             dst.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(src, dst)
@@ -81,6 +86,7 @@ def main():
     shutil.copytree(STAGE / "backend", DEST / "resources" / "backend")
     shutil.copytree(STAGE / "python", DEST / "resources" / "python")
     shutil.copyfile(APP / "build" / "THIRD_PARTY_NOTICES.txt", DEST / "THIRD_PARTY_NOTICES.txt")
+    shutil.copyfile(ROOT / "backend/native/vendor/minhook/LICENSE.txt", DEST / "THIRD_PARTY_MINHOOK.txt")
     (DEST / "THIRD_PARTY_RUST.txt").write_text(rust_notices(), encoding="utf-8", newline="\r\n")
     size = sum(p.stat().st_size for p in DEST.rglob("*") if p.is_file())
     print(json.dumps({"packaged": str(DEST), "mb": round(size / 2**20, 1)}))

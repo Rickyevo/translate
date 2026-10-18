@@ -35,7 +35,7 @@ class WeTypeSource:
     neither flickers nor loses its per-composition state on every keystroke. `composition.end` is sent
     only when the composition really ends (commit, clear/cancel, window hidden, focus change, pause).
 
-    `replay=True` (test mode only) starts no Frida or window threads; the host feeds synthetic pipe bytes
+    `replay=True` (test mode only) starts no transport or window threads; the host feeds synthetic pipe bytes
     and window metadata through the same accept() path, and foreground checks use that metadata.
     """
 
@@ -174,6 +174,8 @@ class WeTypeSource:
 
     def check_target(self) -> str | None:
         """None if inserting into the composition's window is allowed now; else an insert error code."""
+        if not self._transport_healthy():
+            return "stale"
         fg = self._fg_info()
         expected = self.foreground
         if fg.get("password", False) or denied(fg.get("exe", ""), self.config.get("denylist", [])):
@@ -188,9 +190,23 @@ class WeTypeSource:
 
     # ---- events --------------------------------------------------------------------------------
     def accept(self, event):
+        ack = event.pop('_ack', None)
+        try:
+            self._accept(event)
+        finally:
+            if ack:
+                ack()
+
+    def _transport_healthy(self):
+        transport = getattr(self, '_live_transport', None)
+        return transport is None or transport.healthy
+
+    def _accept(self, event):
         """Consume a private event from the backend queue. Never forward raw pipe data."""
         kind = event["kind"]
         if kind == "connection":
+            if event['epoch'] < self._epoch:
+                return
             self._epoch = event["epoch"]
             self._connected = event["state"] == "connected"
             self.connection = event["state"]
@@ -200,6 +216,10 @@ class WeTypeSource:
             self._framers.clear()
             self._needs_composition = True
             self._on_status(event["state"], event.get("code"))
+            return
+        if kind == 'gap':
+            if event['epoch'] == self._epoch:
+                self._reset()
             return
         if kind == "window":
             fg, rect = event["foreground"], event["rect"]
@@ -243,6 +263,9 @@ class WeTypeSource:
                     self._publish(self.current)
             return
         if kind != "bytes" or event["epoch"] != self._epoch or not self._connected:
+            return
+        if not self._transport_healthy():
+            self._reset()
             return
         if not self._data_seen:
             self._data_seen = True
@@ -373,6 +396,12 @@ class WeTypeSource:
         watcher.run()
 
     def _transport(self):
+        if os.environ.get('TRANSLATE_WETYPE_TRANSPORT', 'native') == 'frida':
+            return self._frida_transport()
+        from .native_transport import run
+        run(self._post, self._stop, lambda connection: setattr(self, '_live_transport', connection))
+
+    def _frida_transport(self):
         vendor = Path(__file__).resolve().parents[2] / "vendor"
         if vendor.is_dir() and str(vendor) not in sys.path:
             sys.path.insert(0, str(vendor))

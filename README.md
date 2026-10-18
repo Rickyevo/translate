@@ -155,7 +155,8 @@ Full details: [docs/privacy.md](docs/privacy.md).
 - **WeType updates.** Translate reads WeType's internal messages, which aren't a public interface. A WeType update can
   stop it from seeing candidates until Translate is updated — please
   [open an issue](https://github.com/Rickywu05/translate/issues) with your WeType version.
-- **Security software** may flag Translate, because it attaches to WeType's process (with Frida) to read candidates.
+- **Security software** may flag Translate, because it attaches to WeType's process with a native observer to read
+  candidates.
   Microsoft Pinyin needs no such attachment.
 - **Microsoft Pinyin on Windows 10**, and its *use previous version* setting, are untested.
 - **Not code-signed** yet, so SmartScreen warns on first launch.
@@ -176,7 +177,7 @@ Translate isn't code-signed yet, so SmartScreen doesn't recognise it. Choose **M
 the download against `SHA256SUMS.txt` from the same release:
 
 ```powershell
-Get-FileHash .\Translate-0.2.3-win-x64.zip -Algorithm SHA256
+Get-FileHash .\Translate-0.2.4-win-x64.zip -Algorithm SHA256
 ```
 
 </details>
@@ -226,7 +227,7 @@ Turn off **Settings › General › Start with Windows** and press Save, then qu
 
 ```mermaid
 flowchart LR
-  A["WeChat Input Method<br/>(wetype_server.exe)"] -- candidate lists (Frida) --> B["Translate engine<br/>(bundled Python)"]
+  A["WeChat Input Method<br/>(wetype_server.exe)"] -- candidate lists (native IPC) --> B["Translate engine<br/>(bundled Python)"]
   P["Microsoft Pinyin<br/>(TextInputHost.exe)"] -- candidate lists (UI Automation) --> B
   B --> C{"Cache"}
   C -- miss --> D{"Dictionary"}
@@ -235,8 +236,8 @@ flowchart LR
   F -- "Alt+1…9" --> G["Your app<br/>(SendInput)"]
 ```
 
-The engine attaches to WeType's `wetype_server.exe` with Frida, decodes the candidate lists WeType sends to its own
-candidate window, and tracks that window's position. For Microsoft Pinyin it reads the candidate window through UI
+The engine attaches to WeType's `wetype_server.exe` with a small native observer, decodes the candidate lists WeType
+sends to its own candidate window, and tracks that window's position. For Microsoft Pinyin it reads the candidate window through UI
 Automation (the accessibility interface Narrator uses) — no attachment at all. Each list goes through the cache, the dictionary and then one
 batched request to your service. Inserting cancels the pinyin composition and types the translation with `SendInput`,
 without taking focus from your app.
@@ -250,7 +251,7 @@ Requires Windows 10/11 x64, Node 22+, Python 3.12, Rust (MSVC, with the Visual S
 vendored into `backend/vendor`:
 
 ```powershell
-python -m pip install --target backend/vendor frida==17.23.3
+python -m pip install --target backend/vendor -r backend/requirements.txt
 cd app
 npm install
 python -X utf8 scripts/package.py
@@ -269,7 +270,8 @@ candidate text or translations.
 [MIT](LICENSE) © 2026 Rickywu05
 
 The local dictionary is derived from [CC-CEDICT](https://www.mdbg.net/chinese/dictionary?page=cedict) (CC BY-SA 4.0).
-Release downloads bundle Python, Frida, Tauri and other components under their own licenses — see
+Release downloads bundle Python, MinHook, Frida (optional compatibility transport), Tauri and other components under
+their own licenses — see
 [THIRD_PARTY_NOTICES.txt](app/build/THIRD_PARTY_NOTICES.txt).
 
 <br>

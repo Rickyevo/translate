@@ -72,7 +72,8 @@ def main() -> int:
     shutil.copytree(src, dest)
     exe = dest / "Translate.exe"
     ud = ROOT / ".cache" / "clean-run" / "userdata"
-    env = {**clean_env(), "TRANSLATE_USER_DATA": str(ud)}
+    env = {**clean_env(), "TRANSLATE_USER_DATA": str(ud),
+           "TRANSLATE_NATIVE_CACHE": str(ROOT / ".cache/native-runtime")}
     check("environment has no Python/Node", not any(k.upper().startswith(("PYTHON", "NODE")) or k.upper() == "TRANSLATE_PYTHON" for k in env)
           and "python" not in env["PATH"].lower() and "node" not in env["PATH"].lower(), env["PATH"])
     uia_check = subprocess.run(
@@ -80,7 +81,10 @@ def main() -> int:
          "import sys; sys.coinit_flags=0; "
          "from translate_backend.mspinyin.observer import _load_uia; "
          "c,U=_load_uia(); a=c.client.CreateObject(U.CUIAutomation,interface=U.IUIAutomation); "
-         "assert a.GetRootElement(); print('UIA_READY')"],
+         "assert a.GetRootElement(); print('UIA_READY'); "
+         "import ssl,_ssl; from pathlib import Path; ssl.create_default_context(); "
+         "assert Path(_ssl.__file__).resolve().is_relative_to(Path(sys.executable).resolve().parent); "
+         "print('SSL_READY')"],
         env=env, capture_output=True, text=True, timeout=30,
     )
     check("Microsoft Pinyin UI Automation initializes in the bundled runtime",
@@ -109,8 +113,15 @@ def main() -> int:
             bad = sorted(f for f in files if any(x in f.lower() for x in ("python312\\", "python3", "nodejs", "\\toy\\translate\\backend", "\\toy\\translate\\app\\")) and str(dest).lower() not in f.lower())
             check("backend loads nothing from an installed Python, Node or the source tree", not bad, f"{len(files)} mapped files; outside the release: {bad[:5]}")
             mods = [f for f in files if f.lower().endswith((".pyd", ".dll")) and str(dest).lower() in f.lower()]
-            check("Frida, OpenSSL and ctypes load from the release folder",
-                  any("_frida.pyd" in f for f in mods) and any("libssl" in f for f in mods) and any("_ctypes" in f for f in mods), f"{len(mods)} release DLL/PYD files mapped")
+            check("native observer loads from its versioned runtime cache; Frida is not loaded",
+                  any(Path(f).name.startswith("TranslateObserver-") and
+                      Path(f).parent.resolve() == Path(env["TRANSLATE_NATIVE_CACHE"]).resolve() for f in files)
+                  and not any("_frida.pyd" in f.lower() for f in files))
+            # HTTPS is lazy in the native backend; initialize the bundled SSL module
+            # in the isolated probe rather than require it in the idle process.
+            check("ctypes loads from the release folder and bundled SSL initializes",
+                  any("_ctypes" in f for f in mods) and "SSL_READY" in uia_check.stdout,
+                  f"{len(mods)} release DLL/PYD files mapped")
         check("no visible windows (no console, no main window, no tray)", visible_windows({p.pid for p in procs}) == 0)
         check("no Python or Node process outside the release", not any(p.name().lower() in ("python.exe", "pythonw.exe", "node.exe") for p in procs))
     finally:

@@ -119,7 +119,7 @@ Translate は Windows の **WeChat Input Method（微信输入法・WeType）** 
 ## 既知の制限
 
 - WeType の内部メッセージを使用するため、更新によって動作しなくなる場合があります。[Issues](https://github.com/Rickywu05/translate/issues) にバージョンを添えて報告してください。
-- Frida が入力メソッドのプロセスに接続するため、セキュリティソフトが警告する場合があります。
+- ネイティブ監視モジュールが入力メソッドのプロセスに接続するため、セキュリティソフトが警告する場合があります。
 - コード署名は未対応です。初回起動時に SmartScreen が警告する場合があります。
 - パネルの位置は、WeType のバーが実際に描かれた位置に合わせます（レイアウト、表示倍率、画面端を問いません）。倍率の異なる複数画面と Windows ARM は未検証です。
 - ポータブル版のみで、インストーラーとスタートメニュー項目はありません。移動後は EXE を一度実行して自動起動パスを更新してください。
@@ -133,7 +133,7 @@ Translate は Windows の **WeChat Input Method（微信输入法・WeType）** 
 コード署名がないため警告される場合があります。配布元を確認したうえで「詳細情報 → 実行」を選べます。配布ページの `SHA256SUMS.txt` と比較できます。
 
 ```powershell
-Get-FileHash .\Translate-0.2.3-win-x64.zip -Algorithm SHA256
+Get-FileHash .\Translate-0.2.4-win-x64.zip -Algorithm SHA256
 ```
 
 </details>
@@ -163,7 +163,7 @@ Ctrl+Alt+P で一時停止／再開します。終了は Settings → About → 
 
 ## 仕組み
 
-同梱 Python エンジンが Frida を通じて `wetype_server.exe` から候補ウィンドウへのメッセージを観察し、候補とウィンドウ位置を取得します。キャッシュ、辞書、選択したサービスから翻訳を取得し、Tauri + WebView2 のパネルに表示します。挿入時はピンイン変換を解除して `SendInput` で Unicode テキストを入力します。
+同梱 Python エンジンが ネイティブモジュールと容量制限付き共有メモリを通じて `wetype_server.exe` から候補ウィンドウへのメッセージを観察し、候補とウィンドウ位置を取得します。キャッシュ、辞書、選択したサービスから翻訳を取得し、Tauri + WebView2 のパネルに表示します。挿入時はピンイン変換を解除して `SendInput` で Unicode テキストを入力します。
 
 [開発ガイド](docs/development.md) · [デザイン](DESIGN.md) · [通信仕様](docs/protocol.md) · [リリース構築](docs/release.md) · [変更履歴](CHANGELOG.md)
 
@@ -172,7 +172,7 @@ Ctrl+Alt+P で一時停止／再開します。終了は Settings → About → 
 Windows 10/11 x64、Node 22+、Python 3.12、Rust（MSVC、Visual Studio Build Tools）が必要です。
 
 ```powershell
-python -m pip install --target backend/vendor frida==17.23.3
+python -m pip install --target backend/vendor -r backend/requirements.txt
 cd app
 npm install
 python -X utf8 scripts/package.py
@@ -188,6 +188,6 @@ python -X utf8 scripts/package.py
 
 [MIT](LICENSE) © 2026 Rickywu05
 
-辞書は [CC-CEDICT](https://www.mdbg.net/chinese/dictionary?page=cedict)（CC BY-SA 4.0）由来です。Python、Frida、Tauri などのライセンスは [第三者ライセンス](app/build/THIRD_PARTY_NOTICES.txt) を参照してください。
+辞書は [CC-CEDICT](https://www.mdbg.net/chinese/dictionary?page=cedict)（CC BY-SA 4.0）由来です。Python、MinHook、Frida（互換モード）、Tauri などのライセンスは [第三者ライセンス](app/build/THIRD_PARTY_NOTICES.txt) を参照してください。
 
 <div align="center"><sub>Translate は独立プロジェクトであり、Tencent または WeChat による製品、提携製品、公認製品ではありません。</sub></div>

@@ -5,7 +5,7 @@ it through a queue, so all state changes happen in one place and the process sle
 is happening.
 
 Sources:
-  (default)                       WeTypeSource, live: Frida observer on wetype_server + window metadata
+  (default)                       WeTypeSource, live: native observer on wetype_server + window metadata
   --test                          SimSource: scripted lists with fixture translations (stage-3 harness)
   --test --source=wetype-replay   WeTypeSource fed synthetic pipe bytes by the host (debug.wetype.*)
 Translations: live mode uses the real pipeline (translate/: cache → CC-CEDICT → the configured service). The replay
@@ -33,7 +33,7 @@ from .wetype.source import WeTypeSource
 from .ime import ImeSources
 from .mspinyin.source import MsPinyinSource
 
-VERSION = "0.2.3"
+VERSION = "0.2.4"
 COMPOSITION_CANCEL_TIMEOUT = 0.5  # s to wait for the IME to confirm Esc cancelled the composition
 SETTLE_AFTER_CANCEL = 0.015       # s between the confirmed cancel and typing (lets the IME's text service settle)
 
@@ -352,7 +352,7 @@ class Backend:
             reply(msg, "debug.foreground", **win32.foreground())
 
     def _debug_replay(self, msg: dict) -> None:
-        """Replay source control: the same events the Frida transport and window watcher post."""
+        """Replay source control: the same events the candidate transport and window watcher post."""
         if not self.replay:
             return reply(msg, "error", code="unknown_type", message="Replay source not active")
         t, src = msg["type"], self.source

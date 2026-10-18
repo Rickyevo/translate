@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.2.4 — 2026-10-18
+
+- Lower backend memory use while typing and while idle. WeChat Input Method now uses a small native observer and
+  bounded shared memory instead of loading Frida by default. In a 73-second matched-load test, backend working set
+  fell from about 117 MiB to 59 MiB (about 50%); this excludes the host, WebView2 and input-method processes.
+- If candidate observation falls behind, old candidates are cleared and cannot be inserted; the next fresh
+  composition resumes normally. Queues stay bounded instead of growing with input.
+- Reconnect to WeChat Input Method after its process restarts. Stopping Translate or losing its heartbeat disables
+  observation and releases the shared-memory connection safely.
+- Microsoft Pinyin keeps its full UI Automation implementation. Real candidate reading, translations and Alt+1
+  insertion were verified with both input methods. The interface, shortcuts and translation-service behavior are
+  unchanged; no noticeable candidate or translation latency regression was observed in the matched-load test.
+
 ## 0.2.3 — 2026-10-17
 
 - Shortcuts can be changed in Settings › General: Pause, Open Settings and Hide or show the panel. Click the keys and

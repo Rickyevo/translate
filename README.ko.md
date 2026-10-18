@@ -119,7 +119,7 @@ Translate는 Windows의 **WeChat 입력기(微信输入法, WeType)** 를 위한
 ## 알려진 제한
 
 - WeType 내부 메시지를 사용하므로 업데이트 후 작동하지 않을 수 있습니다. [Issues](https://github.com/Rickywu05/translate/issues)에 버전을 함께 알려 주세요.
-- Frida가 입력기 프로세스에 연결하므로 일부 보안 프로그램에서 경고할 수 있습니다.
+- 네이티브 관찰 모듈이 입력기 프로세스에 연결하므로 일부 보안 프로그램에서 경고할 수 있습니다.
 - 코드 서명이 없어 첫 실행 시 SmartScreen 경고가 나타날 수 있습니다.
 - 패널 위치는 WeType 후보 바가 실제로 그려진 위치를 따릅니다(레이아웃, 배율, 화면 가장자리와 무관). 배율이 서로 다른 다중 모니터와 Windows ARM은 미검증입니다.
 - 포터블 버전이며 설치 프로그램이나 시작 메뉴 항목이 없습니다. 폴더 이동 후 EXE를 한 번 실행하면 자동 시작 경로가 갱신됩니다.
@@ -133,7 +133,7 @@ Translate는 Windows의 **WeChat 입력기(微信输入法, WeType)** 를 위한
 코드 서명이 없어 경고가 나타날 수 있습니다. 다운로드 출처를 확인한 뒤 추가 정보 → 실행을 선택할 수 있습니다. 배포 페이지의 `SHA256SUMS.txt`와 비교할 수 있습니다.
 
 ```powershell
-Get-FileHash .\Translate-0.2.3-win-x64.zip -Algorithm SHA256
+Get-FileHash .\Translate-0.2.4-win-x64.zip -Algorithm SHA256
 ```
 
 </details>
@@ -163,7 +163,7 @@ Ctrl+Alt+P로 일시 중지/다시 시작합니다. 종료는 Settings → About
 
 ## 작동 방식
 
-동봉된 Python 엔진이 Frida를 통해 `wetype_server.exe`에서 후보창으로 보내는 메시지를 관찰하고 후보와 창 위치를 가져옵니다. 캐시, 사전, 선택한 서비스에서 번역을 가져와 Tauri + WebView2 패널에 표시합니다. 입력 시 병음 조합을 취소하고 `SendInput`으로 Unicode 번역을 입력합니다.
+동봉된 Python 엔진이 네이티브 모듈과 크기가 제한된 공유 메모리를 통해 `wetype_server.exe`에서 후보창으로 보내는 메시지를 관찰하고 후보와 창 위치를 가져옵니다. 캐시, 사전, 선택한 서비스에서 번역을 가져와 Tauri + WebView2 패널에 표시합니다. 입력 시 병음 조합을 취소하고 `SendInput`으로 Unicode 번역을 입력합니다.
 
 [개발 가이드](docs/development.md) · [디자인 시스템](DESIGN.md) · [통신 규약](docs/protocol.md) · [배포 빌드](docs/release.md) · [변경 기록](CHANGELOG.md)
 
@@ -172,7 +172,7 @@ Ctrl+Alt+P로 일시 중지/다시 시작합니다. 종료는 Settings → About
 Windows 10/11 x64, Node 22+, Python 3.12, Rust(MSVC, Visual Studio Build Tools)가 필요합니다.
 
 ```powershell
-python -m pip install --target backend/vendor frida==17.23.3
+python -m pip install --target backend/vendor -r backend/requirements.txt
 cd app
 npm install
 python -X utf8 scripts/package.py
@@ -188,6 +188,6 @@ python -X utf8 scripts/package.py
 
 [MIT](LICENSE) © 2026 Rickywu05
 
-사전은 [CC-CEDICT](https://www.mdbg.net/chinese/dictionary?page=cedict)(CC BY-SA 4.0)에서 파생되었습니다. Python, Frida, Tauri 등은 각각의 라이선스를 따릅니다. [타사 고지](app/build/THIRD_PARTY_NOTICES.txt)를 참조하세요.
+사전은 [CC-CEDICT](https://www.mdbg.net/chinese/dictionary?page=cedict)(CC BY-SA 4.0)에서 파생되었습니다. Python, MinHook, Frida(호환 모드), Tauri 등은 각각의 라이선스를 따릅니다. [타사 고지](app/build/THIRD_PARTY_NOTICES.txt)를 참조하세요.
 
 <div align="center"><sub>Translate는 독립 프로젝트이며 Tencent 또는 WeChat의 제품, 제휴 제품 또는 공식 승인 제품이 아닙니다.</sub></div>

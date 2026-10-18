@@ -109,6 +109,42 @@ class SourceTests(unittest.TestCase):
         self.data(candidates(["时间", "事件", "😀", "时间"]))
         self.assertEqual(before, self.output)
 
+    def test_transport_gap_invalidates_candidates_until_a_fresh_composition(self):
+        self.compose()
+        old = self.source.current.gen
+        self.source.accept({"kind": "gap", "epoch": 1})
+        self.assertIsNone(self.source.current)
+        self.assertIn(("end", old), self.output)
+        self.data(candidates(["stale"]))
+        self.assertIsNone(self.source.current)
+        self.data(composition("ni") + candidates(["你"]))
+        self.assertEqual(self.source.current.items[0].text, "你")
+
+    def test_old_transport_gap_cannot_invalidate_reconnected_candidates(self):
+        self.source.accept({"kind": "connection", "state": "connected", "epoch": 2})
+        self.data(composition("ni") + candidates(["你"]), epoch=2)
+        current = self.source.current
+        self.source.accept({"kind": "gap", "epoch": 1})
+        self.assertIs(self.source.current, current)
+
+    def test_unhealthy_transport_rejects_insert_before_gap_is_dispatched(self):
+        from types import SimpleNamespace
+        self.compose()
+        self.source._live_transport = SimpleNamespace(healthy=False)
+        self.assertEqual(self.source.check_target(), "stale")
+        self.data(composition("ni") + candidates(["old"]))
+        self.assertIsNone(self.source.current)
+
+    def test_dispatch_acknowledges_stale_packets_and_exceptions(self):
+        from unittest.mock import Mock
+        ack = Mock()
+        self.source.accept({"kind": "bytes", "epoch": -1, "data": b"ignored", "_ack": ack})
+        ack.assert_called_once_with()
+        ack.reset_mock()
+        with self.assertRaises(KeyError):
+            self.source.accept({"_ack": ack})
+        ack.assert_called_once_with()
+
     def test_new_pinyin_invalidates_old_immediately(self):
         self.compose()
         old = self.source.current.gen

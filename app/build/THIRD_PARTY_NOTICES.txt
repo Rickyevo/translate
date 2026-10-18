@@ -11,9 +11,12 @@ Python 3.12 runtime (Python Software Foundation License Version 2)
   resources\python\ — see resources\python\LICENSE.txt. Includes OpenSSL 3 (Apache License 2.0),
   libffi (MIT License) and the Microsoft Visual C++ runtime (vcruntime140*.dll, redistributable).
 
+MinHook 1.3.4 (BSD-style license)
+  Compiled into the native WeType observer — see THIRD_PARTY_MINHOOK.txt for the license text.
+
 Frida 17.23.3 (wxWindows Library Licence, Version 3.1)
   resources\backend\vendor\frida\ — https://frida.re, https://github.com/frida/frida.
-  Used unmodified, as a library, to observe the WeChat Input Method's candidate list locally.
+  Included for the explicit compatibility transport; not loaded by the default native transport.
 
 comtypes 1.4.17 (MIT License)
   resources\backend\vendor\comtypes\ — https://github.com/enthought/comtypes. Used to read Microsoft Pinyin's candidate
@@ -24,4 +27,4 @@ CC-CEDICT (Creative Commons Attribution-ShareAlike 4.0)
   (https://www.mdbg.net/chinese/dictionary?page=cedict); see cedict.LICENSE next to it.
 
 Inter typeface (SIL Open Font License 1.1), React, Radix UI, lucide, i18next, zustand (MIT License)
-  Bundled in the app's user interface (resources\app.asar).
+  Embedded in Translate.exe with the app's user interface.

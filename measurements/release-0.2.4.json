@@ -1,0 +1,35 @@
+{
+  "version": "0.2.4",
+  "archive": "Translate-0.2.4-win-x64.zip",
+  "archive_sha256": "f541e8138ed712e11fe7d23f981f7a825fc35f3f6a0d1e0d61074c7e0578a250",
+  "archive_bytes": 64379356,
+  "unpacked_bytes": 165201888,
+  "exe_sha256": "fe3f2e184b999f0edd83739d7df3b8e7f6701abad552b1f1e1e1381ad3005096",
+  "observer": "TranslateObserver-8bb8c063d854990c.dll",
+  "checks": {
+    "typescript": true,
+    "rust": {
+      "passed": 8,
+      "total": 8
+    },
+    "backend": {
+      "passed": 82,
+      "total": 82
+    },
+    "wetype_replay": {
+      "passed": 40,
+      "total": 40
+    },
+    "mspinyin_replay": {
+      "passed": 15,
+      "total": 15
+    },
+    "clean_environment": {
+      "passed": 11,
+      "total": 11
+    },
+    "native_transport_integration": true
+  },
+  "real_input_methods": "Candidate reading, dictionary translation and Alt+1 insertion passed on the unchanged backend code before the 0.2.4 version bump. No new desktop keystrokes were sent for release packaging.",
+  "publication": "Local build and commit only; no push or online release."
+}

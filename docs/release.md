@@ -1,5 +1,26 @@
 # Release build
 
+## 0.2.4 backend memory reduction
+
+Release: `release/Translate-0.2.4-win-x64.zip` (61.4 MiB; 157.5 MiB unpacked), with `release/SHA256SUMS.txt`.
+WeChat Input Method uses the native x64 observer by default; Frida remains an explicit compatibility transport.
+The observer uses a 2 MiB ring and at most eight pending dispatch packets. A queue gap invalidates the composition
+before insertion, and a fresh composition restores normal operation. Reconnects check process creation time;
+stop or five seconds without a heartbeat disables capture and releases the lease. The small DLL stays resident
+until the input method exits naturally, with versioned runtime copies avoiding locks on the installation folder.
+Microsoft Pinyin keeps the full UI Automation implementation. No interface, shortcut or placement changes.
+
+Verified: TypeScript typecheck; cargo 8/8; backend 82/82; packaged WeChat replay 40/40; Microsoft Pinyin replay 15/15;
+clean-environment release check 11/11 (including native observation without Frida). Real candidate reading, dictionary
+translations and Alt+1 insertion with both input methods passed before the version bump. Native integration
+covered synchronous and asynchronous writes, 256 KiB payloads, queue pressure, bounded dispatch, controller crash,
+heartbeat expiry, process replacement, attachment cancellation and concurrent shutdown checks.
+
+The 73-second paired backend comparison measured about 117 MiB → 59 MiB working set during typing and idle,
+with no noticeable candidate or translation latency regression. CPU use increased by about 0.7 percentage points
+of one core in that short run; this is not a claim of zero overhead or a long-duration stability test.
+See [the measurement record](../measurements/native-memory-20261018.md) for scope, timings and raw evidence.
+
 ## 0.2.3 Settings refresh and custom shortcuts
 
 Release: `release/Translate-0.2.3-win-x64.zip` (61.2 MB; 157.2 MB unpacked).

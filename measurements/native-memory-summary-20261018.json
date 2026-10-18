@@ -1,0 +1,219 @@
+{
+  "memory_mib": {
+    "warmup": {
+      "baseline": {
+        "ws_mb": 116.469,
+        "private_mb": 73.098
+      },
+      "optimized": {
+        "ws_mb": 57.641,
+        "private_mb": 34.395
+      },
+      "ws_reduction_percent": 50.51
+    },
+    "typing": {
+      "baseline": {
+        "ws_mb": 117.009,
+        "private_mb": 73.123
+      },
+      "optimized": {
+        "ws_mb": 58.722,
+        "private_mb": 34.934
+      },
+      "ws_reduction_percent": 49.81
+    },
+    "idle": {
+      "baseline": {
+        "ws_mb": 117.069,
+        "private_mb": 73.084
+      },
+      "optimized": {
+        "ws_mb": 58.841,
+        "private_mb": 34.955
+      },
+      "ws_reduction_percent": 49.74
+    }
+  },
+  "performance": {
+    "optimized": {
+      "variant": "optimized",
+      "type": "summary",
+      "phases": [
+        {
+          "phase": "warmup",
+          "elapsed_s": 3.015,
+          "cpu_core_percent": 1.042,
+          "inputs": 0,
+          "settled": 0
+        },
+        {
+          "phase": "typing_1",
+          "elapsed_s": 25.038,
+          "cpu_core_percent": 1.562,
+          "inputs": 120,
+          "settled": 24
+        },
+        {
+          "phase": "idle_1",
+          "elapsed_s": 10.015,
+          "cpu_core_percent": 1.094,
+          "inputs": 0,
+          "settled": 0
+        },
+        {
+          "phase": "typing_2",
+          "elapsed_s": 25.026,
+          "cpu_core_percent": 1.938,
+          "inputs": 120,
+          "settled": 24
+        },
+        {
+          "phase": "idle_2",
+          "elapsed_s": 10.007,
+          "cpu_core_percent": 0.469,
+          "inputs": 0,
+          "settled": 0
+        }
+      ],
+      "candidate": {
+        "n": 240,
+        "median_ms": 16.2346,
+        "p95_ms": 17.5769,
+        "max_ms": 20.1254
+      },
+      "dispatch": {
+        "n": 622,
+        "median_ms": 0.2005,
+        "p95_ms": 0.6853,
+        "max_ms": 7.8325
+      },
+      "translation": {
+        "n": 48,
+        "median_ms": 302.7929,
+        "p95_ms": 313.6163,
+        "max_ms": 326.7426
+      },
+      "uia": {
+        "n": 73,
+        "median_ms": 2.8103,
+        "p95_ms": 3.9794,
+        "max_ms": 4.4418
+      },
+      "failed_rows": 0,
+      "observer_errors": [],
+      "events": 0,
+      "jobs": 0,
+      "write_call": {
+        "n": 288,
+        "median_ms": 0.0243,
+        "p95_ms": 0.0381,
+        "max_ms": 0.0746
+      },
+      "inputs": 240,
+      "generations": 240,
+      "settled": 48
+    },
+    "baseline": {
+      "variant": "baseline",
+      "type": "summary",
+      "phases": [
+        {
+          "phase": "warmup",
+          "elapsed_s": 3.011,
+          "cpu_core_percent": 1.042,
+          "inputs": 0,
+          "settled": 0
+        },
+        {
+          "phase": "typing_1",
+          "elapsed_s": 25.026,
+          "cpu_core_percent": 1.312,
+          "inputs": 120,
+          "settled": 24
+        },
+        {
+          "phase": "idle_1",
+          "elapsed_s": 10.007,
+          "cpu_core_percent": 0.156,
+          "inputs": 0,
+          "settled": 0
+        },
+        {
+          "phase": "typing_2",
+          "elapsed_s": 25.027,
+          "cpu_core_percent": 0.75,
+          "inputs": 120,
+          "settled": 24
+        },
+        {
+          "phase": "idle_2",
+          "elapsed_s": 10.003,
+          "cpu_core_percent": 0.0,
+          "inputs": 0,
+          "settled": 0
+        }
+      ],
+      "candidate": {
+        "n": 240,
+        "median_ms": 16.2059,
+        "p95_ms": 17.5928,
+        "max_ms": 19.2839
+      },
+      "dispatch": {
+        "n": 622,
+        "median_ms": 0.178,
+        "p95_ms": 0.6055,
+        "max_ms": 7.9867
+      },
+      "translation": {
+        "n": 48,
+        "median_ms": 304.1263,
+        "p95_ms": 317.4523,
+        "max_ms": 325.8659
+      },
+      "uia": {
+        "n": 73,
+        "median_ms": 2.745,
+        "p95_ms": 3.6016,
+        "max_ms": 5.0588
+      },
+      "failed_rows": 0,
+      "observer_errors": [],
+      "events": 0,
+      "jobs": 0,
+      "write_call": {
+        "n": 288,
+        "median_ms": 0.1754,
+        "p95_ms": 0.2469,
+        "max_ms": 1.2242
+      },
+      "inputs": 240,
+      "generations": 240,
+      "settled": 48
+    }
+  },
+  "real_ime": {
+    "wetype": {
+      "candidate_count": 5,
+      "dictionary_translation": true,
+      "alt_1_insert_ok": true,
+      "gen": 2
+    },
+    "mspinyin": {
+      "first_composition_ok": true,
+      "candidate_count": 5,
+      "dictionary_translation": true,
+      "alt_1_insert_ok": true,
+      "gen": 4
+    }
+  },
+  "regression": {
+    "backend_passed": 82,
+    "wetype_frontend_replay_passed": 40,
+    "mspinyin_frontend_replay_passed": 15
+  },
+  "live_backend_ws_mib": 52.738,
+  "frontend_executable_sha256": "6b5342f57bcc507139e1fe9f8a5ca7f2e4dc72eeea73f74dcee20411d35e36ea",
+  "duration_seconds": 73,
+  "scope": "Backend plus test driver; excludes host, WebView2 and input-method processes. Synthetic pipe input and localhost mock translation service. No long-duration soak claim."
+}
