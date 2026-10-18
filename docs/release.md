@@ -4,8 +4,6 @@
 
 Release: `release/Translate-0.2.4-win-x64.zip` (61.4 MiB; 157.5 MiB unpacked), with `release/SHA256SUMS.txt`.
 GitHub: [Translate 0.2.4](https://github.com/Rickyevo/translate/releases/tag/v0.2.4).
-Only the latest program folder, ZIP and checksum file are kept locally. Old local releases, temporary memory-test
-packages and duplicate packaging directories have been removed; published historical versions remain on GitHub.
 WeChat Input Method uses the native x64 observer by default; Frida remains an explicit compatibility transport.
 The observer uses a 2 MiB ring and at most eight pending dispatch packets. A queue gap invalidates the composition
 before insertion, and a fresh composition restores normal operation. Reconnects check process creation time;

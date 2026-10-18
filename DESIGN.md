@@ -4,8 +4,6 @@ Status: **Stage 5 (translation service).** Additions since the approved stage-2 
 *Keep the panel clickable* placement (§9), the *no service* footer state (§9), and the provider-based service
 section of the Translation settings page (§10). Stage history: stage 2 approved direction B, the Overlap icon
 and the lead preview.
-- Direction B (“Panel”) was selected and refined; direction A has been removed from code (archived in
-  `docs/archive/stage1-prototype-src`).
 - The app icon **Overlap** was selected (§12).
 - The **lead preview** for long translations was approved and implemented (§9.1).
 

@@ -53,3 +53,8 @@ app/src-tauri/gen/
 
 # Native observer artifacts are rebuilt from backend/native/ during packaging.
 backend/translate_backend/wetype/native/*
+
+# Generated research, benchmark and design-review output
+measurements/
+screenshots/stage*/
+assets/icons/concepts/

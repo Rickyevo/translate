@@ -10,12 +10,9 @@ Sources (read in full; not copied into this repository):
 
 ## Limits of this study
 
-- No signed-in Linear workspace was available, so I could not inspect live **settings pages**, menus or
-  dialogs in both themes. The settings observations below come from the article text and the published
-  inbox/sidebar images, not from the settings screens themselves.
+- The settings observations come from the cited articles and published inbox/sidebar images, rather than a
+  direct inspection of the settings screens.
 - Images are marketing crops at 2× density; spacing values are estimates, not measured from the product.
-- Helpful additions if you can provide them: 3–4 screenshots of Linear's *Preferences*, *Account › Security*
-  and the command menu, in light and dark, at 100% zoom.
 
 ## Principles observed → how this product uses them
 

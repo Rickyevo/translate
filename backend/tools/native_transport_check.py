@@ -161,7 +161,7 @@ try:
     connection=None
     report['health_check_shutdown_race']=True
     finish(p)
-    (ROOT/'measurements/native-transport-integration-20261018.json').write_text(json.dumps(report,indent=2),encoding='utf-8')
+    (ROOT/'.cache/native-transport-result.json').write_text(json.dumps(report,indent=2),encoding='utf-8')
     print(json.dumps(report),flush=True)
 finally:
     if connection:connection.close()

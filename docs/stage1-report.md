@@ -3,8 +3,8 @@
 ## Run it
 
 ```
-cd D:\toy\translate\prototype
-npm install        # first time only; npm cache stays in D:\toy\translate\.cache
+cd prototype
+npm install        # first time only; npm cache stays in ../.cache
 npm run dev        # → http://localhost:5320
 ```
 

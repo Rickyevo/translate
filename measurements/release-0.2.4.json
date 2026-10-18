@@ -30,7 +30,7 @@
     },
     "native_transport_integration": true
   },
-  "real_input_methods": "Candidate reading, dictionary translation and Alt+1 insertion passed on the unchanged backend code before the 0.2.4 version bump. No new desktop keystrokes were sent for release packaging.",
+  "real_input_methods": "Candidate reading, dictionary translation and Alt+1 insertion passed on the unchanged transport code before the 0.2.4 version metadata update.",
   "release_tag": "v0.2.4",
   "release_url": "https://github.com/Rickyevo/translate/releases/tag/v0.2.4"
 }

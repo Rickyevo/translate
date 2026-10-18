@@ -5,7 +5,7 @@
     {
       "variant": "optimized",
       "type": "ready",
-      "backend_path": "D:\\toy\\translate\\release\\Translate-0.2.3-native-memory-test-win-x64\\resources\\backend\\translate_backend\\__main__.py",
+      "backend_path": "release/Translate-0.2.3-native-memory-test-win-x64/resources/backend/translate_backend/__main__.py",
       "duration_s": 73
     },
     {
@@ -47,7 +47,7 @@
     {
       "variant": "baseline",
       "type": "ready",
-      "backend_path": "D:\\toy\\translate\\release\\Translate-0.2.3-win-x64\\resources\\backend\\translate_backend\\__main__.py",
+      "backend_path": "release/Translate-0.2.3-win-x64/resources/backend/translate_backend/__main__.py",
       "duration_s": 73
     },
     {

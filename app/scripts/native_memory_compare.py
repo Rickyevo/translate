@@ -27,7 +27,7 @@ for variant, directory in builds:
 run_id = uuid.uuid4().hex[:8]
 scratch = root / '.cache' / 'memory-endurance' / run_id
 scratch.mkdir(parents=True)
-output = root / 'measurements' / 'native-memory-paired-20261018.json'
+output = scratch / 'results.json'
 
 class Handler(BaseHTTPRequestHandler):
     protocol_version = 'HTTP/1.1'

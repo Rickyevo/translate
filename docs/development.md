@@ -23,7 +23,6 @@ How the project is laid out, how to build it from a fresh clone, and how it is t
 | `docs/privacy.md` | What is read, sent, stored and logged |
 | `docs/stage1-report.md` … `docs/stage5-report.md`, `docs/lead-preview-report.md` | Development reports per stage: decisions, verification, measurements |
 | `docs/research/` | Design study notes (links to the sources) |
-| `docs/archive/` | Stage-1 prototype source (incl. the removed direction A) |
 | `measurements/` | Raw samples and summaries (counts and timings; sample texts only, never real typing) |
 | `screenshots/readme/` | README and release screenshots (`app/scripts/readme_shots.py`) |
 | `screenshots/stage1/`, `stage2/`, `stage5/` | Design-stage renders, before/after sheets, interaction captures |
@@ -105,12 +104,9 @@ downloaded 0.2.3 release (`--baseline`) against `release/Translate-0.2.4-win-x64
 fixtures, full UI Automation observer and localhost mock translation service. No desktop keys or external API
 requests are sent. The measurements include the backend-side test driver and exclude the host/WebView2 and input
 method processes; they are not whole-app memory or end-to-end UI latency. The 73-second comparison is a short test,
-not a long-duration soak. Raw evidence and scope are in `measurements/native-memory-20261018.md`.
-
-Keep only the latest formal program folder, its ZIP and `SHA256SUMS.txt` in `release/`. Old local releases and
-temporary memory-test packages are removed after validation; historical GitHub releases can be downloaded when
-needed. Duplicate packaging output in `app/out` and `app/release-build` can be regenerated. Historical measurement
-JSON retains the original paths as provenance, even when the build it measured has been removed.
+not a long-duration soak. Methods, results and scope are in `measurements/native-memory-20261018.md`. New comparison output is
+written to `.cache/memory-endurance/<run-id>/results.json`; native transport integration checks write
+`.cache/native-transport-result.json`.
 
 `TRANSLATE_DIAG=1` makes the engine log counts (never content) of what the WeType adapter receives and drops, once a
 second; `TRANSLATE_NO_A11Y_CARET=1` turns off the accessibility-caret lookup.

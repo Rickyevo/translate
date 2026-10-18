@@ -3,7 +3,7 @@
 ## Run it
 
 ```
-cd D:\toy\translate\prototype
+cd prototype
 npm run dev        # http://localhost:5320
 ```
 

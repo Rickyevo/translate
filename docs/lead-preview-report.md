@@ -6,7 +6,7 @@ Approved design: a full-text **lead preview** for long translations, *Automatic*
 ## Try it
 
 ```
-cd D:\toy\translate\prototype
+cd prototype
 npm run dev        # http://localhost:5320
 ```
 

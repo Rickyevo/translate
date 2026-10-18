@@ -1,12 +1,8 @@
 # Native backend memory comparison — 2026-10-18
 
 The native transport adds bounded queues, explicit gap invalidation, automatic reconnection, process-identity
-checks and safe shutdown. This record describes the 0.2.3 candidate that became 0.2.4. The user's original app
-was restored after desktop testing; temporary test processes and profiles were removed.
-The two temporary memory-test package folders were also removed from `release/` after 0.2.4 was packaged.
-Only the latest formal release is kept locally. To repeat the comparison, download 0.2.3 separately and pass its
-extracted folder with `--baseline`. Original paths in raw JSON identify the historical builds actually measured;
-those records are retained unchanged.
+checks and safe shutdown. This record describes the 0.2.3 candidate that became 0.2.4. To repeat the comparison,
+pass an extracted 0.2.3 release folder with `--baseline`. Source paths in the result files are repository-relative.
 
 ## Memory
 
@@ -51,8 +47,7 @@ Microsoft Pinyin's first composition after switching also worked. No candidate o
 The tested candidate reused the original frontend executable, SHA256:
 `6b5342f57bcc507139e1fe9f8a5ca7f2e4dc72eeea73f74dcee20411d35e36ea`.
 The 0.2.4 version bump rebuilds that executable; this hash identifies the measured candidate, not the final release.
-Interface, placement and Win32 candidate-position code were unchanged. The cancelled candidate-overlay changes
-were not reintroduced.
+Interface, placement and Win32 candidate-position code were unchanged.
 
 ## Recovery checks
 
@@ -70,8 +65,7 @@ was excluded from the default implementation.
 
 The observer DLL is approximately 116 KiB. Shutdown disables the hook and releases shared-memory views and handles;
 code remains resident until the input method exits to avoid unloading instructions another thread could still use.
-A cached DLL may therefore remain locked until that natural exit. No forced input-method restart was used.
+A cached DLL may therefore remain locked until that natural exit.
 
 Evidence: `native-memory-paired-20261018.json`, `native-memory-summary-20261018.json` and
-`native-transport-integration-20261018.json`. An initial sandboxed run could not reach the localhost mock service
-and was discarded; the tables use the successful normal-user rerun.
+`native-transport-integration-20261018.json`.

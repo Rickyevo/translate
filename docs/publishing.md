@@ -2,15 +2,6 @@
 
 Repository: https://github.com/Rickyevo/translate
 
-## Repository presentation
-
-Use these settings for the existing repository:
-
-- **Description:** `Live translations of WeChat Input Method (微信输入法) candidates on Windows — insert the translation instead of the Chinese.`
-- **Topics:** `wechat-input-method`, `wetype`, `microsoft-pinyin`, `ime`, `translation`, `chinese`, `pinyin`, `windows`, `tauri`, `webview2`, `llm`
-- **Social preview** (Settings › General): `screenshots/readme/hero-en-light.png`.
-- Optional: turn off Wiki and Projects; turn on Issues.
-
 ## Push updates
 
 ```
